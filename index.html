@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LyzLearnTyping</title>
+<style>
+    :root {
+        --bg: #0a0c10; --text: #ffffff; --accent: #e6b450; --cursor: #5fb8ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+        /* GANTI 'fantasia.png' PAKE NAMA FILE GAMBAR LU */
+        background-image: 
+            linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%),
+            url('fantasia.png'); 
+        background-size: cover;
+        background-position: center top; 
+        background-attachment: fixed;
+        background-color: var(--bg);
+        
+        color: var(--text); 
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        margin: 0; padding: 20px; 
+        display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
+    }
+
+    .dashboard {
+        text-align: center; 
+        display: flex; flex-direction: column; align-items: center; gap: 30px;
+        margin-top: 10vh;
+    }
+
+    /* Tulisan Tagline */
+    .tagline {
+        font-size: 24px; 
+        font-weight: 800;
+        color: #ff3333; /* Warna merah nyesuaiin gambar Fantasia lu */
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+        line-height: 1.4;
+        max-width: 600px;
+        margin-bottom: 20px;
+    }
+
+    /* Container Tombol */
+    .button-group {
+        display: flex; 
+        gap: 20px; 
+        flex-wrap: wrap; 
+        justify-content: center;
+    }
+
+    /* Desain Tombol Bundar (Pill) */
+    .btn-pill {
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+        border: 2px solid transparent;
+        /* Efek kaca transparan */
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: var(--text);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-pill:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.2);
+        border-color: var(--text);
+    }
+
+    /* Tombol Menuju Creator (Warna beda biar stand out) */
+    .btn-creator {
+        background: var(--accent); /* Warna Emas */
+        color: #000;
+        border-color: var(--accent);
+    }
+    .btn-creator:hover {
+        background: #c99a34;
+        border-color: #c99a34;
+        color: #000;
+    }
+</style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <!-- Teks Tagline -->
+        <div class="tagline">
+            "Make Your Own Website, For your Own Way"
+        </div>
+
+        <!-- Tombol-tombol -->
+        <div class="button-group">
+            <!-- Tombol Ngetik -->
+            <a href="#" class="btn-pill" onclick="alert('Mulai Game Ngetik!')">Get Started</a>
+            
+            <!-- Tombol Pindah ke Creator Web -->
+            <a href="creator.html" class="btn-pill btn-creator">Menuju LyzLearnTyping</a> 
+            <!-- Catatan: Tulisannya "Menuju Creator Web" di sketsa, tapi kode HTML-nya ngarah ke creator.html -->
+        </div>
+    </div>
+
+</body>
+</html>
