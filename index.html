@@ -6,13 +6,14 @@
 <title>LyzLearnTyping</title>
 <style>
     :root {
-        --bg: #0a0c10; --text: #ffffff; --accent: #e6b450; --cursor: #5fb8ff;
+        --bg: #0a0c10; 
+        --text: #ffffff; 
+        --accent: #e6b450;
     }
     * { box-sizing: border-box; }
     body {
-        /* GANTI 'fantasia.png' PAKE NAMA FILE GAMBAR LU */
         background-image: 
-            linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%),
+            linear-gradient(to bottom, rgba(10, 12, 16, 0.6) 0%, rgba(10, 12, 16, 0.95) 100%),
             url('fantasia.png'); 
         background-size: cover;
         background-position: center top; 
@@ -22,90 +23,202 @@
         color: var(--text); 
         font-family: 'Segoe UI', system-ui, sans-serif;
         margin: 0; padding: 20px; 
-        display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
+        display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        overflow-x: hidden;
     }
 
+    /* --- HEADER / NAVBAR --- */
+    .navbar {
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        justify-content: flex-end; /* Ikon garis tiga di kanan */
+        padding: 10px 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .menu-icon {
+        font-size: 30px;
+        cursor: pointer;
+        color: white;
+        text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        transition: 0.2s;
+    }
+    .menu-icon:hover { color: var(--accent); }
+
+    /* --- SIDEBAR MENU (Tersembunyi) --- */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: -250px; /* Sembunyi di kanan */
+        width: 250px;
+        height: 100vh;
+        background-color: rgba(18, 21, 28, 0.95);
+        backdrop-filter: blur(10px);
+        border-left: 1px solid #333;
+        padding: 30px 20px;
+        transition: 0.3s ease-in-out;
+        z-index: 100;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    .sidebar.active {
+        right: 0; /* Muncul ke layar */
+    }
+
+    .sidebar h3 {
+        color: var(--accent);
+        margin-bottom: 20px;
+        font-size: 18px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+    }
+
+    .sidebar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.05);
+        transition: 0.2s;
+        font-size: 15px;
+    }
+
+    .sidebar a:hover {
+        background: var(--accent);
+        color: black;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #aaa;
+    }
+    .close-btn:hover { color: white; }
+
+
+    /* --- DASHBOARD CONTENT --- */
     .dashboard {
-        text-align: center; 
-        display: flex; flex-direction: column; align-items: center; gap: 30px;
-        margin-top: 10vh;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        margin-top: 5vh;
+        width: 100%;
+        max-width: 600px;
     }
 
-    /* Tulisan Tagline */
     .tagline {
-        font-size: 24px; 
+        font-size: 20px; 
         font-weight: 800;
-        color: #ff3333; /* Warna merah nyesuaiin gambar Fantasia lu */
+        color: #ff3333; 
         text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
         line-height: 1.4;
-        max-width: 600px;
-        margin-bottom: 20px;
+        text-align: left;
+        width: 100%;
+        margin-bottom: 40px;
     }
 
-    /* Container Tombol */
-    .button-group {
-        display: flex; 
-        gap: 20px; 
-        flex-wrap: wrap; 
+    .row-top {
+        display: flex;
+        gap: 20px;
         justify-content: center;
+        width: 100%;
+        margin-bottom: 25px;
     }
 
-    /* Desain Tombol Bundar (Pill) */
-    .btn-pill {
-        padding: 15px 40px;
+    /* Tombol Atas (Get Started & Langganan) */
+    .btn-oval {
+        padding: 15px 35px;
         border-radius: 50px;
+        font-weight: 800;
+        font-size: 18px;
+        cursor: pointer;
+        border: none;
+        background: rgba(255, 255, 255, 0.85); 
+        color: #000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        text-decoration: none;
+        text-align: center;
+        transition: 0.2s;
+    }
+    .btn-oval:hover {
+        background: #ffffff;
+        transform: scale(1.05);
+    }
+
+    /* Tombol Bawah (Menuju Web Satunya) */
+    .btn-rect {
+        padding: 15px 30px;
+        border-radius: 5px; 
         font-weight: bold;
         font-size: 18px;
         cursor: pointer;
-        transition: 0.3s;
-        border: 2px solid transparent;
-        /* Efek kaca transparan */
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        color: var(--text);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        border: none;
+        background: rgba(150, 150, 150, 0.8); 
+        color: #000;
         text-decoration: none;
-        display: inline-block;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        transition: 0.2s;
+        line-height: 1.3;
+    }
+    .btn-rect:hover {
+        background: rgba(200, 200, 200, 0.9);
     }
 
-    .btn-pill:hover {
-        transform: translateY(-3px);
-        background: rgba(255, 255, 255, 0.2);
-        border-color: var(--text);
-    }
-
-    /* Tombol Menuju Creator (Warna beda biar stand out) */
-    .btn-creator {
-        background: var(--accent); /* Warna Emas */
-        color: #000;
-        border-color: var(--accent);
-    }
-    .btn-creator:hover {
-        background: #c99a34;
-        border-color: #c99a34;
-        color: #000;
+    @media (max-width: 400px) {
+        .row-top { flex-direction: column; gap: 15px; }
+        .btn-oval { width: 100%; }
     }
 </style>
 </head>
 <body>
 
+    <!-- NAVBAR KANAN ATAS -->
+    <div class="navbar">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    </div>
+
+    <!-- SIDEBAR MENU -->
+    <div class="sidebar" id="mySidebar">
+        <div class="close-btn" onclick="toggleMenu()">×</div>
+        <h3>Menu</h3>
+        <a href="#" onclick="alert('Buka Halaman Kotak Masuk')">📬 Kotak Masuk</a>
+        <a href="#" onclick="alert('Buka Halaman Web yang Dibuat')">🌐 Web Saya</a>
+        <a href="#" onclick="alert('Buka Pengaturan')">⚙️ Pengaturan</a>
+    </div>
+
+    <!-- KONTEN UTAMA -->
     <div class="dashboard">
         <!-- Teks Tagline -->
         <div class="tagline">
             "Make Your Own Website, For your Own Way"
         </div>
 
-        <!-- Tombol-tombol -->
-        <div class="button-group">
-            <!-- Tombol Ngetik -->
-            <a href="#" class="btn-pill" onclick="alert('Mulai Game Ngetik!')">Get Started</a>
-            
-            <!-- Tombol Pindah ke Creator Web -->
-            <a href="creator.html" class="btn-pill btn-creator">Menuju LyzLearnTyping</a> 
-            <!-- Catatan: Tulisannya "Menuju Creator Web" di sketsa, tapi kode HTML-nya ngarah ke creator.html -->
+        <!-- Baris Atas: Get Started & Langganan -->
+        <div class="row-top">
+            <a href="#" class="btn-oval" onclick="alert('Mulai Ngetik!')">Get Started</a>
+            <a href="creator.html" class="btn-oval">Langganan</a> 
         </div>
+
+        <!-- Baris Bawah: Menuju Web Satunya -->
+        <a href="creator.html" class="btn-rect">
+            Menuju<br>LyzLearnTyping
+        </a>
     </div>
 
+    <script>
+        // Fungsi buat buka/tutup sidebar menu
+        function toggleMenu() {
+            const sidebar = document.getElementById('mySidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
