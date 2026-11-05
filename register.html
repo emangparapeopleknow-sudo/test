@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar - Creator Web</title>
+<style>
+  :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+  body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; }
+  .auth-box { background: var(--panel); padding: 40px 30px; border-radius: 16px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .auth-box h2 { color: var(--accent); margin-bottom: 20px; }
+  .input-group { margin-bottom: 15px; text-align: left; }
+  .input-group label { display: block; font-size: 14px; color: #aaa; margin-bottom: 5px; }
+  .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; }
+  .input-group input:focus { border-color: var(--accent); }
+  .btn-submit { width: 100%; padding: 12px; background: var(--accent); color: var(--bg); border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
+  .btn-submit:hover { opacity: 0.9; }
+  .link { margin-top: 20px; font-size: 14px; color: #aaa; display: block; text-decoration: none; }
+  .link:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+  <div class="auth-box">
+    <h2>Daftar Creator</h2>
+    <form onsubmit="prosesDaftar(event)">
+      <div class="input-group">
+        <label>Username Baru</label>
+        <input type="text" id="reg-user" required placeholder="Bikin username">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="reg-pass" required placeholder="Bikin password">
+      </div>
+      <button type="submit" class="btn-submit">Daftar Sekarang</button>
+    </form>
+    <a href="login.html" class="link">Udah punya akun? Login</a>
+  </div>
+
+<script>
+  function prosesDaftar(e) {
+    e.preventDefault();
+    const user = document.getElementById('reg-user').value;
+    const pass = document.getElementById('reg-pass').value;
+    
+    // Simulasi Daftar (Langsung auto-login)
+    if (user && pass) {
+      localStorage.setItem('creator_active_user', user);
+      alert('Registrasi Berhasil! Lu bakal otomatis login.');
+      window.location.href = "creator.html";
+    }
+  }
+</script>
+</body>
+</html>
