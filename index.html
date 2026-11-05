@@ -12,7 +12,6 @@
     }
     * { box-sizing: border-box; }
     body {
-        /* Pastiin file 'fantasia.png' ada di folder yang sama */
         background-image: 
             linear-gradient(to bottom, rgba(10, 12, 16, 0.5) 0%, rgba(10, 12, 16, 0.95) 100%),
             url('fantasia.png'); 
@@ -25,6 +24,18 @@
         font-family: 'Segoe UI', system-ui, sans-serif;
         margin: 0; padding: 20px; 
         display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* --- OVERLAY (Lapisan Hitam Pas Menu Kebuka) --- */
+    .overlay {
+        display: none; /* Awalnya sembunyi */
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6); z-index: 90;
+        backdrop-filter: blur(2px);
+    }
+    .overlay.active {
+        display: block;
     }
 
     /* --- HEADER NAVIGASI --- */
@@ -35,6 +46,7 @@
         align-items: flex-start;
         padding: 10px 0;
         margin-bottom: 5vh;
+        z-index: 10;
     }
 
     .tagline {
@@ -47,7 +59,7 @@
         max-width: 70%;
     }
 
-    /* --- MUSIC PLAYER (KIRI BAWAH) --- */
+    /* --- MUSIC PLAYER --- */
     .music-player {
         position: fixed; bottom: 30px; left: 30px;
         display: flex; align-items: center; gap: 15px;
@@ -64,7 +76,7 @@
     .menu-container {
         background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 10px;
         backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2);
-        cursor: pointer; transition: 0.2s;
+        cursor: pointer; transition: 0.2s; z-index: 105; /* Di atas overlay */
     }
     .menu-container:hover { background: rgba(255,255,255,0.2); }
     .menu-icon { font-size: 24px; color: white; line-height: 1; }
@@ -74,7 +86,7 @@
         position: fixed; top: 0; right: -280px; width: 280px; height: 100vh;
         background-color: rgba(18, 21, 28, 0.98); backdrop-filter: blur(15px);
         border-left: 1px solid #333; padding: 40px 20px;
-        transition: 0.3s ease-in-out; z-index: 100; box-shadow: -5px 0 20px rgba(0,0,0,0.8);
+        transition: 0.3s ease-in-out; z-index: 110; box-shadow: -5px 0 20px rgba(0,0,0,0.8);
     }
     .sidebar.active { right: 0; }
     .sidebar h3 { color: var(--accent); margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 10px; }
@@ -87,11 +99,11 @@
     .dashboard {
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         flex: 1; width: 100%; max-width: 600px; margin-bottom: 10vh;
+        z-index: 10;
     }
 
     .row-top { display: flex; gap: 20px; justify-content: center; width: 100%; margin-bottom: 30px; }
 
-    /* Tombol Kaca (Glassmorphism) */
     .btn-oval {
         padding: 18px 45px; border-radius: 50px; font-weight: 800; font-size: 20px;
         cursor: pointer; background: rgba(255, 255, 255, 0.15);
@@ -101,7 +113,6 @@
     }
     .btn-oval:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); }
 
-    /* Tombol Menuju Web Satunya */
     .btn-rect {
         padding: 18px 40px; border-radius: 10px; font-weight: bold; font-size: 20px;
         cursor: pointer; background: rgba(255, 255, 255, 0.8); color: #000;
@@ -110,7 +121,6 @@
     }
     .btn-rect:hover { background: #fff; transform: translateY(-3px); }
 
-    /* Responsif HP */
     @media (max-width: 450px) {
         .tagline { font-size: 20px; max-width: 65%; }
         .row-top { flex-direction: column; gap: 15px; }
@@ -121,7 +131,10 @@
 </head>
 <body>
 
-    <!-- AUDIO ELEMENT (GANTI NAMA FILE LAGUNYA NANTI) -->
+    <!-- OVERLAY KLIK LUAR MENU -->
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <!-- AUDIO ELEMENT -->
     <audio id="bg-music" loop>
         <source src="lagu-fantasia.mp3" type="audio/mpeg">
     </audio>
@@ -155,22 +168,24 @@
     <!-- KONTEN UTAMA -->
     <div class="dashboard">
         <div class="row-top">
-            <!-- Tombol ini nanti lu arahin ke halaman AI Generator -->
             <a href="#" class="btn-oval" onclick="alert('Masuk ke AI Generator (Segera)')">Get Started</a>
-            
-            <!-- Tombol ini nanti lu arahin ke halaman Langganan/Premium -->
             <a href="#" class="btn-oval" style="background: rgba(230, 180, 80, 0.8); color: #000; border: none;" onclick="alert('Masuk ke Halaman Langganan (Segera)')">Langganan</a> 
         </div>
 
-        <!-- Tombol Pindah ke Web Belajar Ngetik -->
         <a href="index.html" class="btn-rect">
             Menuju<br>LyzLearnTyping
         </a>
     </div>
 
     <script>
+        const sidebar = document.getElementById('mySidebar');
+        const overlay = document.getElementById('overlay');
+
         function toggleMenu() {
-            document.getElementById('mySidebar').classList.toggle('active');
+            // Buka/tutup sidebar
+            sidebar.classList.toggle('active');
+            // Munculin/ilangin lapisan hitam
+            overlay.classList.toggle('active');
         }
 
         const music = document.getElementById('bg-music');
