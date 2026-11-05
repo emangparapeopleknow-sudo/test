@@ -112,99 +112,92 @@
 <body>
 
     <!-- ================= SCREEN 1: LOGIN ================= -->
-    <div id="auth-screen">
-        <h1>Creator Web</h1>
-        <p id="auth-subtitle">Masuk untuk mulai bikin web</p>
+<div id="auth-screen">
+    <h1>Creator Web</h1>
+    <p id="auth-subtitle">Masuk untuk mulai bikin web</p>
 
-        <div class="form-group">
-            <label>Nama Lu</label>
-            <input type="text" id="input-name" placeholder="Contoh: Bily" style="display: none;">
-        </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="input-email" placeholder="bily@email.com">
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="input-pass" placeholder="********">
-        </div>
+    <div class="form-group" id="group-name" style="display: none;">
+        <label>Nama Lu</label>
+        <input type="text" id="input-name" placeholder="Contoh: Bily">
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="input-email" placeholder="bily@email.com">
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="input-pass" placeholder="********">
+    </div>
 
-        <button class="btn-submit" id="btn-auth" onclick="prosesAuth()">Masuk</button>
+    <button class="btn-submit" id="btn-auth" onclick="prosesAuth()">Masuk</button>
 
-        <div class="switch-form">
-            <span id="switch-text">Belum punya akun? </span>
-            <a onclick="toggleAuthMode()" id="switch-link">Daftar Sekarang</a>
+    <div class="switch-form">
+        <span id="switch-text">Belum punya akun? </span>
+        <a onclick="toggleAuthMode()" id="switch-link">Daftar Sekarang</a>
+    </div>
+</div>
+
+<!-- ================= SCREEN 2: DASHBOARD ================= -->
+<div id="main-screen">
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    
+    <audio id="bg-music" loop src=""></audio>
+
+    <div class="navbar">
+        <div class="tagline">"Make Your Own Web,<br>For Your Own Way"</div>
+        <div class="user-info" id="user-display" onclick="logout()">Logout</div>
+        <div class="menu-container" onclick="toggleMenu()"><div class="menu-icon">☰</div></div>
+    </div>
+
+    <div class="music-player">
+        <div class="music-top">
+            <button class="music-btn" id="play-btn" onclick="toggleMusic()">▶</button>
+            <div class="music-info-box">
+                <div class="music-info" id="now-playing">Belum ada lagu</div>
+                <div class="music-artist" id="now-artist">Cari lagu dulu</div>
+            </div>
+        </div>
+        <div class="progress-container">
+            <span id="curr-time">0:00</span>
+            <div class="progress-bar" id="progress-bar" onclick="seekAudio(event)">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span id="total-time">0:00</span>
         </div>
     </div>
 
-    <!-- ================= SCREEN 2: DASHBOARD ================= -->
-    <div id="main-screen">
-        <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-        
-        <audio id="bg-music" loop src=""></audio>
-
-        <!-- HEADER -->
-        <div class="navbar">
-            <div class="tagline">"Make Your Own Web,<br>For Your Own Way"</div>
-            <div class="user-info" id="user-display" onclick="logout()">Logout</div>
-            <div class="menu-container" onclick="toggleMenu()"><div class="menu-icon">☰</div></div>
-        </div>
-
-        <!-- MUSIC PLAYER -->
-        <div class="music-player">
-            <div class="music-top">
-                <button class="music-btn" id="play-btn" onclick="toggleMusic()">▶</button>
-                <div class="music-info-box">
-                    <div class="music-info" id="now-playing">Belum ada lagu</div>
-                    <div class="music-artist" id="now-artist">Cari lagu dulu</div>
-                </div>
-            </div>
-            <div class="progress-container">
-                <span id="curr-time">0:00</span>
-                <div class="progress-bar" id="progress-bar" onclick="seekAudio(event)">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
-                <span id="total-time">0:00</span>
-            </div>
-        </div>
-
-        <!-- SIDEBAR -->
-        <div class="sidebar" id="mySidebar">
-            <div class="close-btn" onclick="toggleMenu()">×</div>
-            <h3>Menu Creator</h3>
-            <a onclick="alert('Buka Kotak Masuk')">📬 Kotak Masuk</a>
-            <a onclick="alert('Buka History')">📜 History Permintaan</a>
-            <a onclick="bukaModalLagu()" style="color: var(--accent); border: 1px solid var(--accent);">🎵 Cari Lagu</a>
-            <a onclick="alert('Buka Pengaturan')">⚙️ Pengaturan</a>
-        </div>
-
-        <!-- KONTEN UTAMA -->
-        <div class="dashboard">
-            <div class="row-top">
-                <a href="#" class="btn-oval" onclick="alert('Get Started')">Get Started</a>
-                <a href="#" class="btn-oval" style="background: rgba(230, 180, 80, 0.8); color: #000; border: none;" onclick="alert('Langganan')">Langganan</a> 
-            </div>
-            <a href="index.html" class="btn-rect">Menuju<br>LyzLearnTyping</a>
-        </div>
-
-        <!-- MODAL PENCARIAN LAGU -->
-        <div id="music-modal">
-            <div class="modal-content">
-                <h3>🎵 Cari Lagu</h3>
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Ketik judul lagu..." onkeypress="if(event.key === 'Enter') cariLagu()">
-                    <button onclick="cariLagu()">Cari</button>
-                </div>
-                <div class="song-results" id="song-results">
-                    <p style="color: #888; text-align: center;">Ketik judul lagu lalu tekan Enter.</p>
-                </div>
-                <button class="btn-oval" style="padding: 10px 20px; font-size: 14px; width: 100%; margin-top: 20px;" onclick="tutupModalLagu()">Tutup</button>
-            </div>
-        </div>
+    <div class="sidebar" id="mySidebar">
+        <div class="close-btn" onclick="toggleMenu()">×</div>
+        <h3>Menu Creator</h3>
+        <a onclick="alert('Buka Kotak Masuk')">📬 Kotak Masuk</a>
+        <a onclick="alert('Buka History')">📜 History Permintaan</a>
+        <a onclick="bukaModalLagu()" style="color: var(--accent); border: 1px solid var(--accent);">🎵 Cari Lagu</a>
+        <a onclick="alert('Buka Pengaturan')">⚙️ Pengaturan</a>
     </div>
 
+    <div class="dashboard">
+        <div class="row-top">
+            <a href="#" class="btn-oval" onclick="alert('Get Started')">Get Started</a>
+            <a href="#" class="btn-oval" style="background: rgba(230, 180, 80, 0.8); color: #000; border: none;" onclick="alert('Langganan')">Langganan</a> 
+        </div>
+        <a href="index.html" class="btn-rect">Menuju<br>LyzLearnTyping</a>
+    </div>
+
+    <div id="music-modal">
+        <div class="modal-content">
+            <h3>🎵 Cari Lagu</h3>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Ketik judul lagu..." onkeypress="if(event.key === 'Enter') cariLagu()">
+                <button onclick="cariLagu()">Cari</button>
+            </div>
+            <div class="song-results" id="song-results">
+                <p style="color: #888; text-align: center;">Ketik judul lagu lalu tekan Enter.</p>
+            </div>
+            <button class="btn-oval" style="padding: 10px 20px; font-size: 14px; width: 100%; margin-top: 20px;" onclick="tutupModalLagu()">Tutup</button>
+        </div>
+    </div>
+</div>
 <script>
-    // ================= SISTEM LOGIN =================
     let isLoginMode = true;
 
     window.onload = function() {
@@ -218,18 +211,24 @@
 
     function toggleAuthMode() {
         isLoginMode = !isLoginMode;
+        const nameGroup = document.getElementById('group-name');
+        const subtitle = document.getElementById('auth-subtitle');
+        const btn = document.getElementById('btn-auth');
+        const switchText = document.getElementById('switch-text');
+        const switchLink = document.getElementById('switch-link');
+
         if (isLoginMode) {
-            document.getElementById('auth-subtitle').innerText = "Masuk untuk mulai bikin web";
-            document.getElementById('input-name').style.display = 'none';
-            document.getElementById('btn-auth').innerText = "Masuk";
-            document.getElementById('switch-text').innerText = "Belum punya akun? ";
-            document.getElementById('switch-link').innerText = "Daftar Sekarang";
+            subtitle.innerText = "Masuk untuk mulai bikin web";
+            nameGroup.style.display = 'none';
+            btn.innerText = "Masuk";
+            switchText.innerText = "Belum punya akun? ";
+            switchLink.innerText = "Daftar Sekarang";
         } else {
-            document.getElementById('auth-subtitle').innerText = "Bikin akun baru buat mulai jualan";
-            document.getElementById('input-name').style.display = 'block';
-            document.getElementById('btn-auth').innerText = "Daftar";
-            document.getElementById('switch-text').innerText = "Udah punya akun? ";
-            document.getElementById('switch-link').innerText = "Masuk";
+            subtitle.innerText = "Bikin akun baru buat mulai jualan";
+            nameGroup.style.display = 'block';
+            btn.innerText = "Daftar";
+            switchText.innerText = "Udah punya akun? ";
+            switchLink.innerText = "Masuk";
         }
     }
 
@@ -238,7 +237,7 @@
         const email = document.getElementById('input-email').value.trim();
         const pass = document.getElementById('input-pass').value.trim();
 
-        if (!email || !pass) return alert("Email dan Password wajib diisi!");
+        if (!email || !pass) return alert("Email dan Password wajib diisi, Bily!");
         if (!isLoginMode && !name) return alert("Nama wajib diisi buat daftar!");
 
         let dbUsers = JSON.parse(localStorage.getItem('creator_db_users')) || [];
@@ -369,35 +368,32 @@
                 item.innerHTML = `
                     <img src="${song.artworkUrl60}" alt="cover">
                     <div class="song-info">
-                                      <span class="song-track">${song.trackName}</span>
-                <span class="song-title">${song.trackName}</span>
-                <span class="song-artist">${song.artistName}</span>
-            </div>
-        `;
+                        <span class="song-title">${song.trackName}</span>
+                        <span class="song-artist">${song.artistName}</span>
+                    </div>
+                `;
+                resultsDiv.appendChild(item);
+            });
 
-        resultsDiv.appendChild(item);
-    });
-
-} catch (error) {
-    resultsDiv.innerHTML = '<p style="color: red; text-align: center;">Gagal m
-}
-}
-
-function putarLagu(url, judul, artis) {
-    if (!url) {
-        alert("Lagu ini tidak punya preview audio.");
-        return;
+        } catch (error) {
+            resultsDiv.innerHTML = '<p style="color: red; text-align: center;">Gagal mencari lagu. Cek internet.</p>';
+        }
     }
 
-    music.src = url;
-    music.load();
-    nowPlaying.innerText = judul;
-    nowArtist.innerText = artis;
-    isSongLoaded = true;
-    music.play();
-    playBtn.innerHTML = "⏸";
-    tutupModalLagu();
-}
+    function putarLagu(url, judul, artis) {
+        if (!url) {
+            alert("Lagu ini tidak punya preview audio.");
+            return;
+        }
+        music.src = url;
+        music.load();
+        nowPlaying.innerText = judul;
+        nowArtist.innerText = artis;
+        isSongLoaded = true; 
+        music.play();
+        playBtn.innerHTML = "⏸";
+        tutupModalLagu();
+    }
 </script>
 </body>
 </html>
