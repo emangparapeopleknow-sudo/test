@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Creator Web - Dashboard</title>
 <style>
-    :root { --bg: #0a0c10; --text: #ffffff; --accent: #e6b450; --cursor: #5fb8ff; --panel: rgba(18, 21, 28, 0.9); --card-bg: rgba(255,255,255,0.05); }
-    body.light-mode { --bg: #f4f4f4; --text: #000000; --accent: #d19a29; --cursor: #007bff; --panel: rgba(255, 255, 255, 0.95); --card-bg: rgba(0,0,0,0.05); }
+    :root { --bg: #0a0c10; --text: #ffffff; --accent: #e6b450; --cursor: #5fb8ff; --panel: rgba(18, 21, 28, 0.9); }
+    body.light-mode { --bg: #f4f4f4; --text: #000000; --accent: #d19a29; --cursor: #007bff; --panel: rgba(255, 255, 255, 0.95); }
     * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
     body { background-image: linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%), url('fantasia.png'); background-size: cover; background-position: center top; background-attachment: fixed; background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    
     .navbar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; margin-bottom: 5vh; z-index: 10; }
     .tagline { font-size: 24px; font-weight: 800; color: #ffffff; text-shadow: 2px 2px 10px rgba(0,0,0,0.9); line-height: 1.3; text-align: left; }
     @media (max-width: 768px) { .navbar { flex-direction: column; align-items: center; } .tagline { text-align: center; margin-bottom: 15px; font-size: 20px; } }
@@ -23,25 +24,96 @@
     .sidebar a { display: flex; align-items: center; gap: 10px; color: white; text-decoration: none; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); cursor: pointer; }
     .sidebar a:hover { background: var(--accent); color: black; }
     .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #aaa; }
+    
     .dashboard { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; width: 100%; max-width: 600px; margin-bottom: 10vh; z-index: 10; }
     .row-top { display: flex; gap: 20px; justify-content: center; width: 100%; margin-bottom: 30px; }
     .btn-start { padding: 20px 50px; border-radius: 50px; font-weight: 800; font-size: 22px; cursor: pointer; background: rgba(230, 180, 80, 0.9); border: 2px solid var(--accent); color: #000; text-decoration: none; text-align: center; margin-bottom: 20px; width: 100%;}
     .btn-oval { padding: 18px 45px; border-radius: 50px; font-weight: 800; cursor: pointer; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; text-align: center; }
-    .btn-rect { padding: 18px 40px; border-radius: 10px; font-weight: bold; cursor: pointer; background: rgba(255, 255, 255, 0.8); color: #000; text-align: center; }
+
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 9999; }
     .modal-content { background: #12151c; padding: 25px; border-radius: 12px; border: 1px solid var(--accent); width: 90%; max-width: 450px; color: white; max-height: 90vh; overflow-y: auto; }
     .modal-content h3 { margin-top: 0; color: var(--accent); }
     .modal-content button { padding: 10px; background: var(--accent); color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px; width: 100%;}
-    .settings-list { list-style: none; padding: 0; margin: 0; }
-    .settings-list li { padding: 15px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
-    .settings-list li:hover { background: rgba(255,255,255,0.05); }
-    .settings-select { background: #0a0c10; color: white; border: 1px solid #444; padding: 5px; border-radius: 5px; }
-    .inbox-item { background: #0a0c10; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 10px; display: flex; gap: 15px; align-items: center; }
-    .inbox-icon { background: var(--accent); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 18px; }
-    .inbox-content { flex: 1; }
-    .inbox-title { font-weight: bold; margin-bottom: 5px; }
-    .inbox-preview { font-size: 13px; color: #aaa; margin-bottom: 10px; }
-    .inbox-code-btn { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; letter-spacing: 1px;}
+
+    /* CSS KHUSUS HARGA (PRICING) FULL SCREEN */
+    .pricing-screen { background: #0f0f11; width: 100%; height: 100dvh; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+    .pricing-card { background: #1a1a1a; border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; position: relative; }
+    .pricing-card.popular { border-color: #ff3333; }
+    .badge-popular { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #ff3333; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+    .price-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+    .price-amount { font-size: 28px; font-weight: bold; margin-bottom: 20px; }
+    .price-amount span { font-size: 14px; color: #888; font-weight: normal; }
+    .price-features { list-style: none; padding: 0; margin: 0 0 20px 0; }
+    .price-features li { padding: 10px 0; border-bottom: 1px solid #2a2d33; font-size: 14px; color: #ccc; }
+    .price-features li::before { content: "✔"; color: #ff3333; margin-right: 10px; font-weight: bold; }
+    .btn-order { background: #003399; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
+    .pricing-card.popular .btn-order { background: #ff3333; }
+
+    /* CSS KHUSUS HISTORY FULL SCREEN */
+    .history-screen { background: #12151c; width: 100%; height: 100dvh; display: flex; flex-direction: column; }
+    .history-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #2a2d33; }
+    .history-header h1 { font-size: 24px; margin: 0; color: white; }
+    .history-list-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .history-card { background: #1e2126; border-radius: 12px; padding: 15px; border: 1px solid #333; font-size: 14px; color: #ccc; }
+    
+    /* CSS SETTINGS GAYA HP */
+    .settings-group { background: #1e2126; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+    .settings-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #2a2d33; cursor: pointer; }
+    .settings-item:last-child { border-bottom: none; }
+    .settings-item:hover { background: #2a2d33; }
+    .settings-icon { width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; margin-right: 15px; flex-shrink: 0; }
+    .settings-text { flex: 1; text-align: left; }
+    .settings-title { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 3px; }
+    .settings-sub { font-size: 12px; color: #888; }
+    .settings-arrow { color: #666; font-size: 18px; }
+    .settings-select { background: transparent; border: none; color: #888; font-size: 13px; text-align: right; outline: none; cursor: pointer; }
+
+    /* CSS KHUSUS INBOX GMAIL */
+    .gmail-inbox { background: #12151c; height: 100dvh; width: 100%; display: flex; flex-direction: column; }
+    .gmail-header { padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #2a2d33; }
+    .gmail-search { flex: 1; background: #2a2d33; border-radius: 20px; padding: 10px 15px; color: #aaa; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+    .gmail-profile { width: 35px; height: 35px; border-radius: 50%; background: url('https://ui-avatars.com/api/?name=User&background=random') center/cover; }
+    .gmail-list { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+    .gmail-item { padding: 15px; border-bottom: 1px solid #2a2d33; display: flex; gap: 15px; align-items: flex-start; }
+    .gmail-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; color: black; flex-shrink: 0; }
+    .gmail-content { flex: 1; }
+    .gmail-sender { font-weight: bold; font-size: 15px; color: #fff; margin-bottom: 3px; display: flex; justify-content: space-between;}
+    .gmail-time { font-size: 12px; color: #888; font-weight: normal; }
+    .gmail-subject { font-weight: bold; font-size: 14px; color: #ccc; margin-bottom: 5px; }
+    .gmail-snippet { font-size: 13px; color: #888; margin-bottom: 10px; line-height: 1.4; }
+    .gmail-action-row { display: flex; gap: 10px; }
+    .btn-copy-code { background: #4a3b32; color: #e6b450; border: none; padding: 10px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; flex: 1; text-align: center;}
+    .btn-aktivasi-gmail { background: #ff0033; color: white; border: none; padding: 10px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; flex: 1; text-align: center;}
+    .gmail-fab { position: absolute; bottom: 20px; right: 20px; background: #ff0033; color: white; padding: 15px 20px; border-radius: 30px; display: flex; align-items: center; gap: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+
+    /* CSS KHUSUS MUSIC PLAYER FULL SCREEN */
+    .music-screen { background: #0f0f11; width: 100%; height: 100dvh; display: flex; flex-direction: column; }
+    .music-search-header { padding: 20px 20px 10px 20px; }
+    .music-search-box { background: #1e2126; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 10px; }
+    .music-search-box input { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 16px; }
+    .music-chips { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; scrollbar-width: none; }
+    .music-chip { padding: 8px 20px; border-radius: 20px; background: #1e2126; color: #ccc; font-size: 14px; white-space: nowrap; cursor: pointer; border: 1px solid #333; }
+    .music-chip.active { background: #ff0033; color: white; border-color: #ff0033; }
+    .music-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+    .music-track-item { display: flex; align-items: center; gap: 15px; padding: 10px 0; border-bottom: 1px solid #2a2d33; cursor: pointer; }
+    .music-track-item:hover { background: #1e2126; }
+    .music-track-cover { width: 50px; height: 50px; border-radius: 8px; background: #333; object-fit: cover; }
+    .music-track-info { flex: 1; text-align: left; }
+    .music-track-title { font-weight: bold; font-size: 15px; color: white; }
+    .music-track-artist { font-size: 13px; color: #888; }
+    .music-mini-player { position: absolute; bottom: 20px; left: 20px; right: 20px; background: #2b1f1c; border-radius: 15px; padding: 10px 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #4a3b32; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+    .music-mini-cover { width: 45px; height: 45px; border-radius: 8px; background: #333; object-fit: cover; }
+    .music-mini-info { flex: 1; text-align: left; overflow: hidden; }
+    .music-mini-title { font-weight: bold; font-size: 14px; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .music-mini-artist { font-size: 12px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .music-mini-btn { background: transparent; border: 2px solid white; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; color: white; cursor: pointer; }
+
+    /* CSS PRIVACY SERIUS */
+    .privacy-screen { background: #12151c; width: 100%; height: 100dvh; display: flex; flex-direction: column; padding: 30px; }
+    .privacy-screen h1 { color: var(--accent); margin-bottom: 20px; text-align: center; font-size: 24px; }
+    .privacy-text { flex: 1; overflow-y: auto; font-size: 14px; color: #ccc; line-height: 1.8; padding-bottom: 20px; }
+    .privacy-text h2 { font-size: 16px; color: white; margin-top: 20px; margin-bottom: 10px; }
+
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; font-size: 13px; color: #aaa; margin-bottom: 5px; }
     .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #0a0c10; color: white; outline: none; }
@@ -67,7 +139,6 @@
             <a href="#" class="btn-oval" onclick="openModal('pricing')">Lihat Harga Premium</a>
             <a href="#" class="btn-oval" onclick="openModal('inbox')">Cek Kotak Masuk</a> 
         </div>
-        <a href="index.html" class="btn-rect">Menuju<br>LyzLearnTyping</a>
     </div>
 
     <div class="sidebar" id="mySidebar">
@@ -80,69 +151,299 @@
         <a onclick="openModal('privacy')">🔒 Privacy & Policy</a>
     </div>
 
-    <!-- PRICING -->
-    <div class="modal" id="modal-pricing">
-        <div class="modal-content">
-            <h3>👑 Upgrade ke Premium!</h3>
-            <div style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
-                <div style="border: 1px solid #333; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><h4 style="margin:0; color: var(--accent);">Mingguan</h4><p style="margin:0; font-size:12px;">Rp 12.000</p></div>
-                    <button onclick="prosesBayar('Premium 1 Minggu', 12000, 7)" style="width:auto; margin:0;">Beli</button>
-                </div>
-                <div style="border: 1px solid #333; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><h4 style="margin:0; color: var(--accent);">VIP Bulanan</h4><p style="margin:0; font-size:12px;">Rp 15.000</p></div>
-                    <button onclick="prosesBayar('VIP 1 Bulan', 15000, 30)" style="width:auto; margin:0;">Beli</button>
-                </div>
-                <div style="border: 1px solid #333; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><h4 style="margin:0; color: var(--accent);">VVIP 2 Bulan</h4><p style="margin:0; font-size:12px;">Rp 25.000</p></div>
-                    <button onclick="prosesBayar('VVIP 2 Bulan', 25000, 60)" style="width:auto; margin:0;">Beli</button>
-                </div>
-                <div style="border: 1px solid #333; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><h4 style="margin:0; color: var(--accent);">Super VIP 6 Bulan</h4><p style="margin:0; font-size:12px;">Rp 40.000</p></div>
-                    <button onclick="prosesBayar('Super VIP 6 Bulan', 40000, 180)" style="width:auto; margin:0;">Beli</button>
-                </div>
-                <div style="border: 1px solid #333; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><h4 style="margin:0; color: var(--accent);">Super VVIP 8 Bulan</h4><p style="margin:0; font-size:12px;">Rp 55.000</p></div>
-                    <button onclick="prosesBayar('Super VVIP 8 Bulan', 55000, 240)" style="width:auto; margin:0;">Beli</button>
-                </div>
-                <div style="border: 1px solid #ffd700; background: rgba(255, 215, 0, 0.1); padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div><h4 style="margin:0; color: #ffd700;">👑 VVIP KING (1 Tahun)</h4><p style="margin:0; font-size:12px;">Rp 135.000</p></div>
-                    <button onclick="prosesBayar('VVIP KING 1 Tahun', 135000, 365)" style="width:auto; margin:0; background:#ffd700;">Beli</button>
+    <!-- PRICING FULL SCREEN LENGKAP -->
+    <div class="modal" id="modal-pricing" style="padding: 0;">
+        <div class="pricing-screen">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="font-size: 24px; cursor:pointer; color:white; margin-right: 15px;" onclick="tutupModal('pricing')">←</div>
+                <h1 style="margin: 0; font-size: 24px;">Pilih Paket Premium</h1>
+            </div>
+
+            <!-- 1. MINGGUAN -->
+            <div class="pricing-card">
+                <div class="price-title">Premium Mingguan</div>
+                <div class="price-amount">Rp 12.000 <span>/minggu</span></div>
+                <ul class="price-features">
+                    <li>Akses penuh selama 7 hari</li>
+                    <li>Bebas limit generate web</li>
+                    <li>Cocok buat coba-coba</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Premium 1 Minggu', 12000, 7)">Order Sekarang</button>
+            </div>
+
+            <!-- 2. VIP BULANAN -->
+            <div class="pricing-card">
+                <div class="price-title">VIP Bulanan</div>
+                <div class="price-amount">Rp 15.000 <span>/bulan</span></div>
+                <ul class="price-features">
+                    <li>Hemat 30% dari paket mingguan</li>
+                    <li>Bebas request web sepuasnya</li>
+                    <li>Prioritas respon AI</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('VIP 1 Bulan', 15000, 30)">Order Sekarang</button>
+            </div>
+
+            <!-- 3. VVIP 2 BULAN (POPULAR) -->
+            <div class="pricing-card popular">
+                <div class="badge-popular">Paling Populer</div>
+                <div class="price-title">VVIP 2 Bulan</div>
+                <div class="price-amount">Rp 25.000 <span>/2 bulan</span></div>
+                <ul class="price-features">
+                    <li>Prioritas server (Anti Lag)</li>
+                    <li>Bebas limit generate web & skripsi</li>
+                    <li>Hemat 40% dari paket mingguan</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('VVIP 2 Bulan', 25000, 60)">Order Sekarang</button>
+            </div>
+
+            <!-- 4. SUPER VIP 6 BULAN -->
+            <div class="pricing-card">
+                <div class="price-title">Super VIP 6 Bulan</div>
+                <div class="price-amount">Rp 40.000 <span>/6 bulan</span></div>
+                <ul class="price-features">
+                    <li>Investasi jangka panjang buat project gede</li>
+                    <li>Akses semua fitur tanpa batas</li>
+                    <li>Hemat lebih dari 50%</li>
+                </ul>
+<body>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <audio id="bg-music" loop src=""></audio>
+
+    <div class="navbar">
+        <div class="tagline">"Make Your Own Web,<br>For Your Own Way"</div>
+        <div style="display:flex; gap:10px;">
+            <div class="user-info" id="user-display" onclick="logout()">Logout</div>
+            <div class="menu-container" onclick="toggleMenu()"><div class="menu-icon">☰</div></div>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <a href="chat.html" class="btn-start" onclick="cekLoginDanMasuk()">🚀 Mulai Bikin Web?</a>
+        <div class="row-top">
+            <a href="#" class="btn-oval" onclick="openModal('pricing')">Lihat Harga Premium</a>
+            <a href="#" class="btn-oval" onclick="openModal('inbox')">Cek Kotak Masuk</a> 
+        </div>
+    </div>
+
+    <div class="sidebar" id="mySidebar">
+        <div class="close-btn" onclick="toggleMenu()">×</div>
+        <h3>Menu Creator</h3>
+        <a onclick="openModal('inbox')">📬 Kotak Masuk</a>
+        <a onclick="openModal('history')">📜 History Permintaan</a>
+        <a onclick="openModal('music')">🎵 Cari Lagu</a>
+        <a onclick="openModal('settings')">⚙️ Pengaturan</a>
+        <a onclick="openModal('privacy')">🔒 Privacy & Policy</a>
+    </div>
+
+    <!-- PRICING FULL SCREEN LENGKAP -->
+    <div class="modal" id="modal-pricing" style="padding: 0;">
+        <div class="pricing-screen">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="font-size: 24px; cursor:pointer; color:white; margin-right: 15px;" onclick="tutupModal('pricing')">←</div>
+                <h1 style="margin: 0; font-size: 24px;">Pilih Paket Premium</h1>
+            </div>
+
+            <!-- 1. MINGGUAN -->
+            <div class="pricing-card">
+                <div class="price-title">Premium Mingguan</div>
+                <div class="price-amount">Rp 12.000 <span>/minggu</span></div>
+                <ul class="price-features">
+                    <li>Akses penuh selama 7 hari</li>
+                    <li>Bebas limit generate web</li>
+                    <li>Cocok buat coba-coba</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Premium 1 Minggu', 12000, 7)">Order Sekarang</button>
+            </div>
+
+            <!-- 2. VIP BULANAN -->
+            <div class="pricing-card">
+                <div class="price-title">VIP Bulanan</div>
+                <div class="price-amount">Rp 15.000 <span>/bulan</span></div>
+                <ul class="price-features">
+                    <li>Hemat 30% dari paket mingguan</li>
+                    <li>Bebas request web sepuasnya</li>
+                    <li>Prioritas respon AI</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('VIP 1 Bulan', 15000, 30)">Order Sekarang</button>
+            </div>
+
+            <!-- 3. VVIP 2 BULAN (POPULAR) -->
+            <div class="pricing-card popular">
+                <div class="badge-popular">Paling Populer</div>
+                <div class="price-title">VVIP 2 Bulan</div>
+                <div class="price-amount">Rp 25.000 <span>/2 bulan</span></div>
+                <ul class="price-features">
+                    <li>Prioritas server (Anti Lag)</li>
+                    <li>Bebas limit generate web & skripsi</li>
+                    <li>Hemat 40% dari paket mingguan</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('VVIP 2 Bulan', 25000, 60)">Order Sekarang</button>
+            </div>
+
+            <!-- 4. SUPER VIP 6 BULAN -->
+            <div class="pricing-card">
+                <div class="price-title">Super VIP 6 Bulan</div>
+                <div class="price-amount">Rp 40.000 <span>/6 bulan</span></div>
+                <ul class="price-features">
+                    <li>Investasi jangka panjang buat project gede</li>
+                    <li>Akses semua fitur tanpa batas</li>
+                    <li>Hemat lebih dari 50%</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Super VIP 6 Bulan', 40000, 180)">Order Sekarang</button>
+            </div>
+
+            <!-- 5. SUPER VVIP 8 BULAN -->
+            <div class="pricing-card">
+                <div class="price-title">Super VVIP 8 Bulan</div>
+                <div class="price-amount">Rp 55.000 <span>/8 bulan</span></div>
+                <ul class="price-features">
+                    <li>Dapet akses beta fitur rahasia!</li>
+                    <li>Bebas limit tanpa interupsi</li>
+                    <li>Prioritas dukungan pelanggan</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Super VVIP 8 Bulan', 55000, 240)">Order Sekarang</button>
+            </div>
+
+            <!-- 6. VVIP KING 1 TAHUN -->
+            <div class="pricing-card" style="border-color: #ffd700;">
+                <div class="price-title" style="color: #ffd700;">👑 VVIP KING (1 Tahun)</div>
+                <div class="price-amount">Rp 135.000 <span>/tahun</span></div>
+                <ul class="price-features">
+                    <li>Akses eksklusif selama 365 hari</li>
+                    <li>Dukungan prioritas 24/7</li>
+                    <li>Jadi Raja di LyzCreator!</li>
+                </ul>
+                <button class="btn-order" style="background: #ffd700; color: black;" onclick="prosesBayar('VVIP KING 1 Tahun', 135000, 365)">Order Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INBOX GMAIL STYLE -->
+    <div class="modal" id="modal-inbox" style="padding: 0;">
+        <div class="gmail-inbox">
+            <div class="gmail-header">
+                <div style="font-size: 24px; cursor:pointer;" onclick="tutupModal('inbox')">☰</div>
+                <div class="gmail-search">🔍 Telusuri dalam email</div>
+                <div class="gmail-profile"></div>
+            </div>
+            <div style="padding: 15px 15px 5px 15px; font-size: 14px; color: #888;">Utama</div>
+            <div class="gmail-list" id="inbox-content"></div>
+            <div class="gmail-fab" onclick="tutupModal('inbox')">✏️ Tulis</div>
+        </div>
+    </div>
+
+    <!-- HISTORY FULL SCREEN -->
+    <div class="modal" id="modal-history" style="padding: 0;">
+        <div class="history-screen">
+            <div class="history-header">
+                <div style="font-size: 24px; cursor:pointer;" onclick="tutupModal('history')">←</div>
+                <h1>History Permintaan</h1>
+            </div>
+            <div class="history-list-container" id="history-list"></div>
+        </div>
+    </div>
+
+    <!-- MUSIC FULL SCREEN -->
+    <div class="modal" id="modal-music" style="padding: 0;">
+        <div class="music-screen">
+            <div class="music-search-header">
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="font-size: 24px; cursor:pointer; color:white;" onclick="tutupModal('music')">←</div>
+                    <div class="music-search-box">
+                        <span>🔍</span>
+                        <input type="text" id="search-music" placeholder="Mau dengar lagu apa?">
+                    </div>
                 </div>
             </div>
-            <button onclick="tutupModal('pricing')" style="background: #333; color: white;">Tutup</button>
+            
+            <div class="music-chips">
+                <div class="music-chip active" onclick="cariLagu()">Semua</div>
+                <div class="music-chip">Lagu</div>
+                <div class="music-chip">Album</div>
+                <div class="music-chip">Artis</div>
+            </div>
+
+            <div class="music-content" id="music-results">
+                <div style="text-align:center; color:#555; margin-top:50px;">
+                    <div style="font-size:40px; margin-bottom:10px;">🪐</div>
+                    Temukan musik baru...
+                </div>
+            </div>
+
+            <div class="music-mini-player" id="mini-player" style="display: none;">
+                <img id="mini-cover" class="music-mini-cover" src="https://ui-avatars.com/api/?name=Music&background=random" alt="Cover">
+                <div class="music-mini-info">
+                    <div class="music-mini-title" id="mini-title">Judul Lagu</div>
+                    <div class="music-mini-artist" id="mini-artist">Artis</div>
+                </div>
+                <button class="music-mini-btn" onclick="toggleMusic()">▶</button>
+            </div>
         </div>
     </div>
 
-    <!-- INBOX GMAIL -->
-    <div class="modal" id="modal-inbox">
-        <div class="modal-content">
-            <h3>📬 Kotak Masuk (Premium)</h3>
-            <div id="inbox-content" style="max-height: 400px; overflow-y: auto;"></div>
-            <button onclick="tutupModal('inbox')" style="background: #333; color: white; margin-top: 15px;">Tutup</button>
+    <!-- SETTINGS GAYA HP -->
+    <div class="modal" id="modal-settings" style="background: #12151c;">
+        <div class="modal-content" style="border: none; background: transparent; padding: 10px;">
+            <h1 style="font-size: 28px; margin-bottom: 20px; text-align: left;">Pengaturan</h1>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <div class="settings-group" style="flex:1; margin:0; padding: 15px; display:flex; gap:10px; align-items:center; cursor:pointer;" onclick="gantiTema()">
+                    <div style="font-size: 24px;">🌗</div>
+                    <div><div class="settings-title">Mode Layar</div><div class="settings-sub">Ganti tema terang/gelap</div></div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <div class="settings-item" onclick="openModal('edit-profile')">
+                    <img src="https://ui-avatars.com/api/?name=User&background=random" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 15px;">
+                    <div class="settings-text">
+                        <div class="settings-title" id="settings-username">Username</div>
+                        <div class="settings-sub">Kelola info dan keamanan akun.</div>
+                    </div>
+                    <div class="settings-arrow">›</div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <div class="settings-item" onclick="openModal('music')">
+                    <div class="settings-icon" style="background:#ff4d4d;">🎵</div>
+                    <div class="settings-text"><div class="settings-title">Cari Lagu</div></div>
+                    <div class="settings-arrow">›</div>
+                </div>
+                <div class="settings-item" onclick="openModal('privacy')">
+                    <div class="settings-icon" style="background:#e6b450;">🔒</div>
+                    <div class="settings-text"><div class="settings-title">Keamanan & privasi</div></div>
+                    <div class="settings-arrow">›</div>
+                </div>
+                <div class="settings-item" onclick="logout()">
+                    <div class="settings-icon" style="background:#ff3333;">🚪</div>
+                    <div class="settings-text"><div class="settings-title" style="color:#ff3333;">Keluar Akun</div></div>
+                </div>
+            </div>
+            <button onclick="tutupModal('settings')" style="margin-top: 10px; background: #333; color: white; padding: 15px; border-radius: 10px;">Tutup</button>
         </div>
     </div>
 
-    <!-- HISTORY -->
-    <div class="modal" id="modal-history">
-        <div class="modal-content">
-            <h3>📜 History Permintaan</h3>
-            <div id="history-list" style="font-size: 14px; color: #ccc;"></div>
-            <button onclick="tutupModal('history')" style="margin-top: 15px; background: #333; color: white;">Tutup</button>
-        </div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div class="modal" id="modal-settings">
-        <div class="modal-content">
-            <h3>⚙️ Pengaturan</h3>
-            <ul class="settings-list">
-                <li><span>🌗 Tema Web</span><select class="settings-select" id="setting-theme" onchange="gantiTema()"><option value="dark">Gelap</option><option value="light">Terang</option></select></li>
-                <li><span>🌐 Bahasa</span><select class="settings-select" onchange="alert('Segera hadir!')"><option value="id">Indonesia</option><option value="en">English</option></select></li>
-                <li style="cursor:pointer;" onclick="openModal('edit-profile')"><span>👤 Edit Profil</span><span>></span></li>
-                <li style="cursor:pointer;" onclick="logout()"><span style="color: #ff3333;">🚪 Keluar Akun</span><span>></span></li>
-            </ul>
-            <button onclick="tutupModal('settings')" style="margin-top: 20px; background: #333; color: white;">Tutup</button>
+    <!-- PRIVACY & POLICY (FULL SCREEN SERIUS) -->
+    <div class="modal" id="modal-privacy" style="padding: 0;">
+        <div class="privacy-screen">
+            <h1>🔒 Privacy & Policy</h1>
+            <div class="privacy-text">
+                <p>Terakhir diperbarui: Hari ini. LyzCreator sangat menghargai privasi Anda. Dokumen ini menjelaskan bagaimana kami menangani data Anda.</p>
+                
+                <h2>1. Data Akun & Google Auth</h2>
+                <p>LyzCreator <b>tidak akan pernah</b> mengambil, menyimpan, atau membaca *password* akun Google/Email kamu. Sistem autentikasi hanya menggunakan email sebagai identitas login. Kami tidak memiliki akses ke kontak, Google Drive, atau data pribadi lainnya di akun Google Anda.</p>
+                
+                <h2>2. Riwayat Permintaan (History)</h2>
+                <p>Semua *history prompt* AI disimpan secara lokal di *browser* perangkat kamu (LocalStorage). Kami tidak menyimpannya di server pusat kami. Untuk menjaga performa perangkat, jika riwayat melebihi 10 data, sistem kami secara otomatis akan menghapus data yang paling lama (Auto-Delete).</p>
+                
+                <h2>3. Pembayaran & Transaksi</h2>
+                <p>Kami tidak menyimpan data kartu kredit, rekening bank, atau detail pembayaran Anda di server kami. Semua transaksi pembayaran Premium diproses melalui *Payment Gateway* pihak ketiga yang bersertifikasi dan aman.</p>
+                
+                <h2>4. Kode Aktivasi</h2>
+                <p>Jangan pernah membagikan kode aktivasi (Lyzz-XXXX) Anda kepada siapa pun. Segala bentuk penyalahgunaan kode di luar tanggung jawab kami, dan kerusakan data akibat pembagian kode adalah risiko pengguna.</p>
+                
+                <h2>5. Perubahan Kebijakan</h2>
+                <p>Kami dapat memperbarui kebijakan privasi ini dari waktu ke waktu. Dengan terus menggunakan layanan LyzCreator, Anda dianggap menyetujui pembaruan tersebut.</p>
+            </div>
+            <button onclick="tutupModal('privacy')" style="margin-top: 10px; background: #333; color: white; padding: 15px; border-radius: 10px;">Tutup</button>
         </div>
     </div>
 
@@ -157,30 +458,7 @@
         </div>
     </div>
 
-    <!-- PRIVACY -->
-    <div class="modal" id="modal-privacy">
-        <div class="modal-content">
-            <h3>🔒 Privacy & Policy</h3>
-            <div style="font-size: 13px; color: #ccc; line-height: 1.6; max-height: 300px; overflow-y: auto;">
-                <p>LyzCreator <b>tidak akan pernah</b> mengambil data password akun Google/Email kamu. Kami hanya menggunakan email sebagai identitas login.</p>
-                <p>History prompt AI disimpan di browser kamu. Jika lebih dari 10, sistem otomatis menghapus yang terlama.</p>
-            </div>
-            <button onclick="tutupModal('privacy')" style="margin-top: 15px; background: #333; color: white;">Tutup</button>
-        </div>
-    </div>
-
-    <!-- MUSIC -->
-    <div class="modal" id="modal-music">
-        <div class="modal-content">
-            <h3>🎵 Cari Lagu</h3>
-            <input type="text" id="search-music" placeholder="Ketik judul lagu..." style="width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid #333; background:#0a0c10; color:white;">
-            <button onclick="cariLagu()">Cari</button>
-            <div id="music-results" style="max-height: 200px; overflow-y: auto; font-size: 14px; color: #ccc;"></div>
-            <button onclick="tutupModal('music')" style="margin-top: 15px; background: #333; color: white;">Tutup</button>
-        </div>
-    </div>
-
-    <!-- AUTH (LOGIN/REGISTER) -->
+    <!-- AUTH -->
     <div class="modal" id="modal-auth">
         <div class="modal-content">
             <h3 id="auth-title">Login ke LyzCreator</h3>
@@ -196,6 +474,14 @@
         </div>
     </div>
     <script>
+    // --- KLIK DI LUAR MODAL BUAT NUTUP ---
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) { this.style.display = 'none'; }
+        });
+    });
+
     const music = document.getElementById('bg-music');
     let hasClicked = false;
     const defaultSongUrl = 'https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3';
@@ -253,6 +539,7 @@
         const activeUser = localStorage.getItem('creator_active_user');
         if(activeUser) {
             document.getElementById('user-display').innerText = `Halo, ${activeUser} (Logout)`;
+            document.getElementById('settings-username').innerText = activeUser;
         } else {
             document.getElementById('user-display').innerText = `Login / Daftar`;
             document.getElementById('modal-auth').style.display = 'flex';
@@ -278,32 +565,46 @@
             const bln = String(today.getMonth() + 1).padStart(2, '0');
             const thn = String(today.getFullYear()).slice(-2);
             const dateStr = `${tgl}-${bln}-${thn}`;
+            const timeStr = today.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' PM';
 
             const expiry = Date.now() + (hari * 24 * 60 * 60 * 1000);
             let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
-            inbox.unshift({ code, namaPaket, dateStr, expiry, status: 'unused' });
+            inbox.unshift({ code, namaPaket, dateStr, timeStr, expiry, status: 'unused' });
             localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
 
             tutupModal('pricing');
             openModal('inbox');
-            alert("Pembayaran Berhasil! Klik kode di Kotak Masuk buat aktivasi.");
+            alert("Pembayaran Berhasil! Cek Kotak Masuk.");
         }
     }
 
     function renderInbox() {
         let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
         const container = document.getElementById('inbox-content');
-        if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#aaa;'>Belum ada pesan.</p>"; return; }
+        
+        if(inbox.length === 0) { 
+            container.innerHTML = "<p style='text-align:center; color:#aaa; padding:20px;'>Belum ada email masuk.</p>"; 
+            return; 
+        }
 
         container.innerHTML = inbox.map((msg, i) => `
-            <div class="inbox-item">
-                <div class="inbox-icon">L</div>
-                <div class="inbox-content">
-                    <div class="inbox-title">Aktivasi ${msg.namaPaket}</div>
-                    <div class="inbox-preview">Dibeli pada ${msg.dateStr}</div>
-                    <button class="inbox-code-btn" onclick="aktivasiKode(${i})" ${msg.status === 'used' ? 'disabled style="background:#555;"' : ''}>
-                        ${msg.status === 'used' ? 'SUDAH AKTIF' : msg.code + ' (KLIK UNTUK AKTIF)'}
-                    </button>
+            <div class="gmail-item">
+                <div class="gmail-avatar" style="background:#ffb74d;">L</div>
+                <div class="gmail-content">
+                    <div class="gmail-sender">
+                        LyzCreator
+                        <span class="gmail-time">${msg.timeStr}</span>
+                    </div>
+                    <div class="gmail-subject">Kode Aktivasi ${msg.namaPaket}</div>
+                    <div class="gmail-snippet">
+                        Haiii! Ini kode aktivasi lu yang dibeli pada ${msg.dateStr}. Klik tombol di bawah buat langsung aktivasi yaa.
+                    </div>
+                    <div class="gmail-action-row">
+                        <button class="btn-copy-code" onclick="navigator.clipboard.writeText('${msg.code}'); alert('Kode ${msg.code} berhasil di-copy!')">Copy code: ${msg.code}</button>
+                        <button class="btn-aktivasi-gmail" onclick="aktivasiKode(${i})" ${msg.status === 'used' ? 'disabled style="background:#555;"' : ''}>
+                            ${msg.status === 'used' ? 'Sudah Aktif' : 'Aktivasi'}
+                        </button>
+                    </div>
                 </div>
             </div>
         `).join('');
@@ -349,33 +650,62 @@
     function renderHistory() {
         let history = JSON.parse(localStorage.getItem('lyz_history')) || [];
         if (history.length > 10) { history = history.slice(0, 10); localStorage.setItem('lyz_history', JSON.stringify(history)); }
-        document.getElementById('history-list').innerHTML = history.length === 0 ? "Belum ada history." : history.map((h, i) => `<div style="border-bottom:1px solid #333; padding:8px 0;">${i+1}. ${h}</div>`).join('');
+        const container = document.getElementById('history-list');
+        if (history.length === 0) {
+            container.innerHTML = "<p style='text-align:center; color:#aaa;'>Belum ada history permintaan.</p>";
+        } else {
+            container.innerHTML = history.map((h, i) => `<div class="history-card"><span style="color: var(--accent); font-weight: bold; margin-right: 10px;">${i+1}.</span> ${h}</div>`).join('');
+        }
     }
 
-    function gantiTema() { document.body.classList.toggle('light-mode', document.getElementById('setting-theme').value === 'light'); }
+    function gantiTema() { document.body.classList.toggle('light-mode'); }
 
     async function cariLagu() {
         const query = document.getElementById('search-music').value.trim();
         if (!query) return;
         const res = document.getElementById('music-results');
-        res.innerHTML = "Mencari...";
+        res.innerHTML = "<div style='text-align:center; color:#aaa;'>Mencari lagu...</div>";
+        
         try {
-            const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&limit=5&media=music`);
+            const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&limit=10&media=music`);
             const data = await response.json();
+            
+            if(data.results.length === 0) {
+                res.innerHTML = "<div style='text-align:center; color:#aaa;'>Lagu tidak ditemukan.</div>";
+                return;
+            }
+
             res.innerHTML = data.results.map(track => `
-                <div style="border-bottom:1px solid #333; padding:10px 0; display:flex; justify-content:space-between; align-items:center;">
-                    <div><div style="color:white; font-weight:bold;">${track.trackName}</div><div style="color:#aaa; font-size:12px;">${track.artistName}</div></div>
-                    <button onclick="putarPreview('${track.previewUrl}', '${track.trackName}', '${track.artistName}')" style="width:auto; margin:0; padding:5px 10px;">Play</button>
-                </div>`).join('');
-        } catch (err) { res.innerHTML = "Gagal mengambil data."; }
+                <div class="music-track-item" onclick="putarPreview('${track.previewUrl}', '${track.trackName}', '${track.artistName}', '${track.artworkUrl60}')">
+                    <img src="${track.artworkUrl60}" class="music-track-cover" alt="cover">
+                    <div class="music-track-info">
+                        <div class="music-track-title">${track.trackName}</div>
+                        <div class="music-track-artist">${track.artistName}</div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (err) { 
+            res.innerHTML = "<div style='text-align:center; color:#ff3333;'>Gagal mengambil data.</div>"; 
+        }
     }
 
-    function putarPreview(url, judul, artis) {
+    function putarPreview(url, judul, artis, cover) {
         if (!url) return alert("Preview lagu tidak tersedia.");
         music.src = url; music.load(); music.play();
-        document.getElementById('now-playing').innerText = judul;
-        document.getElementById('now-artist').innerText = artis;
+        
+        document.getElementById('mini-player').style.display = 'flex';
+        document.getElementById('mini-title').innerText = judul;
+        document.getElementById('mini-artist').innerText = artis;
+        document.getElementById('mini-cover').src = cover;
+        document.querySelector('.music-mini-btn').innerText = "⏸";
+        
         tutupModal('music');
+    }
+
+    function toggleMusic() {
+        const btn = document.querySelector('.music-mini-btn');
+        if (music.paused) { music.play(); btn.innerText = "⏸"; } 
+        else { music.pause(); btn.innerText = "▶"; }
     }
 
     updateUserDisplay();
