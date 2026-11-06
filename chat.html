@@ -9,7 +9,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   body { background: var(--bg); color: var(--text); height: 100dvh; display: flex; overflow: hidden; }
 
-  /* SIDEBAR */
   #sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100dvh; transition: transform 0.3s; z-index: 1000; }
   @media (max-width: 768px) {
     #sidebar { position: fixed; top: 0; left: 0; transform: translateX(-100%); }
@@ -27,10 +26,11 @@
   .history-item:hover, .history-item.active { background: #1e2430; color: var(--text); }
   .btn-delete { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 14px; display: none; }
   .history-item:hover .btn-delete, .history-item.active .btn-delete { display: block; }
+  
+  /* CSS RENAME */
   .history-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rename-input { flex: 1; background: #000; border: 1px solid var(--accent); color: white; padding: 2px 5px; border-radius: 4px; font-size: 14px; outline: none; }
 
-  /* MAIN CHAT */
   #main { flex: 1; display: flex; flex-direction: column; height: 100dvh; width: 100%; overflow: hidden; }
   .top-bar { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0; height: 56px; }
   .nav-btns { display: flex; gap: 10px; align-items: center; }
@@ -48,7 +48,6 @@
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
   
   .file-preview { display: flex; gap: 10px; padding: 10px; background: #1e2430; border-bottom: 1px solid var(--border); align-items: center; }
-  .file-preview img { height: 50px; border-radius: 4px; }
   .file-badge { background: var(--accent); color: black; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
 
   .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; width: 100%; }
@@ -91,7 +90,6 @@
     </div>
     
     <div class="input-row">
-      <!-- UBAH ACCEPT BIAR BISA SEMUA FILE -->
       <input type="file" id="file-input" style="display: none;" onchange="handleFileSelect(event)">
       <button id="attach-btn" onclick="document.getElementById('file-input').click()">📎</button>
       
@@ -110,33 +108,39 @@
 
   const activeUser = localStorage.getItem('creator_active_user') || 'guest';
   
-  // SISTEM LIMIT BARU: 7x buat generate, 5x buat ngobrol biasa
+  // LIMIT
   const limitKey = 'lyz_creator_limit_' + activeUser;
   let limitData = JSON.parse(localStorage.getItem(limitKey)) || { generate: 7, chat: 5 };
   
   function saveLimit() { localStorage.setItem(limitKey, JSON.stringify(limitData)); }
-
   function saveChats() { localStorage.setItem('groq_chats', JSON.stringify(chats)); }
   function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
 
-  // RENAME CHAT
+  // --- FITUR RENAME (KLIK 2X) ---
   function renderHistory() {
     const list = document.getElementById('history-list');
     list.innerHTML = '';
     chats.forEach(c => {
       const item = document.createElement('div');
       item.className = 'history-item' + (c.id === currentChatId ? ' active' : '');
+      
       const title = document.createElement('div');
       title.className = 'history-title';
       title.innerText = c.title;
       title.onclick = () => muatChat(c.id);
+      
+      // Event Double Click / Double Tap buat Rename
       title.ondblclick = (e) => {
         e.stopPropagation();
         const input = document.createElement('input');
         input.className = 'rename-input';
         input.value = c.title;
+        
+        // Ganti tulisan jadi kotak input
         item.replaceChild(input, title);
         input.focus();
+
+        // Simpan kalau enter atau klik di luar
         const saveRename = () => {
           const newTitle = input.value.trim();
           if (newTitle) { c.title = newTitle; saveChats(); }
@@ -145,10 +149,12 @@
         input.onblur = saveRename;
         input.onkeydown = (e) => { if(e.key === 'Enter') saveRename(); };
       };
+
       const delBtn = document.createElement('button');
       delBtn.className = 'btn-delete';
       delBtn.innerText = '🗑';
       delBtn.onclick = (e) => { e.stopPropagation(); hapusChat(c.id); };
+
       item.appendChild(title);
       item.appendChild(delBtn);
       list.appendChild(item);
@@ -168,7 +174,7 @@
   function newChat() {
     if (window.innerWidth <= 768) toggleSidebar();
     const newId = Date.now().toString();
-    chats.unshift({ id: newId, title: 'Obrolan Baru', messages: [] });
+    chats.unshift({ id: newId, title: 'Obrolan Baru', messages: [], tipeChat: null });
     saveChats();
     muatChat(newId);
   }
@@ -188,16 +194,11 @@
     chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial));
   }
 
-  // UPLOAD HANDLER
   function handleFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
+    if (file.size > 10 * 1024 * 1024) return alert("Maksimal 10MB!");
     
-    if (file.size > 10 * 1024 * 1024) {
-      alert("File kegedean, maksimal 10MB ya!");
-      return;
-    }
-
     currentFileType = file.type;
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -247,7 +248,6 @@
           </div>
         `;
       } else {
-        // Text biasa (Skripsi / Analisis)
         div.innerHTML = text.replace(/\n/g, '<br>'); 
       }
     }
@@ -269,20 +269,31 @@
     let text = input.value.trim();
     if (!text && !currentFileBase64) return;
 
-    // DETEKSI APAKAH INI REQUEST GENERATE ATAU NGOBROL BIASA
-    const lowerText = text.toLowerCase();
-    const isGenerate = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || currentFileBase64;
-    
-    // CEK LIMIT
-    if (isGenerate && limitData.generate <= 0) {
-      return alert('Limit generate lu habis (7x)! Silakan langganan buat lanjut.');
-    }
-    if (!isGenerate && limitData.chat <= 0) {
-      return alert('Limit ngobrol lu habis (5x)! Silakan langganan buat lanjut.');
-    }
-
     let chat = chats.find(c => c.id === currentChatId);
     if (!chat) { newChat(); chat = chats.find(c => c.id === currentChatId); }
+
+    // --- LOGIKA LIMIT ---
+    const lowerText = text.toLowerCase();
+    const isGenerateText = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || currentFileBase64;
+    
+    // Kalau chat baru (belum ada tipe)
+    if (chat.tipeChat === null) {
+      if (isGenerateText) {
+        chat.tipeChat = 'generate';
+        if (limitData.generate <= 0) return alert('Limit generate (7x) habis!');
+        limitData.generate--;
+        saveLimit();
+      } else {
+        chat.tipeChat = 'chat';
+        if (limitData.chat <= 0) return alert('Limit ngobrol (5x) habis!');
+        limitData.chat--;
+        saveLimit();
+      }
+    } else {
+      // Kalau udah ada tipe, cek limit aja
+      if (chat.tipeChat === 'generate' && limitData.generate <= 0) return alert('Limit generate udah habis (7x)!');
+      if (chat.tipeChat === 'chat' && limitData.chat <= 0) return alert('Limit ngobrol udah habis (5x)!');
+    }
 
     if (chat.messages.length === 0) {
       chat.title = text.substring(0, 25) + (text.length > 25 ? '...' : '');
@@ -290,7 +301,6 @@
     }
 
     let userContent = text;
-    let fileNote = "";
     if (currentFileBase64) {
       if (currentFileType.startsWith('image/')) {
         userContent = [
@@ -298,9 +308,7 @@
           { type: "image_url", image_url: { url: currentFileBase64 } }
         ];
       } else {
-        // Kalau video/file lain, kita cuma kirim teks nama filenya (karena Groq teks)
-        fileNote = ` [File terlampir: ${document.getElementById('file-name').innerText}]`;
-        userContent = text + fileNote;
+        userContent = text + ` [File terlampir: ${document.getElementById('file-name').innerText}]`;
       }
     }
 
@@ -313,11 +321,6 @@
     saveChats();
     input.value = '';
     hapusFile();
-
-    // KURANGI LIMIT
-    if (isGenerate) limitData.generate--;
-    else limitData.chat--;
-    saveLimit();
 
     isGenerating = true;
     document.getElementById('sendBtn').disabled = true;
@@ -349,7 +352,6 @@
 
       const aiReply = data.choices[0].message.content;
       
-      // Cek apakah AI ngasih kode atau teks
       if (aiReply.includes('```html')) {
         const parts = aiReply.split('```html');
         const code = parts[1].split('```')[0].trim();
@@ -358,18 +360,12 @@
         tambahPesanUI(aiReply, false, code, tutorial);
         chat.messages.push({ role: 'assistant', text: aiReply, code: code, tutorial: tutorial });
       } else {
-        // Ini buat skripsi / analisis / ngobrol
         tambahPesanUI(aiReply, false, null, null);
         chat.messages.push({ role: 'assistant', text: aiReply });
       }
       saveChats();
 
     } catch (err) {
-      // Balikin limit kalau error
-      if (isGenerate) limitData.generate++;
-      else limitData.chat++;
-      saveLimit();
-      
       document.getElementById(loadingId).innerText = '❌ Error: ' + err.message;
     } finally {
       isGenerating = false;
