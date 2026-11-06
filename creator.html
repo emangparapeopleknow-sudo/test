@@ -7,20 +7,19 @@
 <style>
     :root { --bg: #0a0c10; --text: #ffffff; --accent: #e6b450; --panel: rgba(18, 21, 28, 0.9); --card-bg: rgba(255,255,255,0.05); }
     
-    /* FIX TEMA TERANG: Background tetep ada, overlay berubah */
+    /* FIX TEMA TERANG: Background tetep ada, warna dasar berubah */
     body.light-mode { 
         --bg: #f4f4f4; 
         --text: #000000; 
-        --accent: #ffb300; /* Tombol lebih cerah */
+        --accent: #ffb300; 
         --panel: rgba(255, 255, 255, 0.95); 
         --card-bg: rgba(0, 0, 0, 0.05); 
-        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.98) 100%), url('fantasia.png'); 
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.95) 100%), url('fantasia.png'); 
     }
     
     * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
-    body { background-image: linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%), url('fantasia.png'); background-size: cover; background-position: center top; background-attachment: fixed; background-color: #0a0c10; color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    body { background-image: linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%), url('fantasia.png'); background-size: cover; background-position: center top; background-attachment: fixed; background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
 
-    /* --- NAVBAR --- */
     .navbar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 5vh; z-index: 10; position: relative; background: var(--panel); border: 1px solid #333; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
     .nav-left { display: flex; align-items: center; gap: 15px; }
     .nav-icon { font-size: 24px; color: var(--text); cursor: pointer; }
@@ -30,7 +29,6 @@
     .btn-control { background: rgba(128,128,128,0.2); border: 1px solid #555; color: var(--text); width: 40px; height: 40px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
     .btn-control:hover { background: var(--accent); color: black; }
     
-    /* --- CUSTOM ALERT --- */
     #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
     .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
     .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
@@ -38,7 +36,6 @@
     .alert-btn { background: transparent; border: none; border-top: 1px solid #444; color: #0a84ff; width: 100%; padding: 16px; font-size: 17px; font-weight: bold; cursor: pointer; outline: none; }
     .alert-btn:hover { background: rgba(255,255,255,0.05); }
 
-    /* --- OVERLAY & SIDEBAR --- */
     .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(3px); }
     .overlay.active { display: block; }
     .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; background-color: var(--panel); border-right: 1px solid #333; padding: 40px 20px; transition: 0.3s; z-index: 1001; overflow-y: auto; }
@@ -48,27 +45,24 @@
     .sidebar a:hover { background: var(--accent); color: black; }
     .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888; }
     
-    /* --- DASHBOARD --- */
     .dashboard { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; width: 100%; max-width: 600px; margin-bottom: 10vh; z-index: 10; position: relative; gap: 15px; }
     .btn-start { padding: 20px 50px; border-radius: 50px; font-weight: 800; font-size: 22px; cursor: pointer; background: var(--accent); border: 2px solid var(--accent); color: black; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 15px rgba(230,180,80,0.3); }
     .row-top { display: flex; gap: 15px; justify-content: center; width: 100%; }
     .btn-oval { flex: 1; padding: 18px 10px; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; background: var(--card-bg); border: 1px solid #333; color: var(--text); text-align: center; }
 
-    /* --- MODAL CONTAINER --- */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; }
     .modal-content { background: var(--panel); padding: 25px; border-radius: 12px; border: 1px solid var(--accent); width: 90%; max-width: 450px; color: var(--text); max-height: 90vh; overflow-y: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
     .modal-content h3 { margin-top: 0; color: var(--accent); }
     .modal-content button { padding: 10px; background: var(--accent); color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px; width: 100%; }
 
-    /* --- FULL SCREEN STYLES --- */
-    .pricing-screen, .history-screen, .deploy-screen, .music-screen, .privacy-screen, .settings-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--panel); display: flex; flex-direction: column; z-index: 10000; color: var(--text); backdrop-filter: blur(10px); }
+    /* FULL SCREEN STYLES FIX MARGIN */
+    .pricing-screen, .history-screen, .deploy-screen, .music-screen, .privacy-screen, .settings-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; z-index: 10000; color: var(--text); }
     body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mode .deploy-screen, body.light-mode .music-screen, body.light-mode .privacy-screen, body.light-mode .settings-screen { background: #f4f4f4; }
 
-    .fs-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; background: var(--panel); }
+    .fs-header { padding: 15px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; background: var(--panel); flex-shrink: 0; }
     .fs-header h1 { font-size: 20px; margin: 0; color: var(--text); }
     .fs-back { font-size: 24px; cursor: pointer; color: var(--accent); }
 
-    /* --- PRICING --- */
     .pricing-screen { overflow-y: auto; padding: 20px; }
     .pricing-card { background: var(--card-bg); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; position: relative; }
     .pricing-card.popular { border-color: #ff3333; }
@@ -82,15 +76,13 @@
     .btn-order { background: #003399; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
     .pricing-card.popular .btn-order { background: #ff3333; }
 
-    /* --- HISTORY TABS --- */
-    .history-tabs { display: flex; background: var(--panel); border-bottom: 1px solid #333; }
+    .history-tabs { display: flex; background: var(--panel); border-bottom: 1px solid #333; flex-shrink: 0; }
     .history-tab { flex: 1; text-align: center; padding: 15px 0; cursor: pointer; font-weight: bold; color: #888; border-bottom: 2px solid transparent; }
     .history-tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
     .history-content-wrapper { flex: 1; overflow: hidden; position: relative; display: flex; transition: transform 0.3s ease-in-out; width: 200%; }
     .history-list-container { width: 50%; flex-shrink: 0; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
     .history-card { background: var(--card-bg); border-radius: 12px; padding: 15px; border: 1px solid #333; font-size: 14px; color: var(--text); }
 
-    /* --- SETTINGS --- */
     .settings-group { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; border: 1px solid #333; }
     .settings-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #333; cursor: pointer; }
     .settings-item:last-child { border-bottom: none; }
@@ -100,13 +92,11 @@
     .settings-sub { font-size: 12px; color: #888; }
     .settings-arrow { color: #666; font-size: 18px; }
 
-    /* --- TEXT CONTENT --- */
-    .text-content { flex: 1; overflow-y: auto; font-size: 14px; color: var(--text); line-height: 1.8; padding-bottom: 20px; }
+    .text-content { flex: 1; overflow-y: auto; font-size: 14px; color: var(--text); line-height: 1.8; padding: 20px; }
     .text-content h2 { font-size: 16px; color: var(--accent); margin-top: 20px; margin-bottom: 10px; }
     .text-content ul { padding-left: 20px; }
     .text-content li { margin-bottom: 10px; }
 
-    /* --- MUSIC --- */
     .music-search-header { padding: 20px 20px 10px 20px; }
     .music-search-box { background: var(--card-bg); border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 10px; border: 1px solid #333; }
     .music-search-box input { background: transparent; border: none; color: var(--text); width: 100%; outline: none; font-size: 16px; }
@@ -132,7 +122,6 @@
 </style>
 </head>
 <body>
-    <!-- CUSTOM ALERT -->
     <div id="custom-alert">
         <div class="alert-box">
             <div class="alert-title" id="alert-title">Pemberitahuan</div>
@@ -144,7 +133,7 @@
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <audio id="bg-music" loop src=""></audio>
 
-    <!-- NAVBAR BARU -->
+    <!-- NAVBAR -->
     <div class="navbar">
         <div class="nav-left">
             <div class="nav-icon" onclick="toggleMenu()">☰</div>
@@ -230,20 +219,12 @@
     <!-- DEPLOY -->
     <div class="modal" id="modal-deploy">
         <div class="deploy-screen">
-            <div class="fs-header" style="margin: -20px -20px 20px -20px;">
+            <div class="fs-header">
                 <div class="fs-back" onclick="tutupModal('deploy')">←</div>
                 <h1 data-i18n="deploy_title">Cara Deploy Web</h1>
             </div>
-            <div class="text-content">
-                <p>Ikuti panduan lengkap ini untuk merilis web buatanmu ke internet secara gratis:</p>
-                <h2>Langkah 1: Simpan Kode</h2>
-                <ul><li>Minta AI untuk membuatkan web (HTML/CSS/JS).</li><li>Salin kodenya dan simpan ke text editor (Notepad/VS Code).</li><li>Simpan dengan nama file <code>index.html</code>.</li></ul>
-                <h2>Langkah 2: Daftar Akun Vercel</h2>
-                <ul><li>Buka situs <b>vercel.com</b>.</li><li>Klik "Sign Up" di pojok kanan atas.</li><li>Daftar menggunakan Email, GitHub, atau Google (Gratis).</li></ul>
-                <h2>Langkah 3: Upload Project</h2>
-                <ul><li>Setelah login, masuk ke <b>Dashboard Vercel</b>.</li><li>Klik tombol hitam <b>"Add New..."</b> di pojok kanan atas, lalu pilih <b>"Project"</b>.</li><li>Scroll ke bawah, cari tulisan <b>"Deploy from a template"</b> atau <b>"Upload"</b>.</li><li>Drag & Drop file <code>index.html</code> tadi ke area upload Vercel.</li></ul>
-                <h2>Langkah 4: Deploy & Selesai</h2>
-                <ul><li>Klik tombol <b>"Deploy"</b> dan tunggu beberapa detik.</li><li>Vercel akan memberikan link web kamu (contoh: <code>web-lu.vercel.app</code>).</li><li>Web kamu sudah online dan bisa diakses siapa saja!</li></ul>
+            <div class="text-content" id="deploy-text-content">
+                <!-- Diisi JS untuk translasi -->
             </div>
         </div>
     </div>
@@ -308,7 +289,7 @@
     <!-- SETTINGS -->
     <div class="modal" id="modal-settings">
         <div class="settings-screen">
-            <div class="fs-header" style="margin: -20px -20px 20px -20px;">
+            <div class="fs-header">
                 <div class="fs-back" onclick="tutupModal('settings')">←</div>
                 <h1 data-i18n="settings_title">Pengaturan</h1>
             </div>
@@ -358,23 +339,12 @@
     <!-- PRIVACY -->
     <div class="modal" id="modal-privacy">
         <div class="privacy-screen">
-            <div class="fs-header" style="margin: -20px -20px 20px -20px;">
+            <div class="fs-header">
                 <div class="fs-back" onclick="tutupModal('privacy')">←</div>
                 <h1 data-i18n="privacy_title">Privacy & Policy</h1>
             </div>
-            <div class="text-content">
-                <p><b>Terakhir Diperbarui: Hari ini.</b></p>
-                <p>LyzCreator ("Kami", "Kita") sangat menghargai privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan layanan kami.</p>
-                <h2>1. Data Akun & Autentikasi</h2>
-                <p>LyzCreator <b>tidak akan pernah</b> mengambil, menyimpan, atau membaca *password* asli akun Google/Email Anda. Sistem autentikasi kami hanya menggunakan email dan username sebagai identitas login. Kami tidak memiliki akses ke kontak, Google Drive, atau data pribadi lainnya di akun Google Anda.</p>
-                <h2>2. Riwayat Permintaan (History)</h2>
-                <p>Semua *history prompt* dan kode AI disimpan secara lokal di *browser* perangkat Anda (LocalStorage). Kami tidak menyimpannya di server pusat kami. Untuk menjaga performa perangkat, jika riwayat melebihi 10 data, sistem kami secara otomatis akan menghapus data yang paling lama (Auto-Delete).</p>
-                <h2>3. Pembayaran & Transaksi</h2>
-                <p>Kami tidak menyimpan data kartu kredit, rekening bank, atau detail pembayaran Anda di server kami. Semua transaksi pembayaran Premium (VIP, VVIP, dll) diproses melalui *Payment Gateway* pihak ketiga yang bersertifikasi dan aman.</p>
-                <h2>4. Kode Aktivasi Premium</h2>
-                <p>Kode aktivasi (Lyzz-XXXX) bersifat rahasia dan hanya untuk penggunaan pribadi. Jangan pernah membagikan kode Anda kepada siapa pun. Segala bentuk penyalahgunaan kode di luar tanggung jawab kami.</p>
-                <h2>5. Perubahan Kebijakan</h2>
-                <p>Kami dapat memperbarui kebijakan privasi ini dari waktu ke waktu. Dengan terus menggunakan layanan LyzCreator, Anda dianggap menyetujui pembaruan tersebut.</p>
+            <div class="text-content" id="privacy-text-content">
+                <!-- Diisi JS untuk translasi -->
             </div>
         </div>
     </div>
@@ -404,9 +374,9 @@
             <div class="divider" data-i18n="auth_or">Atau</div>
             <p style="text-align:center; font-size: 14px; cursor: pointer;" onclick="toggleAuthMode()" id="auth-switch" data-i18n="auth_switch">Belum punya akun? Daftar</p>
         </div>
-    </div>
-    <script>
-    // --- KAMUS BAHASA ---
+      </div>
+      <script>
+    // --- KAMUS BAHASA LENGKAP ---
     const translations = {
         id: {
             app_title: "LyzCreator", btn_start: "🚀 Mulai Bikin Web?", btn_pricing: "Lihat Harga Premium", btn_deploy: "Cara Deploy Web",
@@ -416,7 +386,32 @@
             settings_profile_sub: "Kelola profil kamu.", settings_lang: "Bahasa", settings_logout: "Keluar Akun",
             privacy_title: "Privacy & Policy", edit_profile_title: "👤 Edit Profil", edit_profile_user: "Username", edit_profile_email: "Email (Tertaut)",
             edit_profile_save: "Simpan", edit_profile_cancel: "Batal", auth_login: "Masuk", auth_pass: "Password (Min. 8 Karakter)", auth_google: "Login pakai Google",
-            auth_or: "Atau", auth_switch: "Belum punya akun? Daftar"
+            auth_or: "Atau", auth_switch: "Belum punya akun? Daftar",
+            privacy_text: `
+                <p><b>Terakhir Diperbarui: Hari ini.</b></p>
+                <p>LyzCreator ("Kami", "Kita") sangat menghargai privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan layanan kami.</p>
+                <h2>1. Data Akun & Autentikasi</h2>
+                <p>LyzCreator <b>tidak akan pernah</b> mengambil, menyimpan, atau membaca *password* asli akun Google/Email Anda. Sistem autentikasi kami hanya menggunakan email dan username sebagai identitas login. Kami tidak memiliki akses ke kontak, Google Drive, atau data pribadi lainnya di akun Google Anda.</p>
+                <h2>2. Riwayat Permintaan (History)</h2>
+                <p>Semua *history prompt* dan kode AI disimpan secara lokal di *browser* perangkat Anda (LocalStorage). Kami tidak menyimpannya di server pusat kami. Untuk menjaga performa perangkat, jika riwayat melebihi 10 data, sistem kami secara otomatis akan menghapus data yang paling lama (Auto-Delete).</p>
+                <h2>3. Pembayaran & Transaksi</h2>
+                <p>Kami tidak menyimpan data kartu kredit, rekening bank, atau detail pembayaran Anda di server kami. Semua transaksi pembayaran Premium (VIP, VVIP, dll) diproses melalui *Payment Gateway* pihak ketiga yang bersertifikasi dan aman.</p>
+                <h2>4. Kode Aktivasi Premium</h2>
+                <p>Kode aktivasi (Lyzz-XXXX) bersifat rahasia dan hanya untuk penggunaan pribadi. Jangan pernah membagikan kode Anda kepada siapa pun. Segala bentuk penyalahgunaan kode di luar tanggung jawab kami.</p>
+                <h2>5. Perubahan Kebijakan</h2>
+                <p>Kami dapat memperbarui kebijakan privasi ini dari waktu ke waktu. Dengan terus menggunakan layanan LyzCreator, Anda dianggap menyetujui pembaruan tersebut.</p>
+            `,
+            deploy_text: `
+                <p>Ikuti panduan lengkap ini untuk merilis web buatanmu ke internet secara gratis:</p>
+                <h2>Langkah 1: Simpan Kode</h2>
+                <ul><li>Minta AI untuk membuatkan web (HTML/CSS/JS).</li><li>Salin kodenya dan simpan ke text editor (Notepad/VS Code).</li><li>Simpan dengan nama file <code>index.html</code>.</li></ul>
+                <h2>Langkah 2: Daftar Akun Vercel</h2>
+                <ul><li>Buka situs <b>vercel.com</b>.</li><li>Klik "Sign Up" di pojok kanan atas.</li><li>Daftar menggunakan Email, GitHub, atau Google (Gratis).</li></ul>
+                <h2>Langkah 3: Upload Project</h2>
+                <ul><li>Setelah login, masuk ke <b>Dashboard Vercel</b>.</li><li>Klik tombol hitam <b>"Add New..."</b> di pojok kanan atas, lalu pilih <b>"Project"</b>.</li><li>Scroll ke bawah, cari tulisan <b>"Deploy from a template"</b> atau <b>"Upload"</b>.</li><li>Drag & Drop file <code>index.html</code> tadi ke area upload Vercel.</li></ul>
+                <h2>Langkah 4: Deploy & Selesai</h2>
+                <ul><li>Klik tombol <b>"Deploy"</b> dan tunggu beberapa detik.</li><li>Vercel akan memberikan link web kamu (contoh: <code>web-lu.vercel.app</code>).</li><li>Web kamu sudah online dan bisa diakses siapa saja!</li></ul>
+            `
         },
         en: {
             app_title: "LyzCreator", btn_start: "🚀 Start Building Web?", btn_pricing: "View Premium Pricing", btn_deploy: "How to Deploy Web",
@@ -426,7 +421,32 @@
             settings_profile_sub: "Manage your profile.", settings_lang: "Language", settings_logout: "Logout",
             privacy_title: "Privacy & Policy", edit_profile_title: "👤 Edit Profile", edit_profile_user: "Username", edit_profile_email: "Email (Linked)",
             edit_profile_save: "Save", edit_profile_cancel: "Cancel", auth_login: "Login", auth_pass: "Password (Min. 8 Characters)", auth_google: "Login with Google",
-            auth_or: "Or", auth_switch: "Don't have an account? Register"
+            auth_or: "Or", auth_switch: "Don't have an account? Register",
+            privacy_text: `
+                <p><b>Last Updated: Today.</b></p>
+                <p>LyzCreator ("We", "Us") highly values your privacy. This Privacy Policy explains how we collect, use, and protect your information when using our services.</p>
+                <h2>1. Account Data & Authentication</h2>
+                <p>LyzCreator <b>will never</b> take, store, or read the actual *password* of your Google/Email account. Our authentication system only uses email and username as login identity. We do not have access to contacts, Google Drive, or other personal data in your Google account.</p>
+                <h2>2. History Request</h2>
+                <p>All *history prompts* and AI code are stored locally on your device's *browser* (LocalStorage). We do not store them on our central server. To maintain device performance, if history exceeds 10 data, our system will automatically delete the oldest data (Auto-Delete).</p>
+                <h2>3. Payments & Transactions</h2>
+                <p>We do not store credit card data, bank accounts, or your payment details on our server. All Premium payment transactions (VIP, VVIP, etc.) are processed through certified and secure third-party *Payment Gateways*.</p>
+                <h2>4. Premium Activation Code</h2>
+                <p>The activation code (Lyzz-XXXX) is confidential and for personal use only. Never share your code with anyone. Any misuse of the code is beyond our responsibility.</p>
+                <h2>5. Policy Changes</h2>
+                <p>We may update this privacy policy from time to time. By continuing to use the LyzCreator service, you are deemed to agree to these updates.</p>
+            `,
+            deploy_text: `
+                <p>Follow this complete guide to release your website to the internet for free:</p>
+                <h2>Step 1: Save the Code</h2>
+                <ul><li>Ask AI to create a website (HTML/CSS/JS).</li><li>Copy the code and save it to a text editor (Notepad/VS Code).</li><li>Save it as a file named <code>index.html</code>.</li></ul>
+                <h2>Step 2: Register a Vercel Account</h2>
+                <ul><li>Go to <b>vercel.com</b>.</li><li>Click "Sign Up" in the top right corner.</li><li>Register using Email, GitHub, or Google (Free).</li></ul>
+                <h2>Step 3: Upload Project</h2>
+                <ul><li>After logging in, go to the <b>Vercel Dashboard</b>.</li><li>Click the black <b>"Add New..."</b> button in the top right, then select <b>"Project"</b>.</li><li>Scroll down, look for <b>"Deploy from a template"</b> or <b>"Upload"</b>.</li><li>Drag & Drop the <code>index.html</code> file into the Vercel upload area.</li></ul>
+                <h2>Step 4: Deploy & Done</h2>
+                <ul><li>Click the <b>"Deploy"</b> button and wait a few seconds.</li><li>Vercel will provide your website link (e.g., <code>your-web.vercel.app</code>).</li><li>Your website is now online and accessible to anyone!</li></ul>
+            `
         }
     };
 
@@ -439,12 +459,18 @@
 
     function applyLanguage() {
         const lang = localStorage.getItem('lyz_lang') || 'id';
+        
+        // Ganti teks biasa
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if(translations[lang] && translations[lang][key]) {
                 el.innerText = translations[lang][key];
             }
         });
+
+        // Ganti teks panjang (Privacy & Deploy)
+        document.getElementById('privacy-text-content').innerHTML = translations[lang]['privacy_text'];
+        document.getElementById('deploy-text-content').innerHTML = translations[lang]['deploy_text'];
     }
 
     // --- CUSTOM ALERT ---
@@ -667,17 +693,12 @@
         if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada email masuk.</p>"; return; }
         container.innerHTML = inbox.map((msg, i) => `
             <div style="background: var(--card-bg); border-radius:12px; padding:15px; margin-bottom:15px; border-left: 4px solid var(--accent);">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span style="font-weight:bold; color:var(--text);">LyzCreator</span>
-                    <span style="font-size:12px; color:#888;">${msg.timeStr}</span>
-                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="font-weight:bold; color:var(--text);">LyzCreator</span><span style="font-size:12px; color:#888;">${msg.timeStr}</span></div>
                 <div style="font-weight:bold; margin-bottom:5px; color:var(--text);">Kode Aktivasi ${msg.namaPaket}</div>
                 <div style="font-size:13px; color:#888; margin-bottom:10px;">Dibeli pada ${msg.dateStr}.</div>
                 <div style="display:flex; gap:10px;">
                     <button onclick="navigator.clipboard.writeText('${msg.code}'); showAlert('Tersalin', 'Kode ${msg.code} berhasil di-copy!')" style="flex:1; padding:10px; border-radius:8px; background:#333; color:#fff; border:none; font-weight:bold;">Copy: ${msg.code}</button>
-                    <button onclick="aktivasiKode(${i})" style="flex:1; padding:10px; border-radius:8px; background:var(--accent); color:#000; border:none; font-weight:bold;" ${msg.status === 'used' ? 'disabled' : ''}>
-                        ${msg.status === 'used' ? 'Aktif' : 'Aktivasi'}
-                    </button>
+                    <button onclick="aktivasiKode(${i})" style="flex:1; padding:10px; border-radius:8px; background:var(--accent); color:#000; border:none; font-weight:bold;" ${msg.status === 'used' ? 'disabled' : ''}>${msg.status === 'used' ? 'Aktif' : 'Aktivasi'}</button>
                 </div>
             </div>
         `).join('');
@@ -689,8 +710,7 @@
         inbox[index].status = 'used';
         localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
         localStorage.setItem('lyz_premium', JSON.stringify({ expiry: inbox[index].expiry }));
-        showAlert("Berhasil", "Premium Berhasil Diaktifkan!");
-        renderInbox();
+        showAlert("Berhasil", "Premium Berhasil Diaktifkan!"); renderInbox();
     }
 
     async function cariLagu() {
@@ -705,10 +725,7 @@
             res.innerHTML = data.results.map(track => `
                 <div class="music-track-item" onclick="putarPreview('${track.previewUrl}', '${track.trackName}', '${track.artistName}', '${track.artworkUrl60}')">
                     <img src="${track.artworkUrl60}" class="music-track-cover" alt="cover">
-                    <div class="music-track-info">
-                        <div class="music-track-title">${track.trackName}</div>
-                        <div class="music-track-artist">${track.artistName}</div>
-                    </div>
+                    <div class="music-track-info"><div class="music-track-title">${track.trackName}</div><div class="music-track-artist">${track.artistName}</div></div>
                 </div>
             `).join('');
         } catch (err) { res.innerHTML = "<div style='text-align:center; color:#ff3333;'>Gagal mengambil data.</div>"; }
@@ -721,11 +738,9 @@
         document.getElementById('mini-title').innerText = judul;
         document.getElementById('mini-artist').innerText = artis;
         document.getElementById('mini-cover').src = cover;
-        updatePlayButtons();
-        tutupModal('music');
+        updatePlayButtons(); tutupModal('music');
     }
 
-    // --- INIT ---
     applyLanguage();
     updateUserDisplay();
     document.getElementById('current-lang-display').innerText = (localStorage.getItem('lyz_lang') || 'id') === 'id' ? 'Indonesia' : 'English';
