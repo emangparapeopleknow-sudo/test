@@ -26,8 +26,9 @@
   .btn-delete { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 14px; display: none; }
   .history-item:hover .btn-delete, .history-item.active .btn-delete { display: block; }
 
-  #main { flex: 1; display: flex; flex-direction: column; position: relative; height: 100vh; width: 100%; overflow: hidden; }
+  #main { flex: 1; display: flex; flex-direction: column; height: 100vh; width: 100%; overflow: hidden; }
   .top-bar { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0; height: 56px; }
+  
   .nav-btns { display: flex; gap: 10px; align-items: center; }
   #openSidebar { display: none; background: none; border: none; color: var(--accent); font-size: 24px; cursor: pointer; }
   @media (max-width: 768px) { #openSidebar { display: block; } }
@@ -35,7 +36,7 @@
   #apiStatusBtn { padding: 8px 12px; border-radius: 6px; border: 1px solid #28a745; color: #28a745; background: rgba(40, 167, 69, 0.1); cursor: pointer; font-size: 12px; font-weight: bold; }
   #apiStatusBtn.error { border-color: #dc3545; color: #dc3545; background: rgba(220, 53, 69, 0.1); }
 
-  #chat-box { flex: 1; padding: 20px 20px 80px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+  #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
   .msg { max-width: 85%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 14px; word-wrap: break-word; }
   .msg-user { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 4px; }
   .msg-ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--border); border-bottom-left-radius: 4px; width: 100%; }
@@ -43,7 +44,8 @@
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
 
-  .input-area { position: absolute; bottom: 0; left: 0; right: 0; padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; gap: 10px; z-index: 10; }
+  /* INPUT AREA DIBIKIN NORMAL (FLEX) BIAR GA KETUTUPAN */
+  .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; gap: 10px; flex-shrink: 0; width: 100%; }
   #chat-input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; resize: none; font-size: 14px; }
   #sendBtn { padding: 0 20px; border: none; border-radius: 8px; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; }
   #sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -81,6 +83,7 @@
     <div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan. Ketik pesan untuk mulai.</div>
   </div>
 
+  <!-- INPUT AREA (Nempel di bawah secara natural) -->
   <div class="input-area">
     <textarea id="chat-input" rows="1" placeholder="Minta buat web di sini..." onkeydown="handleEnter(event)"></textarea>
     <button id="sendBtn" onclick="kirimPesan()">Kirim</button>
@@ -103,10 +106,10 @@
   let currentChatId = null;
   let isGenerating = false;
 
-  // Cek kuota gratis user
+  // Cek kuota gratis user (2x)
   let sisaKuota = localStorage.getItem('lyz_creator_kuota');
   if (sisaKuota === null) {
-    sisaKuota = 2; // Dapet 2 jatah gratis buat pertama kali
+    sisaKuota = 2;
     localStorage.setItem('lyz_creator_kuota', sisaKuota);
   } else {
     sisaKuota = parseInt(sisaKuota);
@@ -251,7 +254,6 @@
     const text = input.value.trim();
     if (!text) return;
 
-    // Cek kuota sebelum ngirim ke API
     if (sisaKuota <= 0) {
       return alert('Waduh, kuota gratis 2x generate lu udah habis, Bily! Silakan langganan buat lanjut.');
     }
@@ -275,7 +277,6 @@
     isGenerating = true;
     document.getElementById('sendBtn').disabled = true;
 
-    // Kurangi kuota setiap kali nge-request ke AI
     sisaKuota--;
     localStorage.setItem('lyz_creator_kuota', sisaKuota);
 
@@ -316,7 +317,6 @@
       saveChats();
 
     } catch (err) {
-      // Kalau error dari API, balikin kuota user
       sisaKuota++;
       localStorage.setItem('lyz_creator_kuota', sisaKuota);
       document.getElementById(loadingId).innerText = '❌ Error: ' + err.message;
