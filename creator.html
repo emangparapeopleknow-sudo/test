@@ -6,58 +6,60 @@
 <title>Creator Web - Dashboard</title>
 <style>
     :root { --bg: #0a0c10; --text: #ffffff; --accent: #e6b450; --panel: rgba(18, 21, 28, 0.9); --card-bg: rgba(255,255,255,0.05); }
-    body.light-mode { --bg: #f4f4f4; --text: #000000; --accent: #d19a29; --panel: rgba(255, 255, 255, 0.95); --card-bg: rgba(0,0,0,0.05); }
+    body.light-mode { --bg: rgba(244, 244, 244, 0.9); --text: #000000; --accent: #d19a29; --panel: rgba(255, 255, 255, 0.95); --card-bg: rgba(0, 0, 0, 0.05); background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.95) 100%), url('fantasia.png'); }
+    
     * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
-    body { background-image: linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%), url('fantasia.png'); background-size: cover; background-position: center top; background-attachment: fixed; background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
-    body.light-mode { background-image: none; background-color: var(--bg); } /* Biar putih bersih */
-    
-    /* NAVBAR */
-    .navbar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 5vh; z-index: 10; position: relative; background: var(--panel); border: 1px solid #333; border-radius: 12px; backdrop-filter: blur(10px); }
-    .tagline-box { flex: 1; text-align: left; }
-    .tagline { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.2; }
-    @media (max-width: 600px) { .tagline { font-size: 16px; text-align: center; } .navbar { flex-direction: column; gap: 15px; } }
-    
-    .header-actions { display: flex; align-items: center; gap: 10px; }
-    .user-info { font-size: 13px; color: var(--accent); font-weight: bold; cursor: pointer; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--accent); background: rgba(230,180,80,0.1); text-align: center; }
-    .user-info span { display: block; font-size: 10px; color: #aaa; font-weight: normal; }
-    
-    .nav-controls { display: flex; gap: 8px; }
-    .btn-control { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--text); width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 18px; }
-    .btn-control:hover { background: var(--accent); color: black; }
+    body { background-image: linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%), url('fantasia.png'); background-size: cover; background-position: center top; background-attachment: fixed; background-color: #0a0c10; color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
 
-    /* OVERLAY & SIDEBAR */
+    /* --- CUSTOM ALERT (SESUAI REFERENSI FOTO 2) --- */
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+    .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+    .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
+    .alert-message { padding: 0 20px 25px 20px; font-size: 14px; color: #ccc; line-height: 1.4; }
+    .alert-btn { background: transparent; border: none; border-top: 1px solid #444; color: #0a84ff; width: 100%; padding: 16px; font-size: 17px; font-weight: bold; cursor: pointer; outline: none; }
+    .alert-btn:hover { background: rgba(255,255,255,0.05); }
+
+    /* --- NAVBAR (SESUAI REFERENSI FOTO 1) --- */
+    .navbar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; padding: 15px 0; margin-bottom: 5vh; z-index: 10; position: relative; }
+    .nav-left { display: flex; align-items: center; gap: 15px; }
+    .nav-icon { font-size: 24px; color: var(--text); cursor: pointer; }
+    .nav-title { font-size: 18px; font-weight: bold; color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 15px; }
+    .nav-controls { display: flex; gap: 10px; }
+    .btn-control { background: transparent; border: none; color: var(--text); font-size: 22px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    
+    /* --- OVERLAY & SIDEBAR --- */
     .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(3px); }
     .overlay.active { display: block; }
-    .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100vh; background-color: var(--panel); border-left: 1px solid #333; padding: 40px 20px; transition: 0.3s; z-index: 1001; overflow-y: auto; }
-    .sidebar.active { right: 0; }
+    .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; background-color: var(--panel); border-right: 1px solid #333; padding: 40px 20px; transition: 0.3s; z-index: 1001; overflow-y: auto; }
+    .sidebar.active { left: 0; }
     .sidebar h3 { color: var(--accent); margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
     .sidebar a { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: var(--card-bg); cursor: pointer; }
     .sidebar a:hover { background: var(--accent); color: black; }
-    .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #aaa; }
+    .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888; }
     
-    /* DASHBOARD AREA */
+    /* --- DASHBOARD --- */
     .dashboard { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; width: 100%; max-width: 600px; margin-bottom: 10vh; z-index: 10; position: relative; gap: 15px; }
-    .btn-start { padding: 20px 50px; border-radius: 50px; font-weight: 800; font-size: 22px; cursor: pointer; background: rgba(230, 180, 80, 0.9); border: 2px solid var(--accent); color: #000; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 15px rgba(230,180,80,0.3); }
+    .btn-start { padding: 20px 50px; border-radius: 50px; font-weight: 800; font-size: 22px; cursor: pointer; background: rgba(230, 180, 80, 0.95); border: 2px solid var(--accent); color: #000; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 15px rgba(230,180,80,0.3); }
     .row-top { display: flex; gap: 15px; justify-content: center; width: 100%; }
-    .btn-oval { flex: 1; padding: 18px 10px; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text); text-align: center; }
-    .btn-oval:hover { background: rgba(255, 255, 255, 0.2); }
+    .btn-oval { flex: 1; padding: 18px 10px; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; background: var(--card-bg); border: 1px solid #333; color: var(--text); text-align: center; }
 
-    /* MODAL CONTAINER */
+    /* --- MODAL CONTAINER --- */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; }
     .modal-content { background: var(--panel); padding: 25px; border-radius: 12px; border: 1px solid var(--accent); width: 90%; max-width: 450px; color: var(--text); max-height: 90vh; overflow-y: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
     .modal-content h3 { margin-top: 0; color: var(--accent); }
     .modal-content button { padding: 10px; background: var(--accent); color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px; width: 100%; }
 
-    /* FULL SCREEN STYLES */
+    /* --- FULL SCREEN STYLES --- */
     .pricing-screen, .history-screen, .deploy-screen, .music-screen, .privacy-screen, .settings-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; z-index: 10000; color: var(--text); }
-    .privacy-screen, .deploy-screen, .settings-screen { padding: 20px; overflow-y: auto; }
+    .privacy-screen, .deploy-screen, .settings-screen { padding: 20px; overflow-y: auto; background: #0f0f11; }
+    body.light-mode .privacy-screen, body.light-mode .deploy-screen, body.light-mode .settings-screen { background: #f4f4f4; }
 
-    /* HEADER FULL SCREEN */
     .fs-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; background: var(--panel); }
     .fs-header h1 { font-size: 20px; margin: 0; color: var(--text); }
     .fs-back { font-size: 24px; cursor: pointer; color: var(--accent); }
 
-    /* PRICING */
+    /* --- PRICING --- */
     .pricing-screen { overflow-y: auto; padding: 20px; }
     .pricing-card { background: var(--card-bg); border: 1px solid #333; border-radius: 16px; padding: 20px; margin-bottom: 20px; position: relative; }
     .pricing-card.popular { border-color: #ff3333; }
@@ -71,15 +73,15 @@
     .btn-order { background: #003399; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; }
     .pricing-card.popular .btn-order { background: #ff3333; }
 
-    /* HISTORY SWIPE TABS */
+    /* --- HISTORY TABS --- */
     .history-tabs { display: flex; background: var(--panel); border-bottom: 1px solid #333; }
     .history-tab { flex: 1; text-align: center; padding: 15px 0; cursor: pointer; font-weight: bold; color: #888; border-bottom: 2px solid transparent; }
     .history-tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
-    .history-content-wrapper { flex: 1; overflow: hidden; position: relative; display: flex; }
-    .history-list-container { width: 100%; flex-shrink: 0; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .history-content-wrapper { flex: 1; overflow: hidden; position: relative; display: flex; transition: transform 0.3s ease-in-out; width: 200%; }
+    .history-list-container { width: 50%; flex-shrink: 0; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
     .history-card { background: var(--card-bg); border-radius: 12px; padding: 15px; border: 1px solid #333; font-size: 14px; color: var(--text); }
 
-    /* SETTINGS SCREEN */
+    /* --- SETTINGS --- */
     .settings-group { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; border: 1px solid #333; }
     .settings-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #333; cursor: pointer; }
     .settings-item:last-child { border-bottom: none; }
@@ -89,11 +91,13 @@
     .settings-sub { font-size: 12px; color: #888; }
     .settings-arrow { color: #666; font-size: 18px; }
 
-    /* DEPLOY & PRIVACY TEXT */
+    /* --- TEXT CONTENT (DEPLOY/PRIVACY) --- */
     .text-content { flex: 1; overflow-y: auto; font-size: 14px; color: var(--text); line-height: 1.8; padding-bottom: 20px; }
     .text-content h2 { font-size: 16px; color: var(--accent); margin-top: 20px; margin-bottom: 10px; }
+    .text-content ul { padding-left: 20px; }
+    .text-content li { margin-bottom: 10px; }
 
-    /* MUSIC */
+    /* --- MUSIC --- */
     .music-search-header { padding: 20px 20px 10px 20px; }
     .music-search-box { background: var(--card-bg); border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 10px; border: 1px solid #333; }
     .music-search-box input { background: transparent; border: none; color: var(--text); width: 100%; outline: none; font-size: 16px; }
@@ -104,7 +108,6 @@
     .music-track-title { font-weight: bold; font-size: 15px; color: var(--text); }
     .music-track-artist { font-size: 13px; color: #888; }
     
-    /* MINI PLAYER */
     .music-mini-player { position: fixed; bottom: 20px; left: 20px; right: 20px; background: var(--panel); border-radius: 15px; padding: 10px 15px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--accent); z-index: 9998; }
     .music-mini-cover { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
     .music-mini-info { flex: 1; text-align: left; overflow: hidden; }
@@ -120,24 +123,34 @@
 </style>
 </head>
 <body>
+    <!-- CUSTOM ALERT -->
+    <div id="custom-alert">
+        <div class="alert-box">
+            <div class="alert-title" id="alert-title">Pemberitahuan</div>
+            <div class="alert-message" id="alert-message">Pesan notifikasi akan muncul di sini.</div>
+            <button class="alert-btn" onclick="tutupAlert()">Oke</button>
+        </div>
+    </div>
+
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <audio id="bg-music" loop src=""></audio>
 
     <!-- NAVBAR -->
     <div class="navbar">
-        <div class="tagline-box">
-            <div class="tagline">"Make Your Own Web,<br>For Your Own Way"</div>
+        <div class="nav-left">
+            <div class="nav-icon" onclick="toggleMenu()">☰</div>
+            <div class="nav-title">Proyek Baru</div>
         </div>
-        <div class="header-actions">
-            <div class="user-info" id="user-display" onclick="logout()">Halo, User <span>(Logout)</span></div>
+        <div class="nav-right">
             <div class="nav-controls">
                 <div class="btn-control" onclick="toggleMusicGlobal()" id="global-music-btn">▶</div>
-                <div class="btn-control" onclick="toggleMenu()">☰</div>
+                <div class="btn-control" onclick="logout()">⏻</div>
             </div>
         </div>
     </div>
 
     <div class="dashboard">
+        <div class="user-info" style="margin-bottom: 10px; font-size: 14px; color: var(--accent); cursor:pointer;" onclick="openModal('settings')">Halo, <span id="user-display">User</span></div>
         <a href="chat.html" class="btn-start" onclick="cekLoginDanMasuk()">🚀 Mulai Bikin Web?</a>
         <div class="row-top">
             <a href="#" class="btn-oval" onclick="openModal('pricing')">Lihat Harga Premium</a>
@@ -156,7 +169,7 @@
         <a onclick="openModal('privacy')">🔒 Privacy & Policy</a>
     </div>
 
-    <!-- PRICING -->
+    <!-- PRICING LENGKAP -->
     <div class="modal" id="modal-pricing">
         <div class="pricing-screen">
             <div class="fs-header">
@@ -170,12 +183,30 @@
                     <ul class="price-features"><li>Akses penuh selama 7 hari</li><li>Bebas limit generate web</li></ul>
                     <button class="btn-order" onclick="prosesBayar('Premium 1 Minggu', 12000, 7)">Order Sekarang</button>
                 </div>
+                <div class="pricing-card">
+                    <div class="price-title">VIP Bulanan</div>
+                    <div class="price-amount">Rp 15.000 <span>/bulan</span></div>
+                    <ul class="price-features"><li>Hemat 30% dari mingguan</li><li>Bebas request web sepuasnya</li></ul>
+                    <button class="btn-order" onclick="prosesBayar('VIP 1 Bulan', 15000, 30)">Order Sekarang</button>
+                </div>
                 <div class="pricing-card popular">
                     <div class="badge-popular">Paling Populer</div>
                     <div class="price-title">VVIP 2 Bulan</div>
                     <div class="price-amount">Rp 25.000 <span>/2 bulan</span></div>
-                    <ul class="price-features"><li>Prioritas server (Anti Lag)</li><li>Bebas limit tanpa interupsi</li></ul>
+                    <ul class="price-features"><li>Prioritas server (Anti Lag)</li><li>Bebas limit generate web & skripsi</li></ul>
                     <button class="btn-order" onclick="prosesBayar('VVIP 2 Bulan', 25000, 60)">Order Sekarang</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="price-title">Super VIP 6 Bulan</div>
+                    <div class="price-amount">Rp 40.000 <span>/6 bulan</span></div>
+                    <ul class="price-features"><li>Investasi jangka panjang</li><li>Akses semua fitur tanpa batas</li></ul>
+                    <button class="btn-order" onclick="prosesBayar('Super VIP 6 Bulan', 40000, 180)">Order Sekarang</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="price-title">Super VVIP 8 Bulan</div>
+                    <div class="price-amount">Rp 55.000 <span>/8 bulan</span></div>
+                    <ul class="price-features"><li>Dapet akses beta fitur rahasia!</li><li>Bebas limit tanpa interupsi</li></ul>
+                    <button class="btn-order" onclick="prosesBayar('Super VVIP 8 Bulan', 55000, 240)">Order Sekarang</button>
                 </div>
                 <div class="pricing-card" style="border-color: #ffd700;">
                     <div class="price-title" style="color: #ffd700;">👑 VVIP KING (1 Tahun)</div>
@@ -190,25 +221,25 @@
     <!-- DEPLOY SCREEN -->
     <div class="modal" id="modal-deploy">
         <div class="deploy-screen">
-            <div class="fs-header">
+            <div class="fs-header" style="margin: -20px -20px 20px -20px;">
                 <div class="fs-back" onclick="tutupModal('deploy')">←</div>
                 <h1>Cara Deploy Web</h1>
             </div>
-            <div class="text-content" style="padding: 20px;">
-                <p>Ikuti langkah mudah ini untuk merilis web buatanmu ke internet secara gratis:</p>
-                <h2>1. Persiapkan File</h2>
-                <p>Simpan kode HTML/CSS/JS yang kamu dapatkan dari AI ke dalam satu file bernama <code>index.html</code> di komputer/HP kamu.</p>
-                <h2>2. Daftar Vercel</h2>
-                <p>Buka <a href="https://vercel.com/signup" target="_blank" style="color:var(--accent);">vercel.com/signup</a> dan daftar menggunakan akun GitHub atau Google kamu secara gratis.</p>
-                <h2>3. Upload Project</h2>
-                <p>Setelah login, klik tombol "Add New..." lalu pilih "Project". Kamu bisa meng-upload folder project atau menghubungkan repository GitHub kamu.</p>
-                <h2>4. Deploy</h2>
-                <p>Klik tombol "Deploy". Tunggu beberapa detik hingga proses build selesai, dan web kamu akan langsung online dengan link gratis dari Vercel!</p>
+            <div class="text-content">
+                <p>Ikuti panduan lengkap ini untuk merilis web buatanmu ke internet secara gratis:</p>
+                <h2>Langkah 1: Simpan Kode</h2>
+                <ul><li>Minta AI untuk membuatkan web (HTML/CSS/JS).</li><li>Salin kodenya dan simpan ke text editor (Notepad/VS Code).</li><li>Simpan dengan nama file <code>index.html</code>.</li></ul>
+                <h2>Langkah 2: Daftar Akun Vercel</h2>
+                <ul><li>Buka situs <b>vercel.com</b>.</li><li>Klik "Sign Up" di pojok kanan atas.</li><li>Daftar menggunakan Email, GitHub, atau Google (Gratis).</li></ul>
+                <h2>Langkah 3: Upload Project</h2>
+                <ul><li>Setelah login, masuk ke <b>Dashboard Vercel</b>.</li><li>Klik tombol hitam <b>"Add New..."</b> di pojok kanan atas, lalu pilih <b>"Project"</b>.</li><li>Scroll ke bawah, cari tulisan <b>"Deploy from a template"</b> atau <b>"Upload"</b>.</li><li>Drag & Drop file <code>index.html</code> tadi ke area upload Vercel.</li></ul>
+                <h2>Langkah 4: Deploy & Selesai</h2>
+                <ul><li>Klik tombol <b>"Deploy"</b> dan tunggu beberapa detik.</li><li>Vercel akan memberikan link web kamu (contoh: <code>web-lu.vercel.app</code>).</li><li>Web kamu sudah online dan bisa diakses siapa saja!</li></ul>
             </div>
         </div>
     </div>
 
-    <!-- HISTORY (SWIPE TABS) -->
+    <!-- HISTORY TABS -->
     <div class="modal" id="modal-history">
         <div class="history-screen">
             <div class="fs-header">
@@ -219,9 +250,11 @@
                 <div class="history-tab active" id="tab-pembelian" onclick="switchHistoryTab('pembelian')">Histori Pembelian</div>
                 <div class="history-tab" id="tab-permintaan" onclick="switchHistoryTab('permintaan')">Histori Permintaan</div>
             </div>
-            <div class="history-content-wrapper">
-                <div class="history-list-container" id="history-pembelian"></div>
-                <div class="history-list-container" id="history-permintaan"></div>
+            <div style="flex:1; overflow:hidden; position:relative;">
+                <div class="history-content-wrapper" id="history-wrapper">
+                    <div class="history-list-container" id="history-pembelian"></div>
+                    <div class="history-list-container" id="history-permintaan"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -263,19 +296,17 @@
         <button class="music-mini-btn" id="mini-btn-control" onclick="toggleMusicGlobal()">▶</button>
     </div>
 
-    <!-- SETTINGS FULL SCREEN -->
+    <!-- SETTINGS -->
     <div class="modal" id="modal-settings">
         <div class="settings-screen">
             <div class="fs-header" style="margin: -20px -20px 20px -20px;">
                 <div class="fs-back" onclick="tutupModal('settings')">←</div>
                 <h1>Pengaturan</h1>
             </div>
-            
             <div class="settings-group" style="display: flex; gap: 10px; padding: 15px; cursor:pointer;" onclick="gantiTema()">
                 <div style="font-size: 24px;">🌗</div>
                 <div><div class="settings-title">Mode Layar</div><div class="settings-sub">Ganti tema terang/gelap</div></div>
             </div>
-            
             <div class="settings-group">
                 <div class="settings-item" onclick="openModal('edit-profile')">
                     <img src="https://ui-avatars.com/api/?name=User&background=random" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 15px;">
@@ -283,7 +314,6 @@
                     <div class="settings-arrow">›</div>
                 </div>
             </div>
-
             <div class="settings-group">
                 <div class="settings-item" onclick="ubahBahasa()">
                     <div class="settings-icon" style="background:#4d79ff;">🌐</div>
@@ -311,11 +341,18 @@
                 <h1>Privacy & Policy</h1>
             </div>
             <div class="text-content">
-                <p>LyzCreator <b>tidak akan pernah</b> mengambil, menyimpan, atau membaca password akun Google/Email kamu. Sistem autentikasi hanya menggunakan email sebagai identitas login.</p>
-                <h2>Riwayat Permintaan</h2>
-                <p>Semua history prompt AI disimpan secara lokal di browser perangkat kamu (LocalStorage). Jika riwayat melebihi 10 data, sistem kami secara otomatis akan menghapus data yang paling lama.</p>
-                <h2>Pembayaran</h2>
-                <p>Kami tidak menyimpan data kartu kredit atau rekening bank Anda di server kami. Semua transaksi diproses melalui Payment Gateway pihak ketiga yang aman.</p>
+                <p><b>Terakhir Diperbarui: Hari ini.</b></p>
+                <p>LyzCreator ("Kami", "Kita") sangat menghargai privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan layanan kami.</p>
+                <h2>1. Data Akun & Autentikasi</h2>
+                <p>LyzCreator <b>tidak akan pernah</b> mengambil, menyimpan, atau membaca *password* asli akun Google/Email Anda. Sistem autentikasi kami hanya menggunakan email dan username sebagai identitas login. Kami tidak memiliki akses ke kontak, Google Drive, atau data pribadi lainnya di akun Google Anda.</p>
+                <h2>2. Riwayat Permintaan (History)</h2>
+                <p>Semua *history prompt* dan kode AI disimpan secara lokal di *browser* perangkat Anda (LocalStorage). Kami tidak menyimpannya di server pusat kami. Untuk menjaga performa perangkat, jika riwayat melebihi 10 data, sistem kami secara otomatis akan menghapus data yang paling lama (Auto-Delete).</p>
+                <h2>3. Pembayaran & Transaksi</h2>
+                <p>Kami tidak menyimpan data kartu kredit, rekening bank, atau detail pembayaran Anda di server kami. Semua transaksi pembayaran Premium (VIP, VVIP, dll) diproses melalui *Payment Gateway* pihak ketiga yang bersertifikasi dan aman.</p>
+                <h2>4. Kode Aktivasi Premium</h2>
+                <p>Kode aktivasi (Lyzz-XXXX) bersifat rahasia dan hanya untuk penggunaan pribadi. Jangan pernah membagikan kode Anda kepada siapa pun. Segala bentuk penyalahgunaan kode di luar tanggung jawab kami.</p>
+                <h2>5. Perubahan Kebijakan</h2>
+                <p>Kami dapat memperbarui kebijakan privasi ini dari waktu ke waktu. Dengan terus menggunakan layanan LyzCreator, Anda dianggap menyetujui pembaruan tersebut.</p>
             </div>
         </div>
     </div>
@@ -331,7 +368,7 @@
         </div>
     </div>
 
-    <!-- AUTH (LOGIN/REGISTER) -->
+    <!-- AUTH -->
     <div class="modal" id="modal-auth">
         <div class="modal-content">
             <h3 id="auth-title">Login ke LyzCreator</h3>
@@ -341,19 +378,28 @@
                 <div class="form-group"><label>Password (Min. 8 Karakter)</label><input type="password" id="auth-password" placeholder="********"></div>
             </div>
             <button onclick="prosesAuth()" id="auth-btn">Masuk</button>
-            <button class="btn-google" onclick="loginGoogle()"><img src="https://img.icons8.com/color/16/000000/google-logo.png"> Login pakai Google</button>
+            <button class="btn-google" onclick="loginGoogle()">Login pakai Google</button>
             <div class="divider">Atau</div>
             <p style="text-align:center; font-size: 14px; cursor: pointer;" onclick="toggleAuthMode()" id="auth-switch">Belum punya akun? Daftar</p>
         </div>
-        </div>
-        <script>
+    </div>
+    <script>
+    // --- CUSTOM ALERT LOGIC ---
+    function showAlert(title, message) {
+        document.getElementById('alert-title').innerText = title;
+        document.getElementById('alert-message').innerText = message;
+        document.getElementById('custom-alert').style.display = 'flex';
+    }
+    function tutupAlert() {
+        document.getElementById('custom-alert').style.display = 'none';
+    }
+
     // --- LOGIKA TEMA ---
     function gantiTema() {
         document.body.classList.toggle('light-mode');
         const isLight = document.body.classList.contains('light-mode');
         localStorage.setItem('lyz_theme', isLight ? 'light' : 'dark');
     }
-    // Load tema pas dibuka
     if(localStorage.getItem('lyz_theme') === 'light') {
         document.body.classList.add('light-mode');
     }
@@ -385,20 +431,19 @@
     }
 
     function toggleMusicGlobal() {
-        if(!music.src || music.src === window.location.href) return alert("Pilih lagu dulu di menu!");
+        if(!music.src || music.src === window.location.href) return showAlert("Oops", "Pilih lagu dulu di menu!");
         if(music.paused) { music.play(); } 
         else { music.pause(); }
         updatePlayButtons();
     }
 
-    // --- LOGIKA AUTH (LOGIN/GOOGLE) ---
+    // --- LOGIKA AUTH ---
     let isLoginMode = true;
     function toggleAuthMode() {
         isLoginMode = !isLoginMode;
         document.getElementById('auth-title').innerText = isLoginMode ? "Login ke LyzCreator" : "Daftar Akun Baru";
         document.getElementById('auth-btn').innerText = isLoginMode ? "Masuk" : "Daftar";
         document.getElementById('auth-switch').innerText = isLoginMode ? "Belum punya akun? Daftar" : "Udah punya akun? Login";
-        // Sembunyiin email kalau mode login (misal lu mau login pakai username aja)
         document.getElementById('email-group').style.display = isLoginMode ? 'none' : 'block'; 
     }
 
@@ -407,29 +452,28 @@
         const pass = document.getElementById('auth-password').value;
         const email = document.getElementById('auth-email').value;
 
-        if(!user || !pass) return alert("Isi Username & Password dulu, Bily!");
-        if(pass.length < 8) return alert("Password minimal 8 karakter biar aman!");
+        if(!user || !pass) return showAlert("Gagal", "Isi Username & Password dulu, Bily!");
+        if(pass.length < 8) return showAlert("Password Lemah", "Password minimal 8 karakter biar aman!");
 
         localStorage.setItem('creator_active_user', user);
         localStorage.setItem('creator_email', email || 'user@gmail.com');
-        alert(`Berhasil ${isLoginMode ? 'Login' : 'Daftar'}!`);
+        showAlert("Berhasil", `Berhasil ${isLoginMode ? 'Login' : 'Daftar'}!`);
         document.getElementById('modal-auth').style.display = 'none';
         updateUserDisplay();
     }
 
     function loginGoogle() {
-        // Simulasi Flow Google Login (Minta Username & Bikin Password)
         const user = prompt("Simulasi Login Google.\nMasukin Username (Nama) lu:");
         if(user) {
             const pass = prompt("Bikin Password (Minimal 8 karakter):");
             if(pass && pass.length >= 8) {
                 localStorage.setItem('creator_active_user', user);
                 localStorage.setItem('creator_email', 'user@gmail.com');
-                alert("Berhasil Login pakai Google!");
+                showAlert("Berhasil", "Berhasil Login pakai Google!");
                 document.getElementById('modal-auth').style.display = 'none';
                 updateUserDisplay();
             } else {
-                alert("Password kurang dari 8 karakter, gagal!");
+                showAlert("Gagal", "Password kurang dari 8 karakter, gagal!");
             }
         }
     }
@@ -439,7 +483,7 @@
         const userEmail = localStorage.getItem('creator_email') || 'user@email.com';
         
         if(activeUser) {
-            document.getElementById('user-display').innerHTML = `${activeUser} <span>(${userEmail})</span>`;
+            document.getElementById('user-display').innerText = activeUser;
             document.getElementById('settings-username').innerText = activeUser;
         } else {
             document.getElementById('user-display').innerText = `Login / Daftar`;
@@ -455,18 +499,18 @@
         }
     }
 
-    // --- HISTORY (TABS SWIPE) ---
+    // --- HISTORY TABS ---
     function switchHistoryTab(tab) {
         document.getElementById('tab-pembelian').classList.remove('active');
         document.getElementById('tab-permintaan').classList.remove('active');
         document.getElementById('tab-' + tab).classList.add('active');
 
-        const wrapper = document.querySelector('.history-content-wrapper');
+        const wrapper = document.getElementById('history-wrapper');
         if(tab === 'pembelian') {
             wrapper.style.transform = 'translateX(0)';
             renderHistoryPembelian();
         } else {
-            wrapper.style.transform = 'translateX(-100%)';
+            wrapper.style.transform = 'translateX(-50%)';
             renderHistoryPermintaan();
         }
     }
@@ -489,7 +533,6 @@
 
     function renderHistoryPermintaan() {
         let history = JSON.parse(localStorage.getItem('lyz_history')) || [];
-        // Auto delete kalau lebih dari 10
         if (history.length > 10) { 
             history = history.slice(0, 10); 
             localStorage.setItem('lyz_history', JSON.stringify(history)); 
@@ -537,17 +580,15 @@
             localStorage.setItem('creator_active_user', newName);
             localStorage.setItem('creator_email', newEmail);
             updateUserDisplay();
-            alert("Profil Diupdate!");
+            showAlert("Berhasil", "Profil Diupdate!");
             tutupModal('edit-profile');
         }
     }
 
-    // --- BAHASA ---
     function ubahBahasa() {
-        alert("Fitur Ganti Bahasa Berhasil Diaktifkan (Simulasi)!");
+        showAlert("Fitur Aktif", "Ganti Bahasa Berhasil Diaktifkan (Simulasi)!");
     }
 
-    // --- LAINNYA (PEMBAYARAN, DLL) ---
     function prosesBayar(namaPaket, harga, hari) {
         if(confirm(`Konfirmasi Pembayaran ${namaPaket} sebesar Rp ${harga.toLocaleString()}?`)) {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -568,7 +609,7 @@
 
             tutupModal('pricing');
             openModal('inbox');
-            alert("Pembayaran Berhasil! Cek Kotak Masuk.");
+            showAlert("Pembayaran Sukses", "Pembayaran Berhasil! Cek Kotak Masuk.");
         }
     }
 
@@ -590,7 +631,7 @@
                 <div style="font-weight:bold; margin-bottom:5px; color:var(--text);">Kode Aktivasi ${msg.namaPaket}</div>
                 <div style="font-size:13px; color:#888; margin-bottom:10px;">Dibeli pada ${msg.dateStr}.</div>
                 <div style="display:flex; gap:10px;">
-                    <button onclick="navigator.clipboard.writeText('${msg.code}'); alert('Kode ${msg.code} berhasil di-copy!')" style="flex:1; padding:10px; border-radius:8px; background:#333; color:#fff; border:none; font-weight:bold;">Copy: ${msg.code}</button>
+                    <button onclick="navigator.clipboard.writeText('${msg.code}'); showAlert('Tersalin', 'Kode ${msg.code} berhasil di-copy!')" style="flex:1; padding:10px; border-radius:8px; background:#333; color:#fff; border:none; font-weight:bold;">Copy: ${msg.code}</button>
                     <button onclick="aktivasiKode(${i})" style="flex:1; padding:10px; border-radius:8px; background:var(--accent); color:#000; border:none; font-weight:bold;" ${msg.status === 'used' ? 'disabled' : ''}>
                         ${msg.status === 'used' ? 'Aktif' : 'Aktivasi'}
                     </button>
@@ -605,7 +646,7 @@
         inbox[index].status = 'used';
         localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
         localStorage.setItem('lyz_premium', JSON.stringify({ expiry: inbox[index].expiry }));
-        alert("Premium Berhasil Diaktifkan!");
+        showAlert("Berhasil", "Premium Berhasil Diaktifkan!");
         renderInbox();
     }
 
@@ -639,7 +680,7 @@
     }
 
     function putarPreview(url, judul, artis, cover) {
-        if (!url) return alert("Preview lagu tidak tersedia.");
+        if (!url) return showAlert("Gagal", "Preview lagu tidak tersedia.");
         music.src = url; music.load(); music.play();
         
         document.getElementById('mini-player').style.display = 'flex';
