@@ -8,16 +8,14 @@
   :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   
-  /* KUNCI UTAMA: PAKE GRID BIAR LAYOUT KAKU */
   body { 
     background: var(--bg); 
     color: var(--text); 
-    height: 100dvh; /* dvh biar aman dari address bar HP */
+    height: 100dvh; 
     display: flex; 
     overflow: hidden; 
   }
 
-  /* SIDEBAR */
   #sidebar { 
     width: 260px; 
     background: var(--panel); 
@@ -47,7 +45,6 @@
   .btn-delete { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 14px; display: none; }
   .history-item:hover .btn-delete, .history-item.active .btn-delete { display: block; }
 
-  /* MAIN CHAT (PAKE FLEX COLUMN) */
   #main { 
     flex: 1; 
     display: flex; 
@@ -66,7 +63,6 @@
   #apiStatusBtn { padding: 8px 12px; border-radius: 6px; border: 1px solid #28a745; color: #28a745; background: rgba(40, 167, 69, 0.1); cursor: pointer; font-size: 12px; font-weight: bold; }
   #apiStatusBtn.error { border-color: #dc3545; color: #dc3545; background: rgba(220, 53, 69, 0.1); }
 
-  /* CHAT BOX (SCROLLABLE) */
   #chat-box { 
     flex: 1; 
     padding: 20px; 
@@ -82,21 +78,19 @@
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
 
-  /* INPUT AREA (NEMPEL BAWAH) */
   .input-area { 
     padding: 15px; 
     background: var(--panel); 
     border-top: 1px solid var(--border); 
     display: flex; 
     gap: 10px; 
-    flex-shrink: 0; /* INI KUNCI BIAR GA KETUTUPAN */
+    flex-shrink: 0; 
     width: 100%; 
   }
   #chat-input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; resize: none; font-size: 14px; }
   #sendBtn { padding: 0 20px; border: none; border-radius: 8px; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; }
   #sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* MODAL API */
   .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
   .modal-content { background: var(--panel); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid var(--border); }
   .modal-content h3 { margin-bottom: 15px; font-size: 16px; }
@@ -152,10 +146,14 @@
   let currentChatId = null;
   let isGenerating = false;
 
-  let sisaKuota = localStorage.getItem('lyz_creator_kuota');
+  // --- LOGIKA KUOTA PER AKUN ---
+  const activeUser = localStorage.getItem('creator_active_user') || 'guest';
+  const kuotaKey = 'lyz_creator_kuota_' + activeUser;
+  
+  let sisaKuota = localStorage.getItem(kuotaKey);
   if (sisaKuota === null) {
-    sisaKuota = 2;
-    localStorage.setItem('lyz_creator_kuota', sisaKuota);
+    sisaKuota = 2; // Dapet 2 jatah gratis buat akun baru
+    localStorage.setItem(kuotaKey, sisaKuota);
   } else {
     sisaKuota = parseInt(sisaKuota);
   }
@@ -322,8 +320,9 @@
     isGenerating = true;
     document.getElementById('sendBtn').disabled = true;
 
+    // KURANGI KUOTA
     sisaKuota--;
-    localStorage.setItem('lyz_creator_kuota', sisaKuota);
+    localStorage.setItem(kuotaKey, sisaKuota);
 
     const loadingId = 'loading-' + Date.now();
     const box = document.getElementById('chat-box');
@@ -339,7 +338,7 @@
         method: 'POST',
         headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'openai/gpt-oss-120b',
+          model: 'openai/gpt-oss-120b', // MODEL BARU YANG AKTIF
           messages: [
             { role: 'system', content: 'Kamu adalah web developer expert. Jika user minta dibuatkan web, berikan kode lengkap HTML+CSS+JS dalam satu blok kode. Pisahkan kode dengan penanda === TUTORIAL === diikuti penjelasan singkat.' },
             ...chat.messages.map(m => ({ role: m.role, content: m.text }))
@@ -362,8 +361,9 @@
       saveChats();
 
     } catch (err) {
+      // KALAU ERROR, KUOTA DIBALIKIN
       sisaKuota++;
-      localStorage.setItem('lyz_creator_kuota', sisaKuota);
+      localStorage.setItem(kuotaKey, sisaKuota);
       document.getElementById(loadingId).innerText = '❌ Error: ' + err.message;
     } finally {
       isGenerating = false;
@@ -375,4 +375,4 @@
   if (chats.length > 0) { muatChat(chats[0].id); } else { renderHistory(); }
 </script>
 </body>
-    </html>
+</html>
