@@ -9,7 +9,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   body { background: var(--bg); color: var(--text); height: 100dvh; display: flex; overflow: hidden; }
 
-  /* SIDEBAR */
   #sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100dvh; transition: transform 0.3s; z-index: 1000; }
   @media (max-width: 768px) {
     #sidebar { position: fixed; top: 0; left: 0; transform: translateX(-100%); }
@@ -31,7 +30,6 @@
   .history-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rename-input { flex: 1; background: #000; border: 1px solid var(--accent); color: white; padding: 2px 5px; border-radius: 4px; font-size: 14px; outline: none; }
 
-  /* MAIN CHAT */
   #main { flex: 1; display: flex; flex-direction: column; height: 100dvh; width: 100%; overflow: hidden; }
   .top-bar { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0; height: 56px; }
   .nav-btns { display: flex; gap: 10px; align-items: center; }
@@ -49,12 +47,10 @@
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
   
-  /* IMAGE PREVIEW */
   .img-preview { display: flex; gap: 10px; padding: 10px; background: #1e2430; border-bottom: 1px solid var(--border); align-items: center; }
   .img-preview img { height: 50px; border-radius: 4px; }
   .file-badge { background: var(--accent); color: black; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
 
-  /* INPUT AREA */
   .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; width: 100%; }
   .input-row { display: flex; gap: 10px; width: 100%; }
   #attach-btn { background: #2a2f3a; border: none; color: white; padding: 0 15px; border-radius: 8px; cursor: pointer; font-size: 18px; }
@@ -125,19 +121,16 @@
   function saveChats() { localStorage.setItem('groq_chats', JSON.stringify(chats)); }
   function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
 
-  // RENAME CHAT
   function renderHistory() {
     const list = document.getElementById('history-list');
     list.innerHTML = '';
     chats.forEach(c => {
       const item = document.createElement('div');
       item.className = 'history-item' + (c.id === currentChatId ? ' active' : '');
-      
       const title = document.createElement('div');
       title.className = 'history-title';
       title.innerText = c.title;
       title.onclick = () => muatChat(c.id);
-      
       title.ondblclick = (e) => {
         e.stopPropagation();
         const input = document.createElement('input');
@@ -145,7 +138,6 @@
         input.value = c.title;
         item.replaceChild(input, title);
         input.focus();
-
         const saveRename = () => {
           const newTitle = input.value.trim();
           if (newTitle) { c.title = newTitle; saveChats(); }
@@ -154,12 +146,10 @@
         input.onblur = saveRename;
         input.onkeydown = (e) => { if(e.key === 'Enter') saveRename(); };
       };
-
       const delBtn = document.createElement('button');
       delBtn.className = 'btn-delete';
       delBtn.innerText = '🗑';
       delBtn.onclick = (e) => { e.stopPropagation(); hapusChat(c.id); };
-
       item.appendChild(title);
       item.appendChild(delBtn);
       list.appendChild(item);
@@ -199,11 +189,9 @@
     chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial));
   }
 
-  // FILE UPLOAD HANDLING (BASE64)
   function handleFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = function(e) {
       currentImageBase64 = e.target.result;
@@ -235,10 +223,8 @@
     const box = document.getElementById('chat-box');
     const empty = document.getElementById('empty-state');
     if(empty) empty.remove();
-    
     const div = document.createElement('div');
     div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
-
     if (isUser) {
       div.innerText = text;
     } else {
@@ -273,12 +259,8 @@
     if (isGenerating) return;
     const input = document.getElementById('chat-input');
     let text = input.value.trim();
-    
     if (!text && !currentImageBase64) return;
-
-    if (sisaKuota <= 0) {
-      return alert('Waduh, kuota gratis 2x generate lu udah habis, Bily! Silakan langganan buat lanjut.');
-    }
+    if (sisaKuota <= 0) return alert('Waduh, kuota gratis 2x generate lu udah habis, Bily! Silakan langganan buat lanjut.');
 
     let chat = chats.find(c => c.id === currentChatId);
     if (!chat) { newChat(); chat = chats.find(c => c.id === currentChatId); }
@@ -288,29 +270,26 @@
       renderHistory();
     }
 
-    // Bentuk pesan user (Teks + Gambar jika ada)
     let userContent = text;
     if (currentImageBase64) {
       userContent = [
         { type: "text", text: text || "Tolong analisis gambar ini." },
         { type: "image_url", image_url: { url: currentImageBase64 } }
       ];
-      hapusFile();
     }
 
-    // Simpan ke UI (kalo ada gambar, tampilin teksnya aja dulu biar gak berat)
     let displayTeks = text;
     if (currentImageBase64) displayTeks += " [Gambar Terlampir]";
     if (!displayTeks) displayTeks = "[Gambar Terlampir]";
     
     tambahPesanUI(displayTeks, true);
-    chat.messages.push({ role: 'user', text: displayTeks, content: userContent }); // Simpan format aslinya di 'content'
+    chat.messages.push({ role: 'user', text: displayTeks, content: userContent });
     saveChats();
     input.value = '';
+    hapusFile();
 
     isGenerating = true;
     document.getElementById('sendBtn').disabled = true;
-
     sisaKuota--;
     localStorage.setItem(kuotaKey, sisaKuota);
 
@@ -324,12 +303,11 @@
     box.scrollTop = box.scrollHeight;
 
     try {
-      // NEMBAK KE API PROXY LU SENDIRI (BUKAN KE GROQ LANGSUNG)
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: currentImageBase64 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b', // Ganti model kalau ada gambar
+          model: currentImageBase64 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b',
           messages: [
             { role: 'system', content: 'Kamu adalah asisten AI yang cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS, pisahkan dengan === TUTORIAL ===. JIKA user minta hal lain (skripsi/teks/analisis gambar), jawab dengan teks biasa.' },
             ...chat.messages.map(m => ({ role: m.role, content: m.content || m.text }))
@@ -346,7 +324,6 @@
       const tutorial = parts[1] ? parts[1].trim() : null;
 
       document.getElementById(loadingId).remove();
-      
       if (tutorial) {
         tambahPesanUI(aiReply, false, code, tutorial);
         chat.messages.push({ role: 'assistant', text: aiReply, code: code, tutorial: tutorial });
@@ -354,9 +331,7 @@
         tambahPesanUI(aiReply, false, null, null);
         chat.messages.push({ role: 'assistant', text: aiReply });
       }
-      
       saveChats();
-
     } catch (err) {
       sisaKuota++;
       localStorage.setItem(kuotaKey, sisaKuota);
@@ -370,4 +345,4 @@
   if (chats.length > 0) { muatChat(chats[0].id); } else { renderHistory(); }
 </script>
 </body>
-</html>
+  </html>
