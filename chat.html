@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AI Web Generator</title>
+<title>AI Web Generator - LyzCreator</title>
 <style>
   :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   body { background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
 
-  /* SIDEBAR */
   #sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; transition: transform 0.3s; z-index: 1000; }
   @media (max-width: 768px) {
     #sidebar { position: fixed; top: 0; left: 0; transform: translateX(-100%); }
@@ -27,16 +26,12 @@
   .btn-delete { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 14px; display: none; }
   .history-item:hover .btn-delete, .history-item.active .btn-delete { display: block; }
 
-  /* MAIN CHAT */
   #main { flex: 1; display: flex; flex-direction: column; position: relative; height: 100vh; width: 100%; overflow: hidden; }
   .top-bar { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0; height: 56px; }
-  
-  /* Tombol Navigasi */
   .nav-btns { display: flex; gap: 10px; align-items: center; }
   #openSidebar { display: none; background: none; border: none; color: var(--accent); font-size: 24px; cursor: pointer; }
   @media (max-width: 768px) { #openSidebar { display: block; } }
   .btn-back { text-decoration: none; color: var(--accent); font-size: 14px; font-weight: bold; padding: 5px 10px; border: 1px solid var(--accent); border-radius: 6px; }
-  
   #apiStatusBtn { padding: 8px 12px; border-radius: 6px; border: 1px solid #28a745; color: #28a745; background: rgba(40, 167, 69, 0.1); cursor: pointer; font-size: 12px; font-weight: bold; }
   #apiStatusBtn.error { border-color: #dc3545; color: #dc3545; background: rgba(220, 53, 69, 0.1); }
 
@@ -48,13 +43,11 @@
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
 
-  /* INPUT AREA */
   .input-area { position: absolute; bottom: 0; left: 0; right: 0; padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; gap: 10px; z-index: 10; }
   #chat-input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; resize: none; font-size: 14px; }
   #sendBtn { padding: 0 20px; border: none; border-radius: 8px; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; }
   #sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* MODAL */
   .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
   .modal-content { background: var(--panel); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid var(--border); }
   .modal-content h3 { margin-bottom: 15px; font-size: 16px; }
@@ -66,7 +59,6 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <div id="sidebar">
   <div class="sidebar-header">
     <h2>History Chat</h2>
@@ -76,7 +68,6 @@
   <div id="history-list"></div>
 </div>
 
-<!-- MAIN CHAT -->
 <div id="main">
   <div class="top-bar">
     <div class="nav-btns">
@@ -90,14 +81,12 @@
     <div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan. Ketik pesan untuk mulai.</div>
   </div>
 
-  <!-- INI TAG HTML INPUT AREA YANG TADI KELUPAAN -->
   <div class="input-area">
     <textarea id="chat-input" rows="1" placeholder="Minta buat web di sini..." onkeydown="handleEnter(event)"></textarea>
     <button id="sendBtn" onclick="kirimPesan()">Kirim</button>
   </div>
 </div>
 
-<!-- MODAL API -->
 <div id="api-modal" class="modal">
   <div class="modal-content">
     <h3>Set API Key Groq</h3>
@@ -113,6 +102,15 @@
   let chats = JSON.parse(localStorage.getItem('groq_chats')) || [];
   let currentChatId = null;
   let isGenerating = false;
+
+  // Cek kuota gratis user
+  let sisaKuota = localStorage.getItem('lyz_creator_kuota');
+  if (sisaKuota === null) {
+    sisaKuota = 2; // Dapet 2 jatah gratis buat pertama kali
+    localStorage.setItem('lyz_creator_kuota', sisaKuota);
+  } else {
+    sisaKuota = parseInt(sisaKuota);
+  }
 
   function saveChats() { localStorage.setItem('groq_chats', JSON.stringify(chats)); }
   function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
@@ -253,6 +251,11 @@
     const text = input.value.trim();
     if (!text) return;
 
+    // Cek kuota sebelum ngirim ke API
+    if (sisaKuota <= 0) {
+      return alert('Waduh, kuota gratis 2x generate lu udah habis, Bily! Silakan langganan buat lanjut.');
+    }
+
     const apiKey = localStorage.getItem('groq_api_key');
     if (!apiKey) return alert('Set API Key Groq dulu!');
 
@@ -271,6 +274,10 @@
 
     isGenerating = true;
     document.getElementById('sendBtn').disabled = true;
+
+    // Kurangi kuota setiap kali nge-request ke AI
+    sisaKuota--;
+    localStorage.setItem('lyz_creator_kuota', sisaKuota);
 
     const loadingId = 'loading-' + Date.now();
     const box = document.getElementById('chat-box');
@@ -309,6 +316,9 @@
       saveChats();
 
     } catch (err) {
+      // Kalau error dari API, balikin kuota user
+      sisaKuota++;
+      localStorage.setItem('lyz_creator_kuota', sisaKuota);
       document.getElementById(loadingId).innerText = '❌ Error: ' + err.message;
     } finally {
       isGenerating = false;
