@@ -6,12 +6,31 @@
 <title>Creator Web - Dashboard</title>
 <style>
     :root { --bg: #0a0c10; --text: #ffffff; --accent: #e6b450; --panel: rgba(18, 21, 28, 0.9); --card-bg: rgba(255,255,255,0.05); }
-    body.light-mode { --bg: rgba(244, 244, 244, 0.9); --text: #000000; --accent: #d19a29; --panel: rgba(255, 255, 255, 0.95); --card-bg: rgba(0, 0, 0, 0.05); background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.95) 100%), url('fantasia.png'); }
+    
+    /* FIX TEMA TERANG: Background tetep ada, overlay berubah */
+    body.light-mode { 
+        --bg: #f4f4f4; 
+        --text: #000000; 
+        --accent: #ffb300; /* Tombol lebih cerah */
+        --panel: rgba(255, 255, 255, 0.95); 
+        --card-bg: rgba(0, 0, 0, 0.05); 
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.98) 100%), url('fantasia.png'); 
+    }
     
     * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
     body { background-image: linear-gradient(to bottom, rgba(10, 12, 16, 0.7) 0%, rgba(10, 12, 16, 0.95) 100%), url('fantasia.png'); background-size: cover; background-position: center top; background-attachment: fixed; background-color: #0a0c10; color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
 
-    /* --- CUSTOM ALERT (SESUAI REFERENSI FOTO 2) --- */
+    /* --- NAVBAR --- */
+    .navbar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 5vh; z-index: 10; position: relative; background: var(--panel); border: 1px solid #333; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .nav-left { display: flex; align-items: center; gap: 15px; }
+    .nav-icon { font-size: 24px; color: var(--text); cursor: pointer; }
+    .nav-title { font-size: 18px; font-weight: bold; color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 15px; }
+    .nav-controls { display: flex; gap: 10px; }
+    .btn-control { background: rgba(128,128,128,0.2); border: 1px solid #555; color: var(--text); width: 40px; height: 40px; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    .btn-control:hover { background: var(--accent); color: black; }
+    
+    /* --- CUSTOM ALERT --- */
     #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
     .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
     .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
@@ -19,15 +38,6 @@
     .alert-btn { background: transparent; border: none; border-top: 1px solid #444; color: #0a84ff; width: 100%; padding: 16px; font-size: 17px; font-weight: bold; cursor: pointer; outline: none; }
     .alert-btn:hover { background: rgba(255,255,255,0.05); }
 
-    /* --- NAVBAR (SESUAI REFERENSI FOTO 1) --- */
-    .navbar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; padding: 15px 0; margin-bottom: 5vh; z-index: 10; position: relative; }
-    .nav-left { display: flex; align-items: center; gap: 15px; }
-    .nav-icon { font-size: 24px; color: var(--text); cursor: pointer; }
-    .nav-title { font-size: 18px; font-weight: bold; color: var(--text); }
-    .nav-right { display: flex; align-items: center; gap: 15px; }
-    .nav-controls { display: flex; gap: 10px; }
-    .btn-control { background: transparent; border: none; color: var(--text); font-size: 22px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-    
     /* --- OVERLAY & SIDEBAR --- */
     .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-filter: blur(3px); }
     .overlay.active { display: block; }
@@ -40,7 +50,7 @@
     
     /* --- DASHBOARD --- */
     .dashboard { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; width: 100%; max-width: 600px; margin-bottom: 10vh; z-index: 10; position: relative; gap: 15px; }
-    .btn-start { padding: 20px 50px; border-radius: 50px; font-weight: 800; font-size: 22px; cursor: pointer; background: rgba(230, 180, 80, 0.95); border: 2px solid var(--accent); color: #000; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 15px rgba(230,180,80,0.3); }
+    .btn-start { padding: 20px 50px; border-radius: 50px; font-weight: 800; font-size: 22px; cursor: pointer; background: var(--accent); border: 2px solid var(--accent); color: black; text-decoration: none; text-align: center; width: 100%; box-shadow: 0 4px 15px rgba(230,180,80,0.3); }
     .row-top { display: flex; gap: 15px; justify-content: center; width: 100%; }
     .btn-oval { flex: 1; padding: 18px 10px; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; background: var(--card-bg); border: 1px solid #333; color: var(--text); text-align: center; }
 
@@ -51,9 +61,8 @@
     .modal-content button { padding: 10px; background: var(--accent); color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px; width: 100%; }
 
     /* --- FULL SCREEN STYLES --- */
-    .pricing-screen, .history-screen, .deploy-screen, .music-screen, .privacy-screen, .settings-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; flex-direction: column; z-index: 10000; color: var(--text); }
-    .privacy-screen, .deploy-screen, .settings-screen { padding: 20px; overflow-y: auto; background: #0f0f11; }
-    body.light-mode .privacy-screen, body.light-mode .deploy-screen, body.light-mode .settings-screen { background: #f4f4f4; }
+    .pricing-screen, .history-screen, .deploy-screen, .music-screen, .privacy-screen, .settings-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--panel); display: flex; flex-direction: column; z-index: 10000; color: var(--text); backdrop-filter: blur(10px); }
+    body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mode .deploy-screen, body.light-mode .music-screen, body.light-mode .privacy-screen, body.light-mode .settings-screen { background: #f4f4f4; }
 
     .fs-header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; background: var(--panel); }
     .fs-header h1 { font-size: 20px; margin: 0; color: var(--text); }
@@ -91,7 +100,7 @@
     .settings-sub { font-size: 12px; color: #888; }
     .settings-arrow { color: #666; font-size: 18px; }
 
-    /* --- TEXT CONTENT (DEPLOY/PRIVACY) --- */
+    /* --- TEXT CONTENT --- */
     .text-content { flex: 1; overflow-y: auto; font-size: 14px; color: var(--text); line-height: 1.8; padding-bottom: 20px; }
     .text-content h2 { font-size: 16px; color: var(--accent); margin-top: 20px; margin-bottom: 10px; }
     .text-content ul { padding-left: 20px; }
@@ -117,7 +126,7 @@
 
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; font-size: 13px; color: #888; margin-bottom: 5px; }
-    .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: var(--bg); color: var(--text); outline: none; }
+    .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: var(--card-bg); color: var(--text); outline: none; }
     .btn-google { background: #fff; color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;}
     .divider { text-align: center; margin: 15px 0; color: #888; font-size: 12px; }
 </style>
@@ -135,11 +144,11 @@
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <audio id="bg-music" loop src=""></audio>
 
-    <!-- NAVBAR -->
+    <!-- NAVBAR BARU -->
     <div class="navbar">
         <div class="nav-left">
             <div class="nav-icon" onclick="toggleMenu()">☰</div>
-            <div class="nav-title">Proyek Baru</div>
+            <div class="nav-title" data-i18n="app_title">LyzCreator</div>
         </div>
         <div class="nav-right">
             <div class="nav-controls">
@@ -151,30 +160,30 @@
 
     <div class="dashboard">
         <div class="user-info" style="margin-bottom: 10px; font-size: 14px; color: var(--accent); cursor:pointer;" onclick="openModal('settings')">Halo, <span id="user-display">User</span></div>
-        <a href="chat.html" class="btn-start" onclick="cekLoginDanMasuk()">🚀 Mulai Bikin Web?</a>
+        <a href="chat.html" class="btn-start" onclick="cekLoginDanMasuk()" data-i18n="btn_start">🚀 Mulai Bikin Web?</a>
         <div class="row-top">
-            <a href="#" class="btn-oval" onclick="openModal('pricing')">Lihat Harga Premium</a>
-            <a href="#" class="btn-oval" onclick="openModal('deploy')">Cara Deploy Web</a> 
+            <a href="#" class="btn-oval" onclick="openModal('pricing')" data-i18n="btn_pricing">Lihat Harga Premium</a>
+            <a href="#" class="btn-oval" onclick="openModal('deploy')" data-i18n="btn_deploy">Cara Deploy Web</a> 
         </div>
     </div>
 
     <!-- SIDEBAR -->
     <div class="sidebar" id="mySidebar">
         <div class="close-btn" onclick="toggleMenu()">×</div>
-        <h3>Menu Creator</h3>
-        <a onclick="openModal('inbox')">📬 Kotak Masuk</a>
-        <a onclick="openModal('history')">📜 Histori</a>
-        <a onclick="openModal('music')">🎵 Cari Lagu</a>
-        <a onclick="openModal('settings')">⚙️ Pengaturan</a>
-        <a onclick="openModal('privacy')">🔒 Privacy & Policy</a>
+        <h3 data-i18n="menu_title">Menu Creator</h3>
+        <a onclick="openModal('inbox')" data-i18n="menu_inbox">📬 Kotak Masuk</a>
+        <a onclick="openModal('history')" data-i18n="menu_history">📜 Histori</a>
+        <a onclick="openModal('music')" data-i18n="menu_music">🎵 Cari Lagu</a>
+        <a onclick="openModal('settings')" data-i18n="menu_settings">⚙️ Pengaturan</a>
+        <a onclick="openModal('privacy')" data-i18n="menu_privacy">🔒 Privacy & Policy</a>
     </div>
 
-    <!-- PRICING LENGKAP -->
+    <!-- PRICING -->
     <div class="modal" id="modal-pricing">
         <div class="pricing-screen">
             <div class="fs-header">
                 <div class="fs-back" onclick="tutupModal('pricing')">←</div>
-                <h1>Pilih Paket Premium</h1>
+                <h1 data-i18n="pricing_title">Pilih Paket Premium</h1>
             </div>
             <div style="padding: 20px; overflow-y: auto;">
                 <div class="pricing-card">
@@ -218,12 +227,12 @@
         </div>
     </div>
 
-    <!-- DEPLOY SCREEN -->
+    <!-- DEPLOY -->
     <div class="modal" id="modal-deploy">
         <div class="deploy-screen">
             <div class="fs-header" style="margin: -20px -20px 20px -20px;">
                 <div class="fs-back" onclick="tutupModal('deploy')">←</div>
-                <h1>Cara Deploy Web</h1>
+                <h1 data-i18n="deploy_title">Cara Deploy Web</h1>
             </div>
             <div class="text-content">
                 <p>Ikuti panduan lengkap ini untuk merilis web buatanmu ke internet secara gratis:</p>
@@ -239,16 +248,16 @@
         </div>
     </div>
 
-    <!-- HISTORY TABS -->
+    <!-- HISTORY -->
     <div class="modal" id="modal-history">
         <div class="history-screen">
             <div class="fs-header">
                 <div class="fs-back" onclick="tutupModal('history')">←</div>
-                <h1>Histori</h1>
+                <h1 data-i18n="history_title">Histori</h1>
             </div>
             <div class="history-tabs">
-                <div class="history-tab active" id="tab-pembelian" onclick="switchHistoryTab('pembelian')">Histori Pembelian</div>
-                <div class="history-tab" id="tab-permintaan" onclick="switchHistoryTab('permintaan')">Histori Permintaan</div>
+                <div class="history-tab active" id="tab-pembelian" onclick="switchHistoryTab('pembelian')" data-i18n="tab_purchase">Histori Pembelian</div>
+                <div class="history-tab" id="tab-permintaan" onclick="switchHistoryTab('permintaan')" data-i18n="tab_request">Histori Permintaan</div>
             </div>
             <div style="flex:1; overflow:hidden; position:relative;">
                 <div class="history-content-wrapper" id="history-wrapper">
@@ -264,7 +273,7 @@
         <div class="gmail-inbox" style="background: var(--bg); height: 100%; display: flex; flex-direction: column;">
             <div class="fs-header">
                 <div class="fs-back" onclick="tutupModal('inbox')">←</div>
-                <h1>Kotak Masuk</h1>
+                <h1 data-i18n="inbox_title">Kotak Masuk</h1>
             </div>
             <div class="gmail-list" id="inbox-content" style="flex: 1; overflow-y: auto; padding: 20px;"></div>
         </div>
@@ -301,35 +310,48 @@
         <div class="settings-screen">
             <div class="fs-header" style="margin: -20px -20px 20px -20px;">
                 <div class="fs-back" onclick="tutupModal('settings')">←</div>
-                <h1>Pengaturan</h1>
+                <h1 data-i18n="settings_title">Pengaturan</h1>
             </div>
+            
             <div class="settings-group" style="display: flex; gap: 10px; padding: 15px; cursor:pointer;" onclick="gantiTema()">
                 <div style="font-size: 24px;">🌗</div>
-                <div><div class="settings-title">Mode Layar</div><div class="settings-sub">Ganti tema terang/gelap</div></div>
+                <div><div class="settings-title" data-i18n="settings_theme">Mode Layar</div><div class="settings-sub" data-i18n="settings_theme_sub">Ganti tema terang/gelap</div></div>
             </div>
+            
             <div class="settings-group">
                 <div class="settings-item" onclick="openModal('edit-profile')">
                     <img src="https://ui-avatars.com/api/?name=User&background=random" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 15px;">
-                    <div class="settings-text"><div class="settings-title" id="settings-username">Username</div><div class="settings-sub">Kelola profil kamu.</div></div>
+                    <div class="settings-text"><div class="settings-title" id="settings-username">Username</div><div class="settings-sub" data-i18n="settings_profile_sub">Kelola profil kamu.</div></div>
                     <div class="settings-arrow">›</div>
                 </div>
             </div>
+
             <div class="settings-group">
-                <div class="settings-item" onclick="ubahBahasa()">
+                <div class="settings-item" onclick="openModal('lang-select')">
                     <div class="settings-icon" style="background:#4d79ff;">🌐</div>
-                    <div class="settings-text"><div class="settings-title">Bahasa</div><div class="settings-sub">Ubah bahasa aplikasi.</div></div>
+                    <div class="settings-text"><div class="settings-title" data-i18n="settings_lang">Bahasa</div><div class="settings-sub" id="current-lang-display">Indonesia</div></div>
                     <div class="settings-arrow">›</div>
                 </div>
                 <div class="settings-item" onclick="openModal('privacy')">
                     <div class="settings-icon" style="background:#e6b450;">🔒</div>
-                    <div class="settings-text"><div class="settings-title">Keamanan & privasi</div></div>
+                    <div class="settings-text"><div class="settings-title" data-i18n="menu_privacy">Keamanan & privasi</div></div>
                     <div class="settings-arrow">›</div>
                 </div>
                 <div class="settings-item" onclick="logout()">
                     <div class="settings-icon" style="background:#ff3333;">🚪</div>
-                    <div class="settings-text"><div class="settings-title" style="color:#ff3333;">Keluar Akun</div></div>
+                    <div class="settings-text"><div class="settings-title" style="color:#ff3333;" data-i18n="settings_logout">Keluar Akun</div></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- LANG SELECT -->
+    <div class="modal" id="modal-lang-select">
+        <div class="modal-content">
+            <h3 data-i18n="settings_lang">Pilih Bahasa</h3>
+            <button onclick="setLanguage('id')" style="background: #333; color: white; margin-bottom: 10px;">🇮🇩 Indonesia</button>
+            <button onclick="setLanguage('en')" style="background: #333; color: white; margin-bottom: 10px;">🇺🇸 English</button>
+            <button onclick="tutupModal('lang-select')" style="background: var(--accent); color: black;">Tutup</button>
         </div>
     </div>
 
@@ -338,7 +360,7 @@
         <div class="privacy-screen">
             <div class="fs-header" style="margin: -20px -20px 20px -20px;">
                 <div class="fs-back" onclick="tutupModal('privacy')">←</div>
-                <h1>Privacy & Policy</h1>
+                <h1 data-i18n="privacy_title">Privacy & Policy</h1>
             </div>
             <div class="text-content">
                 <p><b>Terakhir Diperbarui: Hari ini.</b></p>
@@ -360,39 +382,78 @@
     <!-- EDIT PROFILE -->
     <div class="modal" id="modal-edit-profile">
         <div class="modal-content">
-            <h3>👤 Edit Profil</h3>
-            <div class="form-group"><label>Username</label><input type="text" id="edit-username"></div>
-            <div class="form-group"><label>Email (Tertaut)</label><input type="email" id="edit-email"></div>
-            <button onclick="simpanProfile()">Simpan</button>
-            <button onclick="tutupModal('edit-profile')" style="background: #333; color: white;">Batal</button>
+            <h3 data-i18n="edit_profile_title">👤 Edit Profil</h3>
+            <div class="form-group"><label data-i18n="edit_profile_user">Username</label><input type="text" id="edit-username"></div>
+            <div class="form-group"><label data-i18n="edit_profile_email">Email (Tertaut)</label><input type="email" id="edit-email"></div>
+            <button onclick="simpanProfile()" data-i18n="edit_profile_save">Simpan</button>
+            <button onclick="tutupModal('edit-profile')" style="background: #333; color: white;" data-i18n="edit_profile_cancel">Batal</button>
         </div>
     </div>
 
     <!-- AUTH -->
     <div class="modal" id="modal-auth">
         <div class="modal-content">
-            <h3 id="auth-title">Login ke LyzCreator</h3>
+            <h3 id="auth-title" data-i18n="auth_login">Login ke LyzCreator</h3>
             <div id="auth-fields">
-                <div class="form-group"><label>Username</label><input type="text" id="auth-username" placeholder="Masukin username"></div>
-                <div class="form-group" id="email-group"><label>Email</label><input type="email" id="auth-email" placeholder="email@contoh.com"></div>
-                <div class="form-group"><label>Password (Min. 8 Karakter)</label><input type="password" id="auth-password" placeholder="********"></div>
+                <div class="form-group"><label data-i18n="edit_profile_user">Username</label><input type="text" id="auth-username" placeholder="Masukin username"></div>
+                <div class="form-group" id="email-group"><label data-i18n="edit_profile_email">Email</label><input type="email" id="auth-email" placeholder="email@contoh.com"></div>
+                <div class="form-group"><label data-i18n="auth_pass">Password (Min. 8 Karakter)</label><input type="password" id="auth-password" placeholder="********"></div>
             </div>
-            <button onclick="prosesAuth()" id="auth-btn">Masuk</button>
-            <button class="btn-google" onclick="loginGoogle()">Login pakai Google</button>
-            <div class="divider">Atau</div>
-            <p style="text-align:center; font-size: 14px; cursor: pointer;" onclick="toggleAuthMode()" id="auth-switch">Belum punya akun? Daftar</p>
+            <button onclick="prosesAuth()" id="auth-btn" data-i18n="auth_login">Masuk</button>
+            <button class="btn-google" onclick="loginGoogle()" data-i18n="auth_google">Login pakai Google</button>
+            <div class="divider" data-i18n="auth_or">Atau</div>
+            <p style="text-align:center; font-size: 14px; cursor: pointer;" onclick="toggleAuthMode()" id="auth-switch" data-i18n="auth_switch">Belum punya akun? Daftar</p>
         </div>
     </div>
     <script>
-    // --- CUSTOM ALERT LOGIC ---
+    // --- KAMUS BAHASA ---
+    const translations = {
+        id: {
+            app_title: "LyzCreator", btn_start: "🚀 Mulai Bikin Web?", btn_pricing: "Lihat Harga Premium", btn_deploy: "Cara Deploy Web",
+            menu_title: "Menu Creator", menu_inbox: "📬 Kotak Masuk", menu_history: "📜 Histori", menu_music: "🎵 Cari Lagu", menu_settings: "⚙️ Pengaturan", menu_privacy: "🔒 Privacy & Policy",
+            pricing_title: "Pilih Paket Premium", deploy_title: "Cara Deploy Web", history_title: "Histori", tab_purchase: "Histori Pembelian", tab_request: "Histori Permintaan",
+            inbox_title: "Kotak Masuk", settings_title: "Pengaturan", settings_theme: "Mode Layar", settings_theme_sub: "Ganti tema terang/gelap",
+            settings_profile_sub: "Kelola profil kamu.", settings_lang: "Bahasa", settings_logout: "Keluar Akun",
+            privacy_title: "Privacy & Policy", edit_profile_title: "👤 Edit Profil", edit_profile_user: "Username", edit_profile_email: "Email (Tertaut)",
+            edit_profile_save: "Simpan", edit_profile_cancel: "Batal", auth_login: "Masuk", auth_pass: "Password (Min. 8 Karakter)", auth_google: "Login pakai Google",
+            auth_or: "Atau", auth_switch: "Belum punya akun? Daftar"
+        },
+        en: {
+            app_title: "LyzCreator", btn_start: "🚀 Start Building Web?", btn_pricing: "View Premium Pricing", btn_deploy: "How to Deploy Web",
+            menu_title: "Creator Menu", menu_inbox: "📬 Inbox", menu_history: "📜 History", menu_music: "🎵 Search Song", menu_settings: "⚙️ Settings", menu_privacy: "🔒 Privacy & Policy",
+            pricing_title: "Choose Premium Plan", deploy_title: "How to Deploy Web", history_title: "History", tab_purchase: "Purchase History", tab_request: "Request History",
+            inbox_title: "Inbox", settings_title: "Settings", settings_theme: "Display Mode", settings_theme_sub: "Change light/dark theme",
+            settings_profile_sub: "Manage your profile.", settings_lang: "Language", settings_logout: "Logout",
+            privacy_title: "Privacy & Policy", edit_profile_title: "👤 Edit Profile", edit_profile_user: "Username", edit_profile_email: "Email (Linked)",
+            edit_profile_save: "Save", edit_profile_cancel: "Cancel", auth_login: "Login", auth_pass: "Password (Min. 8 Characters)", auth_google: "Login with Google",
+            auth_or: "Or", auth_switch: "Don't have an account? Register"
+        }
+    };
+
+    function setLanguage(lang) {
+        localStorage.setItem('lyz_lang', lang);
+        applyLanguage();
+        tutupModal('lang-select');
+        document.getElementById('current-lang-display').innerText = lang === 'id' ? 'Indonesia' : 'English';
+    }
+
+    function applyLanguage() {
+        const lang = localStorage.getItem('lyz_lang') || 'id';
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(translations[lang] && translations[lang][key]) {
+                el.innerText = translations[lang][key];
+            }
+        });
+    }
+
+    // --- CUSTOM ALERT ---
     function showAlert(title, message) {
         document.getElementById('alert-title').innerText = title;
         document.getElementById('alert-message').innerText = message;
         document.getElementById('custom-alert').style.display = 'flex';
     }
-    function tutupAlert() {
-        document.getElementById('custom-alert').style.display = 'none';
-    }
+    function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
 
     // --- LOGIKA TEMA ---
     function gantiTema() {
@@ -400,9 +461,7 @@
         const isLight = document.body.classList.contains('light-mode');
         localStorage.setItem('lyz_theme', isLight ? 'light' : 'dark');
     }
-    if(localStorage.getItem('lyz_theme') === 'light') {
-        document.body.classList.add('light-mode');
-    }
+    if(localStorage.getItem('lyz_theme') === 'light') document.body.classList.add('light-mode');
 
     // --- LOGIKA MUSIK ---
     const music = document.getElementById('bg-music');
@@ -441,9 +500,10 @@
     let isLoginMode = true;
     function toggleAuthMode() {
         isLoginMode = !isLoginMode;
-        document.getElementById('auth-title').innerText = isLoginMode ? "Login ke LyzCreator" : "Daftar Akun Baru";
-        document.getElementById('auth-btn').innerText = isLoginMode ? "Masuk" : "Daftar";
-        document.getElementById('auth-switch').innerText = isLoginMode ? "Belum punya akun? Daftar" : "Udah punya akun? Login";
+        const lang = localStorage.getItem('lyz_lang') || 'id';
+        document.getElementById('auth-title').innerText = isLoginMode ? (lang === 'id' ? "Login ke LyzCreator" : "Login to LyzCreator") : (lang === 'id' ? "Daftar Akun Baru" : "Register New Account");
+        document.getElementById('auth-btn').innerText = isLoginMode ? (lang === 'id' ? "Masuk" : "Login") : (lang === 'id' ? "Daftar" : "Register");
+        document.getElementById('auth-switch').innerText = isLoginMode ? (lang === 'id' ? "Belum punya akun? Daftar" : "Don't have an account? Register") : (lang === 'id' ? "Udah punya akun? Login" : "Already have an account? Login");
         document.getElementById('email-group').style.display = isLoginMode ? 'none' : 'block'; 
     }
 
@@ -457,7 +517,7 @@
 
         localStorage.setItem('creator_active_user', user);
         localStorage.setItem('creator_email', email || 'user@gmail.com');
-        showAlert("Berhasil", `Berhasil ${isLoginMode ? 'Login' : 'Daftar'}!`);
+        showAlert("Berhasil", "Login Berhasil!");
         document.getElementById('modal-auth').style.display = 'none';
         updateUserDisplay();
     }
@@ -480,8 +540,6 @@
 
     function updateUserDisplay() {
         const activeUser = localStorage.getItem('creator_active_user');
-        const userEmail = localStorage.getItem('creator_email') || 'user@email.com';
-        
         if(activeUser) {
             document.getElementById('user-display').innerText = activeUser;
             document.getElementById('settings-username').innerText = activeUser;
@@ -504,7 +562,6 @@
         document.getElementById('tab-pembelian').classList.remove('active');
         document.getElementById('tab-permintaan').classList.remove('active');
         document.getElementById('tab-' + tab).classList.add('active');
-
         const wrapper = document.getElementById('history-wrapper');
         if(tab === 'pembelian') {
             wrapper.style.transform = 'translateX(0)';
@@ -533,19 +590,14 @@
 
     function renderHistoryPermintaan() {
         let history = JSON.parse(localStorage.getItem('lyz_history')) || [];
-        if (history.length > 10) { 
-            history = history.slice(0, 10); 
-            localStorage.setItem('lyz_history', JSON.stringify(history)); 
-        }
-        
+        if (history.length > 10) { history = history.slice(0, 10); localStorage.setItem('lyz_history', JSON.stringify(history)); }
         const container = document.getElementById('history-permintaan');
         if (history.length === 0) {
-            container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada permintaan. Silakan buat web di menu utama.</p>";
+            container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada permintaan.</p>";
         } else {
             container.innerHTML = history.map((h, i) => `
                 <div class="history-card">
-                    <span style="color: var(--accent); font-weight: bold; margin-right: 10px;">${i+1}.</span> 
-                    ${h}
+                    <span style="color: var(--accent); font-weight: bold; margin-right: 10px;">${i+1}.</span> ${h}
                 </div>
             `).join('');
         }
@@ -585,10 +637,6 @@
         }
     }
 
-    function ubahBahasa() {
-        showAlert("Fitur Aktif", "Ganti Bahasa Berhasil Diaktifkan (Simulasi)!");
-    }
-
     function prosesBayar(namaPaket, harga, hari) {
         if(confirm(`Konfirmasi Pembayaran ${namaPaket} sebesar Rp ${harga.toLocaleString()}?`)) {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -616,12 +664,7 @@
     function renderInbox() {
         let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
         const container = document.getElementById('inbox-content');
-        
-        if(inbox.length === 0) { 
-            container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada email masuk.</p>"; 
-            return; 
-        }
-
+        if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada email masuk.</p>"; return; }
         container.innerHTML = inbox.map((msg, i) => `
             <div style="background: var(--card-bg); border-radius:12px; padding:15px; margin-bottom:15px; border-left: 4px solid var(--accent);">
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
@@ -655,16 +698,10 @@
         if (!query) return;
         const res = document.getElementById('music-results');
         res.innerHTML = "<div style='text-align:center; color:#aaa;'>Mencari lagu...</div>";
-        
         try {
             const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&limit=10&media=music`);
             const data = await response.json();
-            
-            if(data.results.length === 0) {
-                res.innerHTML = "<div style='text-align:center; color:#aaa;'>Lagu tidak ditemukan.</div>";
-                return;
-            }
-
+            if(data.results.length === 0) { res.innerHTML = "<div style='text-align:center; color:#aaa;'>Lagu tidak ditemukan.</div>"; return; }
             res.innerHTML = data.results.map(track => `
                 <div class="music-track-item" onclick="putarPreview('${track.previewUrl}', '${track.trackName}', '${track.artistName}', '${track.artworkUrl60}')">
                     <img src="${track.artworkUrl60}" class="music-track-cover" alt="cover">
@@ -674,25 +711,24 @@
                     </div>
                 </div>
             `).join('');
-        } catch (err) { 
-            res.innerHTML = "<div style='text-align:center; color:#ff3333;'>Gagal mengambil data.</div>"; 
-        }
+        } catch (err) { res.innerHTML = "<div style='text-align:center; color:#ff3333;'>Gagal mengambil data.</div>"; }
     }
 
     function putarPreview(url, judul, artis, cover) {
         if (!url) return showAlert("Gagal", "Preview lagu tidak tersedia.");
         music.src = url; music.load(); music.play();
-        
         document.getElementById('mini-player').style.display = 'flex';
         document.getElementById('mini-title').innerText = judul;
         document.getElementById('mini-artist').innerText = artis;
         document.getElementById('mini-cover').src = cover;
-        
         updatePlayButtons();
         tutupModal('music');
     }
 
+    // --- INIT ---
+    applyLanguage();
     updateUserDisplay();
+    document.getElementById('current-lang-display').innerText = (localStorage.getItem('lyz_lang') || 'id') === 'id' ? 'Indonesia' : 'English';
 </script>
 </body>
 </html>
