@@ -571,7 +571,6 @@
     let inbox = JSON.parse(localStorage.getItem('lyz_inbox'));
     if(inbox[index].status === 'used') return;
     
-    // Ubah status jadi used
     inbox[index].status = 'used';
     localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
     
