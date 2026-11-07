@@ -650,19 +650,29 @@ function verifikasiAksi(aksi) {
 function renderInbox() {
     let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
     const container = document.getElementById('inbox-content');
-    if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada email masuk.</p>"; return; }
+    
+    if(inbox.length === 0) { 
+        container.innerHTML = "<div style='text-align:center; color:#888; padding:20px;'>Belum ada email masuk.</div>"; 
+        return; 
+    }
+
     container.innerHTML = inbox.map((msg, i) => `
-        <div style="background: var(--card-bg); border-radius:12px; padding:15px; margin-bottom:15px; border-left: 4px solid var(--accent);">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="font-weight:bold; color:var(--text);">LyzCreator</span><span style="font-size:12px; color:#888;">${msg.timeStr}</span></div>
-            <div style="font-weight:bold; margin-bottom:5px; color:var(--text);">Kode Aktivasi ${msg.namaPaket}</div>
-            <div style="font-size:13px; color:#888; margin-bottom:10px;">Dibeli pada ${msg.dateStr}.</div>
-            <div style="display:flex; gap:10px;">
-                <button onclick="navigator.clipboard.writeText('${msg.code}'); showAlert('Tersalin', 'Kode ${msg.code} berhasil di-copy!')" style="flex:1; padding:10px; border-radius:8px; background:#333; color:#fff; border:none; font-weight:bold;">Copy: ${msg.code}</button>
-                <button onclick="aktivasiKode(${i})" style="flex:1; padding:10px; border-radius:8px; background:var(--accent); color:#000; border:none; font-weight:bold;" ${msg.status === 'used' ? 'disabled' : ''}>${msg.status === 'used' ? 'Aktif' : 'Aktivasi'}</button>
+        <div style="background: var(--card-bg); border-radius:12px; padding:15px; margin-bottom:15px; border-left: 4px solid var(--accent); display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:bold; color:var(--text); font-size:15px;">LyzCreator Official</span>
+                <span style="font-size:12px; color:#888;">${msg.timeStr}</span>
+            </div>
+            <div style="font-weight:bold; color:var(--accent); font-size:14px;">Aktivasi ${msg.namaPaket}</div>
+            <div style="font-size:13px; color:#aaa; line-height:1.4;">Haiii! Ini kode aktivasi lu yang dibeli pada ${msg.dateStr}. Klik tombol di bawah buat langsung aktivasi yaa.</div>
+            <div style="display:flex; gap:10px; margin-top:5px;">
+                <button onclick="navigator.clipboard.writeText('${msg.code}'); showAlert('Tersalin', 'Kode ${msg.code} berhasil di-copy!')" style="flex:1; padding:10px; border-radius:8px; background:#333; color:#fff; border:none; font-weight:bold; font-size:13px; cursor:pointer;">Copy: ${msg.code}</button>
+                <button onclick="aktivasiKode(${i})" style="flex:1; padding:10px; border-radius:8px; background:var(--accent); color:#000; border:none; font-weight:bold; font-size:13px; cursor:pointer;" ${msg.status === 'used' ? 'disabled style="background:#555; color:#888;"' : ''}>
+                    ${msg.status === 'used' ? 'Sudah Aktif' : 'Aktivasi'}
+                </button>
             </div>
         </div>
     `).join('');
-}
+  }
 
 function aktivasiKode(index) {
     let inbox = JSON.parse(localStorage.getItem('lyz_inbox'));
