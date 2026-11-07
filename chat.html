@@ -8,6 +8,7 @@
   :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   body { background: var(--bg); color: var(--text); height: 100dvh; display: flex; overflow: hidden; }
+  
   #sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100dvh; transition: transform 0.3s; z-index: 1000; }
   @media (max-width: 768px) { #sidebar { position: fixed; top: 0; left: 0; transform: translateX(-100%); } #sidebar.show { transform: translateX(0); } }
   .sidebar-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -29,9 +30,7 @@
   @media (max-width: 768px) { #openSidebar { display: block; } }
   .btn-back { text-decoration: none; color: var(--accent); font-size: 14px; font-weight: bold; padding: 5px 10px; border: 1px solid var(--accent); border-radius: 6px; }
 
-  /* EMPTY STATE (LOGO SPIDER) */
   #empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #fff; text-align: center; padding: 20px; }
-  #empty-state img { width: 60px; height: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(230, 180, 80, 0.5)); }
   #empty-state h2 { font-size: 20px; font-weight: 600; }
 
   #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
@@ -46,16 +45,31 @@
   .file-preview { display: flex; gap: 10px; padding: 10px; background: #1e2430; border-bottom: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
   .file-badge { background: var(--accent); color: black; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
   
-  .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; width: 100%; }
-  .mode-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-  #ai-mode-select { background: var(--bg); color: var(--accent); border: 1px solid var(--accent); padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; outline: none; }
-  #status-text { font-size: 12px; color: #888; }
+  /* HEADER AI MODE BARU */
+  .mode-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .mode-selector { display: flex; align-items: center; gap: 5px; cursor: pointer; position: relative; }
+  .mode-selector h3 { font-size: 16px; font-weight: normal; color: #ddd; }
+  .mode-selector.active h3 { color: var(--accent); }
+  .btn-upgrade { background: #2a3163; color: #fff; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: bold; }
   
+  /* DROPDOWN MENU MODE */
+  .dropdown-mode { display: none; position: absolute; top: 40px; left: 15px; background: #1e1e1e; border-radius: 16px; width: 250px; padding: 15px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #333; }
+  .dropdown-mode.show { display: block; }
+  .mode-option { display: flex; align-items: center; gap: 15px; padding: 10px; border-radius: 10px; cursor: pointer; }
+  .mode-option:hover { background: #2a2a2a; }
+  .mode-option.locked { opacity: 0.5; cursor: not-allowed; }
+  .mode-icon { width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; font-size: 18px; }
+  .mode-info h4 { font-size: 15px; color: #fff; margin-bottom: 2px; font-weight: normal; }
+  .mode-info p { font-size: 12px; color: #888; }
+  .mode-check { margin-left: auto; color: #fff; display: none; }
+  .mode-option.selected .mode-check { display: block; }
+
+  /* INPUT AREA */
+  .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; width: 100%; }
   .input-row { display: flex; gap: 10px; width: 100%; align-items: flex-end; background: #1e2430; border-radius: 20px; padding: 5px 10px; border: 1px solid var(--border); }
-  #attach-btn, #voice-btn { background: transparent; border: none; color: #aaa; padding: 10px; cursor: pointer; font-size: 20px; }
+  #attach-btn { background: transparent; border: none; color: #aaa; padding: 10px; cursor: pointer; font-size: 20px; }
   #chat-input { flex: 1; padding: 10px 0; background: transparent; border: none; color: var(--text); outline: none; resize: none; font-size: 14px; max-height: 100px; }
   #sendBtn { padding: 10px; border: none; border-radius: 50%; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; margin-bottom: 2px; }
-  #sendBtn svg { width: 20px; height: 20px; fill: currentColor; }
 
   /* BOTTOM SHEET */
   .bottom-sheet-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; }
@@ -65,23 +79,9 @@
   .bs-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
   .bs-item { background: #1e2430; border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; color: #fff; }
   .bs-item svg { width: 30px; height: 30px; fill: #fff; }
-
-  #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-  .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
-  .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
-  .alert-message { padding: 0 20px 25px 20px; font-size: 14px; color: #ccc; }
-  .alert-btn { background: transparent; border: none; border-top: 1px solid #444; color: #0a84ff; width: 100%; padding: 16px; font-size: 17px; font-weight: bold; cursor: pointer; }
 </style>
 </head>
 <body>
-
-<div id="custom-alert">
-    <div class="alert-box">
-        <div class="alert-title" id="alert-title">Pemberitahuan</div>
-        <div class="alert-message" id="alert-message">Pesan notifikasi akan muncul di sini.</div>
-        <button class="alert-btn" onclick="tutupAlert()">Oke</button>
-    </div>
-</div>
 
 <div id="sidebar">
   <div class="sidebar-header">
@@ -98,36 +98,60 @@
       <button id="openSidebar" onclick="toggleSidebar()">☰</button>
       <a href="creator.html" class="btn-back">← Dashboard</a>
     </div>
-    <span id="status-indicator" style="color: #28a745; font-size: 12px; font-weight: bold; padding: 5px 10px; border: 1px solid #28a745; border-radius: 6px; background: rgba(40, 167, 69, 0.1);">● Sistem Online</span>
+    <!-- TOMBOL UPGRADE -->
+    <a href="creator.html" class="btn-upgrade">Upgrade</a>
+  </div>
+
+  <!-- HEADER MODE AI -->
+  <div class="mode-header" style="position:relative;">
+      <div class="mode-selector" onclick="toggleModeDropdown()">
+          <h3 id="current-mode-text">Free</h3>
+          <span style="color:#aaa;">▼</span>
+      </div>
+      
+      <!-- DROPDOWN MODE -->
+      <div class="dropdown-mode" id="mode-dropdown">
+          <div class="mode-option selected" data-mode="free" onclick="pilihMode('free')">
+              <div class="mode-icon">✓</div>
+              <div class="mode-info"><h4>Free</h4><p>Limit 5 chat, 7 generate</p></div>
+              <div class="mode-check">✓</div>
+          </div>
+          <div class="mode-option locked" data-mode="pro" onclick="pilihMode('pro')">
+              <div class="mode-icon">🔒</div>
+              <div class="mode-info"><h4>Pro</h4><p>Cepat, Limit ∞</p></div>
+              <div class="mode-check">✓</div>
+          </div>
+          <div class="mode-option locked" data-mode="vip" onclick="pilihMode('vip')">
+              <div class="mode-icon">🔒</div>
+              <div class="mode-info"><h4>VIP</h4><p>Analisis, Limit ∞</p></div>
+              <div class="mode-check">✓</div>
+          </div>
+          <div class="mode-option locked" data-mode="vvip" onclick="pilihMode('vvip')">
+              <div class="mode-icon">🔒</div>
+              <div class="mode-info"><h4>VVIP</h4><p>Super Stabil, ∞</p></div>
+              <div class="mode-check">✓</div>
+          </div>
+          <div class="mode-option locked" data-mode="king" onclick="pilihMode('king')">
+              <div class="mode-icon">🔒</div>
+              <div class="mode-info"><h4>KING</h4><p>Apapun, ∞</p></div>
+              <div class="mode-check">✓</div>
+          </div>
+      </div>
   </div>
 
   <div id="chat-box">
-    <!-- EMPTY STATE -->
     <div id="empty-state">
-        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e6b450'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm1.5-4c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5z'/></svg>" alt="Spider Logo">
         <h2>Halo, bagaimana saya bisa membantu?</h2>
     </div>
   </div>
 
   <div class="input-area">
-    <div class="mode-row">
-        <select id="ai-mode-select">
-            <option value="free">Mode: Free (Limit)</option>
-            <option value="pro">Mode: Pro (Cepat, ∞)</option>
-            <option value="vip">Mode: VIP (Analisis, ∞)</option>
-            <option value="vvip">Mode: VVIP (Super Stabil, ∞)</option>
-            <option value="king">Mode: KING (Apapun, ∞)</option>
-        </select>
-        <span id="status-text">Status: Free</span>
-    </div>
     <div id="file-preview" class="file-preview" style="display: none;"></div>
     <div class="input-row">
       <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
       <button id="attach-btn" onclick="openBottomSheet()">+</button>
       <textarea id="chat-input" rows="1" placeholder="Ketik pesan di sini..." onkeydown="handleEnter(event)" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"></textarea>
-      <button id="sendBtn" onclick="kirimPesan()">
-        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-      </button>
+      <button id="sendBtn" onclick="kirimPesan()"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
   </div>
 </div>
@@ -154,6 +178,77 @@
 </div>
 
   <script>
+  // --- LOGO SPIDER ---
+  const spiderLogoHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#e6b450" style="width:80px; height:80px; margin-bottom:15px; filter: drop-shadow(0 0 10px rgba(230,180,80,0.5));"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm1.5-4c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5z"/></svg>`;
+
+  let chats = JSON.parse(localStorage.getItem('groq_chats')) || [];
+  let currentChatId = null;
+  let isGenerating = false;
+  let selectedFiles = [];
+
+  // --- SISTEM KUNCIAN MODE BERDASARKAN PAKET & EXPIRY ---
+  let premiumData = JSON.parse(localStorage.getItem('lyz_premium'));
+  let currentPaket = "Free";
+  
+  if (premiumData && premiumData.expiry > Date.now()) {
+      currentPaket = premiumData.paket;
+  } else {
+      // Kalau udah expired, hapus premiumnya
+      localStorage.removeItem('lyz_premium');
+  }
+
+  // Set Mode Awal berdasarkan paket
+  let currentMode = "free";
+  if (currentPaket.includes("KING")) currentMode = "king";
+  else if (currentPaket.includes("Super VVIP") || currentPaket.includes("Super VIP")) currentMode = "vvip";
+  else if (currentPaket.includes("VVIP")) currentMode = "vip";
+  else if (currentPaket.includes("Premium")) currentMode = "pro";
+
+  function updateModeLocks() {
+      let modes = ['pro', 'vip', 'vvip', 'king'];
+      let highestUnlocked = 'free';
+
+      if (currentPaket.includes("KING")) highestUnlocked = 'king';
+      else if (currentPaket.includes("Super VVIP") || currentPaket.includes("Super VIP")) highestUnlocked = 'vvip';
+      else if (currentPaket.includes("VVIP")) highestUnlocked = 'vip';
+      else if (currentPaket.includes("Premium")) highestUnlocked = 'pro';
+
+      const hierarchy = ['free', 'pro', 'vip', 'vvip', 'king'];
+      const unlockIndex = hierarchy.indexOf(highestUnlocked);
+
+      document.querySelectorAll('.mode-option').forEach(opt => {
+          const mode = opt.getAttribute('data-mode');
+          const modeIndex = hierarchy.indexOf(mode);
+          
+          if (modeIndex > unlockIndex) {
+              opt.classList.add('locked');
+              opt.querySelector('.mode-icon').innerText = '🔒';
+          } else {
+              opt.classList.remove('locked');
+              opt.querySelector('.mode-icon').innerText = '✓';
+          }
+      });
+      document.getElementById('current-mode-text').innerText = currentMode.charAt(0).toUpperCase() + currentMode.slice(1);
+  }
+  
+  updateModeLocks();
+
+  function toggleModeDropdown() { document.getElementById('mode-dropdown').classList.toggle('show'); }
+  
+  function pilihMode(mode) {
+      const opt = document.querySelector(`.mode-option[data-mode="${mode}"]`);
+      if (opt.classList.contains('locked')) {
+          showAlert("Mode Terkunci", "Upgrade paket lu di Dashboard buat buka mode ini!");
+          return;
+      }
+      
+      currentMode = mode;
+      document.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      document.getElementById('current-mode-text').innerText = mode.charAt(0).toUpperCase() + mode.slice(1);
+      document.getElementById('mode-dropdown').classList.remove('show');
+  }
+
   function showAlert(title, message) {
       document.getElementById('alert-title').innerText = title;
       document.getElementById('alert-message').innerText = message;
@@ -161,42 +256,18 @@
   }
   function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
 
-  let chats = JSON.parse(localStorage.getItem('groq_chats')) || [];
-  let currentChatId = null;
-  let isGenerating = false;
-  let selectedFiles = [];
-
-  // --- BOTTOM SHEET ---
   function openBottomSheet() { document.getElementById('bs-overlay').style.display = 'block'; setTimeout(() => document.getElementById('bs-menu').classList.add('show'), 10); }
   function closeBottomSheet() { document.getElementById('bs-menu').classList.remove('show'); setTimeout(() => document.getElementById('bs-overlay').style.display = 'none', 300); }
   function triggerUpload(type) { closeBottomSheet(); document.getElementById('file-input').click(); }
 
-  // --- SISTEM MODE AI ---
-  let currentMode = localStorage.getItem('ai_mode') || 'free';
-  document.getElementById('ai-mode-select').value = currentMode;
-
-  function updateMode() {
-      currentMode = document.getElementById('ai-mode-select').value;
-      localStorage.setItem('ai_mode', currentMode);
-      let statusEl = document.getElementById('status-text');
-      if(currentMode === 'free') statusEl.innerText = "Status: Free (Limit)";
-      else if(currentMode === 'pro') statusEl.innerText = "Status: PRO (∞)";
-      else if(currentMode === 'vip') statusEl.innerText = "Status: VIP (∞)";
-      else if(currentMode === 'vvip') statusEl.innerText = "Status: VVIP (∞)";
-      else if(currentMode === 'king') statusEl.innerText = "Status: KING (∞)";
-  }
-  document.getElementById('ai-mode-select').addEventListener('change', updateMode);
-  updateMode();
-
-  // Batas Kuota
-  const limitKey = 'lyz_creator_limit_' + (localStorage.getItem('creator_active_user') || 'guest');
+      const limitKey = 'lyz_creator_limit_' + (localStorage.getItem('creator_active_user') || 'guest');
   let limitData = JSON.parse(localStorage.getItem(limitKey)) || { generate: 7, chat: 5 };
   
   function saveLimit() { localStorage.setItem(limitKey, JSON.stringify(limitData)); }
   function saveChats() { localStorage.setItem('groq_chats', JSON.stringify(chats)); }
   function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
 
-      function renderHistory() {
+  function renderHistory() {
     const list = document.getElementById('history-list');
     list.innerHTML = '';
     chats.forEach(c => {
@@ -235,7 +306,7 @@
     box.innerHTML = '';
     const chat = chats.find(c => c.id === id);
     if (!chat || chat.messages.length === 0) { 
-        box.innerHTML = `<div id="empty-state"><img src="https://img.icons8.com/color/96/spiderman.png"><h2>Halo, bagaimana saya bisa membantu?</h2></div>`; 
+        box.innerHTML = `<div id="empty-state">${spiderLogoHTML}<h2>Halo, bagaimana saya bisa membantu?</h2></div>`; 
         return; 
     }
     chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial));
@@ -245,9 +316,13 @@
     const file = event.target.files[0];
     if (!file) return;
     
-    // Maksimal 2 foto buat free, 3 buat vip, dll
-    let maxFoto = currentMode === 'king' ? 8 : (currentMode === 'vvip' ? 7 : (currentMode === 'vip' ? 5 : 2));
-    if (selectedFiles.length >= maxFoto) return showAlert("Limit Foto", `Maksimal ${maxFoto} foto buat mode ${currentMode.toUpperCase()}!`);
+    // Cek batas foto
+    let maxFoto = 2; // Default Free
+    if (currentPaket.includes("KING")) maxFoto = 8;
+    else if (currentPaket.includes("Super")) maxFoto = 7;
+    else if (currentPaket.includes("VVIP")) maxFoto = 5;
+
+    if (selectedFiles.length >= maxFoto) return showAlert("Limit Foto", `Maksimal ${maxFoto} foto buat paket lu!`);
 
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -305,13 +380,11 @@
     let chat = chats.find(c => c.id === currentChatId);
     if (!chat) { newChat(); chat = chats.find(c => c.id === currentChatId); }
 
-    // LOGIKA LIMIT
-    const lowerText = text.toLowerCase();
-    const isGenerateText = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('tolong') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || selectedFiles.length > 0;
+    const isGenerate = text.toLowerCase().match(/(buatkan|bikin|tolong|web|skripsi|analisis)/) || selectedFiles.length > 0;
     
     if (currentMode === 'free') {
       if (chat.tipeChat === null) {
-        if (isGenerateText) {
+        if (isGenerate) {
           chat.tipeChat = 'generate';
           if (limitData.generate <= 0) return showAlert("Limit Habis", 'Limit generate (7x) habis!');
           limitData.generate--; saveLimit();
@@ -328,18 +401,14 @@
 
     if (chat.messages.length === 0) { chat.title = text.substring(0, 25) + '...'; renderHistory(); }
     
-    // GABUNGIN TEKS & FOTO JADI SATU PESAN
     let userContent = text;
     if (selectedFiles.length > 0) {
         userContent = [{ type: "text", text: text || "Tolong analisis gambar ini." }];
-        selectedFiles.forEach(f => {
-            userContent.push({ type: "image_url", image_url: { url: f.base64 } });
-        });
+        selectedFiles.forEach(f => { userContent.push({ type: "image_url", image_url: { url: f.base64 } }); });
     }
 
     tambahPesanUI(text + (selectedFiles.length > 0 ? " [Foto Terlampir]" : ""), true); 
-    chat.messages.push({ role: 'user', text: text, content: userContent }); 
-    saveChats();
+    chat.messages.push({ role: 'user', text: text, content: userContent }); saveChats();
     input.value = ''; selectedFiles = []; document.getElementById('file-preview').style.display = 'none'; input.style.height = '';
 
     isGenerating = true; document.getElementById('sendBtn').disabled = true;
@@ -350,13 +419,15 @@
     box.appendChild(loadDiv); box.scrollTop = box.scrollHeight;
 
     try {
+      const apiPayloadMessages = chat.messages.map(m => m.content ? { role: m.role, content: m.content } : { role: m.role, content: m.text });
+
       const response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: selectedFiles.length > 0 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b', // Ganti model kalau ada gambar
+          model: selectedFiles.length > 0 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b',
           messages: [
-            { role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' },
-            ...chat.messages.map(m => ({ role: m.role, content: m.content || m.text }))
+            { role: 'system', content: 'Kamu adalah asisten AI cerdas.' },
+            ...apiPayloadMessages
           ]
         })
       });
