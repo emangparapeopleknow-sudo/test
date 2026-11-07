@@ -8,37 +8,27 @@
   :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   body { background: var(--bg); color: var(--text); height: 100dvh; display: flex; overflow: hidden; }
-
   #sidebar { width: 260px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100dvh; transition: transform 0.3s; z-index: 1000; }
-  @media (max-width: 768px) {
-    #sidebar { position: fixed; top: 0; left: 0; transform: translateX(-100%); }
-    #sidebar.show { transform: translateX(0); }
-  }
+  @media (max-width: 768px) { #sidebar { position: fixed; top: 0; left: 0; transform: translateX(-100%); } #sidebar.show { transform: translateX(0); } }
   .sidebar-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
   .sidebar-header h2 { font-size: 16px; color: var(--accent); }
   #closeSidebar { display: none; background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; }
   @media (max-width: 768px) { #closeSidebar { display: block; } }
   .btn-new-chat { margin: 15px; padding: 10px; background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: 8px; cursor: pointer; font-weight: bold; }
-  .btn-new-chat:hover { background: var(--accent); color: var(--bg); }
-  
   #history-list { flex: 1; overflow-y: auto; padding: 0 10px; }
   .history-item { padding: 10px; margin-bottom: 5px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #aaa; }
   .history-item:hover, .history-item.active { background: #1e2430; color: var(--text); }
   .btn-delete { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 14px; display: none; }
-  .history-item:hover .btn-delete, .history-item.active .btn-delete { display: block; }
-  
-  /* CSS RENAME */
+  .history-item:hover .btn-delete { display: block; }
   .history-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rename-input { flex: 1; background: #000; border: 1px solid var(--accent); color: white; padding: 2px 5px; border-radius: 4px; font-size: 14px; outline: none; }
-
-  #main { flex: 1; display: flex; flex-direction: column; height: 100dvh; width: 100%; overflow: hidden; }
+    #main { flex: 1; display: flex; flex-direction: column; height: 100dvh; width: 100%; overflow: hidden; }
   .top-bar { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0; height: 56px; }
   .nav-btns { display: flex; gap: 10px; align-items: center; }
   #openSidebar { display: none; background: none; border: none; color: var(--accent); font-size: 24px; cursor: pointer; }
   @media (max-width: 768px) { #openSidebar { display: block; } }
   .btn-back { text-decoration: none; color: var(--accent); font-size: 14px; font-weight: bold; padding: 5px 10px; border: 1px solid var(--accent); border-radius: 6px; }
   #status-indicator { color: #28a745; font-size: 12px; font-weight: bold; padding: 5px 10px; border: 1px solid #28a745; border-radius: 6px; background: rgba(40, 167, 69, 0.1); }
-
   #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
   .msg { max-width: 85%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 14px; word-wrap: break-word; }
   .msg-user { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 4px; }
@@ -46,21 +36,28 @@
   .code-wrapper { background: #000; border: 1px solid #333; border-radius: 8px; margin-top: 10px; overflow: hidden; }
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
-  
-  .file-preview { display: flex; gap: 10px; padding: 10px; background: #1e2430; border-bottom: 1px solid var(--border); align-items: center; }
+  .file-preview { display: flex; gap: 10px; padding: 10px; background: #1e2430; border-bottom: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
   .file-badge { background: var(--accent); color: black; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
-
   .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; width: 100%; }
-  .input-row { display: flex; gap: 10px; width: 100%; }
-  #attach-btn { background: #2a2f3a; border: none; color: white; padding: 0 15px; border-radius: 8px; cursor: pointer; font-size: 18px; }
-  #attach-btn:hover { background: #3a4050; }
+  .input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
+  #attach-btn, #voice-btn { background: #2a2f3a; border: none; color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 18px; }
   #chat-input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; resize: none; font-size: 14px; }
-  #sendBtn { padding: 0 20px; border: none; border-radius: 8px; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; }
-  #sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #sendBtn { padding: 12px 20px; border: none; border-radius: 8px; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; }
+  #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+  .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
+  .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
+  .alert-message { padding: 0 20px 25px 20px; font-size: 14px; color: #ccc; }
+  .alert-btn { background: transparent; border: none; border-top: 1px solid #444; color: #0a84ff; width: 100%; padding: 16px; font-size: 17px; font-weight: bold; cursor: pointer; }
 </style>
 </head>
 <body>
-
+  <div id="custom-alert">
+      <div class="alert-box">
+          <div class="alert-title" id="alert-title">Pemberitahuan</div>
+          <div class="alert-message" id="alert-message">Pesan notifikasi akan muncul di sini.</div>
+          <button class="alert-btn" onclick="tutupAlert()">Oke</button>
+      </div>
+  </div>
 <div id="sidebar">
   <div class="sidebar-header">
     <h2>History Chat</h2>
@@ -69,7 +66,6 @@
   <button class="btn-new-chat" onclick="newChat()">+ Obrolan Baru</button>
   <div id="history-list"></div>
 </div>
-
 <div id="main">
   <div class="top-bar">
     <div class="nav-btns">
@@ -78,105 +74,87 @@
     </div>
     <span id="status-indicator">● Sistem Online</span>
   </div>
-
   <div id="chat-box">
     <div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan. Ketik pesan untuk mulai.</div>
   </div>
-
   <div class="input-area">
-    <div id="file-preview" class="file-preview" style="display: none;">
-      <span id="file-name" class="file-badge">file.jpg</span>
-      <span onclick="hapusFile()" style="cursor:pointer; color:red; margin-left:auto;">✖</span>
-    </div>
-    
+    <div id="file-preview" class="file-preview" style="display: none;"></div>
     <div class="input-row">
-      <input type="file" id="file-input" style="display: none;" onchange="handleFileSelect(event)">
+      <input type="file" id="file-input" multiple style="display: none;" onchange="handleFileSelect(event)">
       <button id="attach-btn" onclick="document.getElementById('file-input').click()">📎</button>
-      
-      <textarea id="chat-input" rows="1" placeholder="Minta buat web, skripsi, atau analisis di sini..." onkeydown="handleEnter(event)"></textarea>
+      <button id="voice-btn" onclick="aktifkanSuara()" style="display:none;">🎤</button>
+      <textarea id="chat-input" rows="1" placeholder="Ketik pesan atau minta buat web di sini..." onkeydown="handleEnter(event)"></textarea>
       <button id="sendBtn" onclick="kirimPesan()">Kirim</button>
     </div>
   </div>
 </div>
-
 <script>
+  function showAlert(title, message) {
+      document.getElementById('alert-title').innerText = title;
+      document.getElementById('alert-message').innerText = message;
+      document.getElementById('custom-alert').style.display = 'flex';
+  }
+  function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
   let chats = JSON.parse(localStorage.getItem('groq_chats')) || [];
   let currentChatId = null;
   let isGenerating = false;
-  let currentFileBase64 = null;
-  let currentFileType = null;
+  let selectedFiles = [];
 
-  const activeUser = localStorage.getItem('creator_active_user') || 'guest';
+  // --- CEK STATUS PREMIUM USER ---
+  let premiumData = JSON.parse(localStorage.getItem('lyz_premium')) || null;
+  let paket = premiumData ? premiumData.paket : "Free";
   
-  // LIMIT
-  const limitKey = 'lyz_creator_limit_' + activeUser;
+  // Set Aturan Berdasarkan Paket
+  let isPro = false, isVip = false, isKing = false;
+  if (paket.includes("VIP 1 Bulan")) isPro = true;
+  if (paket.includes("VVIP 2 Bulan") || paket.includes("Super VIP") || paket.includes("Super VVIP")) isVip = true;
+  if (paket.includes("VVIP KING")) isKing = true;
+
+  // Batas Limit & File
+  let maxFoto = isKing ? 8 : (isVip ? 3 : 2);
+  let maxFile = isKing ? 8 : (isVip ? 5 : 3);
+  let isUnlimited = isPro || isVip || isKing;
+
+  // Batas Kuota Harian (Free)
+  const limitKey = 'lyz_creator_limit_' + (localStorage.getItem('creator_active_user') || 'guest');
   let limitData = JSON.parse(localStorage.getItem(limitKey)) || { generate: 7, chat: 5 };
   
+  if (isKing) { document.getElementById('voice-btn').style.display = 'block'; } // Tampilkan Mic
+
   function saveLimit() { localStorage.setItem(limitKey, JSON.stringify(limitData)); }
   function saveChats() { localStorage.setItem('groq_chats', JSON.stringify(chats)); }
   function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
-
-  // --- FITUR RENAME (KLIK 2X) ---
-  function renderHistory() {
+    function renderHistory() {
     const list = document.getElementById('history-list');
     list.innerHTML = '';
     chats.forEach(c => {
       const item = document.createElement('div');
       item.className = 'history-item' + (c.id === currentChatId ? ' active' : '');
-      
       const title = document.createElement('div');
       title.className = 'history-title';
       title.innerText = c.title;
       title.onclick = () => muatChat(c.id);
-      
-      // Event Double Click / Double Tap buat Rename
-      title.ondblclick = (e) => {
-        e.stopPropagation();
-        const input = document.createElement('input');
-        input.className = 'rename-input';
-        input.value = c.title;
-        
-        // Ganti tulisan jadi kotak input
-        item.replaceChild(input, title);
-        input.focus();
-
-        // Simpan kalau enter atau klik di luar
-        const saveRename = () => {
-          const newTitle = input.value.trim();
-          if (newTitle) { c.title = newTitle; saveChats(); }
-          renderHistory();
-        };
-        input.onblur = saveRename;
-        input.onkeydown = (e) => { if(e.key === 'Enter') saveRename(); };
-      };
-
       const delBtn = document.createElement('button');
       delBtn.className = 'btn-delete';
       delBtn.innerText = '🗑';
       delBtn.onclick = (e) => { e.stopPropagation(); hapusChat(c.id); };
-
-      item.appendChild(title);
-      item.appendChild(delBtn);
-      list.appendChild(item);
+      item.appendChild(title); item.appendChild(delBtn); list.appendChild(item);
     });
   }
 
   function hapusChat(id) {
     if (!confirm('Hapus obrolan ini?')) return;
-    chats = chats.filter(c => c.id !== id);
-    saveChats();
-    if (currentChatId === id) {
-      currentChatId = chats.length > 0 ? chats[0].id : null;
-      muatChat(currentChatId);
-    } else { renderHistory(); }
+    chats = chats.filter(c => c.id !== id); saveChats();
+    if (currentChatId === id) { currentChatId = chats.length > 0 ? chats[0].id : null; muatChat(currentChatId); } 
+    else { renderHistory(); }
   }
 
   function newChat() {
     if (window.innerWidth <= 768) toggleSidebar();
     const newId = Date.now().toString();
     chats.unshift({ id: newId, title: 'Obrolan Baru', messages: [], tipeChat: null });
-    saveChats();
-    muatChat(newId);
+    saveChats(); muatChat(newId);
   }
 
   function muatChat(id) {
@@ -187,161 +165,109 @@
     const box = document.getElementById('chat-box');
     box.innerHTML = '';
     const chat = chats.find(c => c.id === id);
-    if (!chat) {
-      box.innerHTML = '<div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan. Ketik pesan untuk mulai.</div>';
-      return;
-    }
+    if (!chat) { box.innerHTML = '<div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan.</div>'; return; }
     chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial));
   }
 
   function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > 10 * 1024 * 1024) return alert("Maksimal 10MB!");
+    const files = event.target.files;
+    if (files.length > maxFile) return showAlert("Limit File", `Maksimal ${maxFile} file buat paket lu!`);
     
-    currentFileType = file.type;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      currentFileBase64 = e.target.result;
-      document.getElementById('file-name').innerText = file.name;
-      document.getElementById('file-preview').style.display = 'flex';
-    };
-    reader.readAsDataURL(file);
+    selectedFiles = Array.from(files);
+    const preview = document.getElementById('file-preview');
+    preview.innerHTML = selectedFiles.map((f, i) => `<div class="file-badge">${f.name} <span onclick="hapusFile(${i})" style="cursor:pointer; color:red;">✖</span></div>`).join('');
+    preview.style.display = 'flex';
   }
 
-  function hapusFile() {
-    currentFileBase64 = null;
-    currentFileType = null;
-    document.getElementById('file-input').value = '';
-    document.getElementById('file-preview').style.display = 'none';
+  function hapusFile(index) {
+    selectedFiles.splice(index, 1);
+    if(selectedFiles.length === 0) document.getElementById('file-preview').style.display = 'none';
+    else handleFileSelect({ target: { files: selectedFiles } }); 
   }
 
-  function handleEnter(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      kirimPesan();
-    }
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
+  function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kirimPesan(); } }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
   function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
     const box = document.getElementById('chat-box');
-    const empty = document.getElementById('empty-state');
-    if(empty) empty.remove();
-    const div = document.createElement('div');
-    div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
-    if (isUser) {
-      div.innerText = text;
-    } else {
+    const empty = document.getElementById('empty-state'); if(empty) empty.remove();
+    const div = document.createElement('div'); div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
+    if (isUser) { div.innerText = text; } 
+    else {
       if (codeContent) {
-        div.innerHTML = `
-          <div style="margin-bottom:10px; color:#ccc;">${escapeHtml(tutorialText || '')}</div>
-          <div class="code-wrapper">
-            <div class="code-header">
-              <span>HTML + CSS + JS</span>
-              <button onclick="salinKode(this)" style="background:none;border:none;color:var(--accent);cursor:pointer;">Salin</button>
-            </div>
-            <div class="code-box">${escapeHtml(codeContent)}</div>
-          </div>
-        `;
-      } else {
-        div.innerHTML = text.replace(/\n/g, '<br>'); 
-      }
+        div.innerHTML = `<div style="margin-bottom:10px; color:#ccc;">${escapeHtml(tutorialText || '')}</div>
+          <div class="code-wrapper"><div class="code-header"><span>HTML + CSS + JS</span>
+          <button onclick="salinKode(this)" style="background:none;border:none;color:var(--accent);cursor:pointer;">Salin</button></div>
+          <div class="code-box">${escapeHtml(codeContent)}</div></div>`;
+      } else { div.innerHTML = text.replace(/\n/g, '<br>'); }
     }
-    box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
+    box.appendChild(div); box.scrollTop = box.scrollHeight;
   }
 
   function salinKode(btn) {
     const codeText = btn.closest('.code-wrapper').querySelector('.code-box').innerText;
     navigator.clipboard.writeText(codeText).then(() => {
-      btn.innerText = 'Tersalin!';
-      setTimeout(() => btn.innerText = 'Salin', 2000);
+      btn.innerText = 'Tersalin!'; setTimeout(() => btn.innerText = 'Salin', 2000);
+      let history = JSON.parse(localStorage.getItem('lyz_history')) || [];
+      history.unshift("Generate Web (Disalin)"); localStorage.setItem('lyz_history', JSON.stringify(history));
+      showAlert("Tersalin", "Kode berhasil disalin & masuk ke Histori!");
     });
   }
 
   async function kirimPesan() {
     if (isGenerating) return;
-    const input = document.getElementById('chat-input');
-    let text = input.value.trim();
-    if (!text && !currentFileBase64) return;
+    const input = document.getElementById('chat-input'); let text = input.value.trim();
+    if (!text && selectedFiles.length === 0) return;
 
     let chat = chats.find(c => c.id === currentChatId);
     if (!chat) { newChat(); chat = chats.find(c => c.id === currentChatId); }
 
-    // --- LOGIKA LIMIT ---
+    // --- LOGIKA LIMIT (Hanya buat Free) ---
     const lowerText = text.toLowerCase();
-    const isGenerateText = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || currentFileBase64;
+    const isGenerateText = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('tolong') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || selectedFiles.length > 0;
     
-    // Kalau chat baru (belum ada tipe)
-    if (chat.tipeChat === null) {
-      if (isGenerateText) {
-        chat.tipeChat = 'generate';
-        if (limitData.generate <= 0) return alert('Limit generate (7x) habis!');
-        limitData.generate--;
-        saveLimit();
+    if (!isUnlimited) {
+      if (chat.tipeChat === null) {
+        if (isGenerateText) {
+          chat.tipeChat = 'generate';
+          if (limitData.generate <= 0) return showAlert("Limit Habis", 'Limit generate (7x) habis!');
+          limitData.generate--; saveLimit();
+        } else {
+          chat.tipeChat = 'chat';
+          if (limitData.chat <= 0) return showAlert("Limit Habis", 'Limit ngobrol (5x) habis!');
+          limitData.chat--; saveLimit();
+        }
       } else {
-        chat.tipeChat = 'chat';
-        if (limitData.chat <= 0) return alert('Limit ngobrol (5x) habis!');
-        limitData.chat--;
-        saveLimit();
-      }
-    } else {
-      // Kalau udah ada tipe, cek limit aja
-      if (chat.tipeChat === 'generate' && limitData.generate <= 0) return alert('Limit generate udah habis (7x)!');
-      if (chat.tipeChat === 'chat' && limitData.chat <= 0) return alert('Limit ngobrol udah habis (5x)!');
-    }
-
-    if (chat.messages.length === 0) {
-      chat.title = text.substring(0, 25) + (text.length > 25 ? '...' : '');
-      renderHistory();
-    }
-
-    let userContent = text;
-    if (currentFileBase64) {
-      if (currentFileType.startsWith('image/')) {
-        userContent = [
-          { type: "text", text: text || "Tolong analisis gambar ini." },
-          { type: "image_url", image_url: { url: currentFileBase64 } }
-        ];
-      } else {
-        userContent = text + ` [File terlampir: ${document.getElementById('file-name').innerText}]`;
+        if (chat.tipeChat === 'generate' && limitData.generate <= 0) return showAlert("Limit Habis", 'Limit generate lu udah habis (7x)!');
+        if (chat.tipeChat === 'chat' && limitData.chat <= 0) return showAlert("Limit Habis", 'Limit ngobrol lu udah habis (5x)!');
       }
     }
 
-    let displayTeks = text;
-    if (currentFileBase64) displayTeks += " [File Terlampir]";
-    if (!displayTeks) displayTeks = "[File Terlampir]";
+    if (chat.messages.length === 0) { chat.title = text.substring(0, 25) + '...'; renderHistory(); }
     
-    tambahPesanUI(displayTeks, true);
-    chat.messages.push({ role: 'user', text: displayTeks, content: userContent });
-    saveChats();
-    input.value = '';
-    hapusFile();
+    let fileNames = selectedFiles.map(f => f.name).join(', ');
+    let userContent = text + (selectedFiles.length > 0 ? `\n[File terlampir: ${fileNames}]` : '');
+    tambahPesanUI(userContent, true); chat.messages.push({ role: 'user', text: userContent }); saveChats();
+    input.value = ''; selectedFiles = []; document.getElementById('file-preview').style.display = 'none';
 
-    isGenerating = true;
-    document.getElementById('sendBtn').disabled = true;
-
+    isGenerating = true; document.getElementById('sendBtn').disabled = true;
     const loadingId = 'loading-' + Date.now();
     const box = document.getElementById('chat-box');
-    const loadDiv = document.createElement('div');
-    loadDiv.className = 'msg msg-ai';
-    loadDiv.id = loadingId;
-    loadDiv.innerHTML = '⏳ AI sedang memproses...';
-    box.appendChild(loadDiv);
-    box.scrollTop = box.scrollHeight;
+    const loadDiv = document.createElement('div'); loadDiv.className = 'msg msg-ai'; loadDiv.id = loadingId;
+    loadDiv.innerHTML = isPro || isVip || isKing ? '⚡ AI Cepat sedang memproses...' : '⏳ AI sedang berpikir...';
+    box.appendChild(loadDiv); box.scrollTop = box.scrollHeight;
+
+    // ATUR MODEL AI BERDASARKAN PAKET
+    let modelAI = 'openai/gpt-oss-120b';
+    if (isKing || isVip) modelAI = 'meta-llama/llama-4-scout-17b-16e-instruct'; // Model yang lebih pinter
 
     try {
       const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: currentFileBase64 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b',
+          model: modelAI,
           messages: [
-            { role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi, esai, atau tabel analisis, buatkan teks yang rapi.' },
+            { role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' },
             ...chat.messages.map(m => ({ role: m.role, content: m.content || m.text }))
           ]
         })
@@ -349,28 +275,25 @@
 
       const data = await response.json();
       if (data.error) throw new Error(data.error.message);
-
       const aiReply = data.choices[0].message.content;
       
       if (aiReply.includes('```html')) {
-        const parts = aiReply.split('```html');
-        const code = parts[1].split('```')[0].trim();
-        const tutorial = parts[0].trim();
-        
-        tambahPesanUI(aiReply, false, code, tutorial);
-        chat.messages.push({ role: 'assistant', text: aiReply, code: code, tutorial: tutorial });
+        const parts = aiReply.split('```html'); const code = parts[1].split('```')[0].trim(); const tutorial = parts[0].trim();
+        tambahPesanUI(aiReply, false, code, tutorial); chat.messages.push({ role: 'assistant', text: aiReply, code: code, tutorial: tutorial });
       } else {
-        tambahPesanUI(aiReply, false, null, null);
-        chat.messages.push({ role: 'assistant', text: aiReply });
+        tambahPesanUI(aiReply, false, null, null); chat.messages.push({ role: 'assistant', text: aiReply });
       }
       saveChats();
-
     } catch (err) {
+      if (!isUnlimited) { if (chat.tipeChat === 'generate') limitData.generate++; else limitData.chat++; saveLimit(); }
       document.getElementById(loadingId).innerText = '❌ Error: ' + err.message;
     } finally {
-      isGenerating = false;
-      document.getElementById('sendBtn').disabled = false;
+      isGenerating = false; document.getElementById('sendBtn').disabled = false;
     }
+  }
+
+  function aktifkanSuara() {
+    showAlert("Mode Suara", "Merekam suara... (Fitur khusus VVIP KING)");
   }
 
   if (chats.length > 0) { muatChat(chats[0].id); } else { renderHistory(); }
