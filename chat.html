@@ -379,22 +379,29 @@
     box.appendChild(loadDiv); box.scrollTop = box.scrollHeight;
 
     try {
-      const apiPayloadMessages = chat.messages.map(m => m.content ? { role: m.role, content: m.content } : { role: m.role, content: m.text });
-      
-      // --- LOGIKA AUTO-FALLBACK MODEL ---
+      // --- FIX FORMAT PAYLOAD KE GROQ API ---
+      const apiPayloadMessages = chat.messages.map(m => {
+          // Kalau pesannya punya content array (gambar), pastiin formatnya bener
+          if (m.content && Array.isArray(m.content)) {
+              return { role: m.role, content: m.content };
+          }
+          // Kalau pesan teks biasa, paksa jadi string
+          return { role: m.role, content: String(m.text) };
+      });
+
       let modelToUse = imgBase64 ? 'qwen/qwen3.8-27b' : 'openai/gpt-oss-120b';
       
       let response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: modelToUse,
-          messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas.' }, ...apiPayloadMessages]
+          messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' }, ...apiPayloadMessages]
         })
       });
 
       let data = await response.json();
 
-      // Kalau qwen overcapacity / error, coba pake Llama 3.2 Vision
+      // AUTO FALLBACK KALAU QWEN ERROR
       if (data.error && data.error.message.includes('over capacity')) {
           loadDiv.innerHTML = '⚠️ Model utama penuh, mencoba server cadangan...';
           modelToUse = 'llama-3.2-11b-vision-preview';
@@ -402,7 +409,7 @@
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               model: modelToUse,
-              messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas.' }, ...apiPayloadMessages]
+              messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas, kamu bisa membuat HTML, CSS, JS, dan bisa membuat analisis tabel, Dan Membuat Skripsi, atau Soal latihan TKA(Tes Kemampuan Akademik, Harus Mirip).' }, ...apiPayloadMessages]
             })
           });
           data = await response.json();
@@ -430,3 +437,4 @@
 </script>
 </body>
 </html>
+    
