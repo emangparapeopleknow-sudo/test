@@ -21,13 +21,19 @@
   .btn-delete { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 14px; display: none; }
   .history-item:hover .btn-delete { display: block; }
   .history-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  
-  #main { flex: 1; display: flex; flex-direction: column; height: 100dvh; width: 100%; overflow: hidden; }
+
+  #main { flex: 1; display: flex; flex-direction: column; height: 100dvh; width: 100%; overflow: hidden; position: relative; }
   .top-bar { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--panel); flex-shrink: 0; height: 56px; }
   .nav-btns { display: flex; gap: 10px; align-items: center; }
   #openSidebar { display: none; background: none; border: none; color: var(--accent); font-size: 24px; cursor: pointer; }
   @media (max-width: 768px) { #openSidebar { display: block; } }
   .btn-back { text-decoration: none; color: var(--accent); font-size: 14px; font-weight: bold; padding: 5px 10px; border: 1px solid var(--accent); border-radius: 6px; }
+
+  /* EMPTY STATE (LOGO SPIDER) */
+  #empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #fff; text-align: center; padding: 20px; }
+  #empty-state img { width: 60px; height: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(230, 180, 80, 0.5)); }
+  #empty-state h2 { font-size: 20px; font-weight: 600; }
+
   #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
   .msg { max-width: 85%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 14px; word-wrap: break-word; }
   .msg-user { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 4px; }
@@ -36,15 +42,30 @@
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
 </style>
-</head>
 <style>
   .file-preview { display: flex; gap: 10px; padding: 10px; background: #1e2430; border-bottom: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
   .file-badge { background: var(--accent); color: black; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
+  
   .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; width: 100%; }
-  .input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
-  #attach-btn, #voice-btn { background: #2a2f3a; border: none; color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 18px; }
-  #chat-input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; resize: none; font-size: 14px; }
-  #sendBtn { padding: 12px 20px; border: none; border-radius: 8px; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; }
+  .mode-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  #ai-mode-select { background: var(--bg); color: var(--accent); border: 1px solid var(--accent); padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; outline: none; }
+  #status-text { font-size: 12px; color: #888; }
+  
+  .input-row { display: flex; gap: 10px; width: 100%; align-items: flex-end; background: #1e2430; border-radius: 20px; padding: 5px 10px; border: 1px solid var(--border); }
+  #attach-btn, #voice-btn { background: transparent; border: none; color: #aaa; padding: 10px; cursor: pointer; font-size: 20px; }
+  #chat-input { flex: 1; padding: 10px 0; background: transparent; border: none; color: var(--text); outline: none; resize: none; font-size: 14px; max-height: 100px; }
+  #sendBtn { padding: 10px; border: none; border-radius: 50%; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; margin-bottom: 2px; }
+  #sendBtn svg { width: 20px; height: 20px; fill: currentColor; }
+
+  /* BOTTOM SHEET */
+  .bottom-sheet-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; }
+  .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: #12151c; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; transform: translateY(100%); transition: transform 0.3s; }
+  .bottom-sheet.show { transform: translateY(0); }
+  .bs-handle { width: 40px; height: 5px; background: #333; border-radius: 3px; margin: 0 auto 20px auto; }
+  .bs-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+  .bs-item { background: #1e2430; border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; color: #fff; }
+  .bs-item svg { width: 30px; height: 30px; fill: #fff; }
+
   #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
   .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
   .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
@@ -53,13 +74,15 @@
 </style>
 </head>
 <body>
-  <div id="custom-alert">
-      <div class="alert-box">
-          <div class="alert-title" id="alert-title">Pemberitahuan</div>
-          <div class="alert-message" id="alert-message">Pesan notifikasi akan muncul di sini.</div>
-          <button class="alert-btn" onclick="tutupAlert()">Oke</button>
-      </div>
-  </div>
+
+<div id="custom-alert">
+    <div class="alert-box">
+        <div class="alert-title" id="alert-title">Pemberitahuan</div>
+        <div class="alert-message" id="alert-message">Pesan notifikasi akan muncul di sini.</div>
+        <button class="alert-btn" onclick="tutupAlert()">Oke</button>
+    </div>
+</div>
+
 <div id="sidebar">
   <div class="sidebar-header">
     <h2>History Chat</h2>
@@ -68,6 +91,7 @@
   <button class="btn-new-chat" onclick="newChat()">+ Obrolan Baru</button>
   <div id="history-list"></div>
 </div>
+
 <div id="main">
   <div class="top-bar">
     <div class="nav-btns">
@@ -76,28 +100,57 @@
     </div>
     <span id="status-indicator" style="color: #28a745; font-size: 12px; font-weight: bold; padding: 5px 10px; border: 1px solid #28a745; border-radius: 6px; background: rgba(40, 167, 69, 0.1);">● Sistem Online</span>
   </div>
+
   <div id="chat-box">
-    <div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan. Ketik pesan untuk mulai.</div>
+    <!-- EMPTY STATE -->
+    <div id="empty-state">
+        <img src="https://img.icons8.com/color/96/spiderman.png" alt="Spider Logo">
+        <h2>Halo, bagaimana saya bisa membantu?</h2>
+    </div>
   </div>
+
   <div class="input-area">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-        <select id="ai-mode-select" style="background:var(--panel); color:var(--accent); border:1px solid var(--accent); padding:5px 10px; border-radius:6px; font-size:12px; font-weight:bold; outline:none;">
+    <div class="mode-row">
+        <select id="ai-mode-select">
             <option value="free">Mode: Free (Limit)</option>
             <option value="pro">Mode: Pro (Cepat, ∞)</option>
             <option value="vip">Mode: VIP (Analisis, ∞)</option>
             <option value="vvip">Mode: VVIP (Super Stabil, ∞)</option>
             <option value="king">Mode: KING (Apapun, ∞)</option>
         </select>
-        <span id="status-text" style="font-size:12px; color:#888;">Status: Free</span>
+        <span id="status-text">Status: Free</span>
     </div>
     <div id="file-preview" class="file-preview" style="display: none;"></div>
     <div class="input-row">
-      <input type="file" id="file-input" multiple style="display: none;" onchange="handleFileSelect(event)">
-      <button id="attach-btn" onclick="document.getElementById('file-input').click()">📎</button>
-      <textarea id="chat-input" rows="1" placeholder="Ketik pesan di sini..." onkeydown="handleEnter(event)"></textarea>
-      <button id="sendBtn" onclick="kirimPesan()">Kirim</button>
+      <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+      <button id="attach-btn" onclick="openBottomSheet()">+</button>
+      <textarea id="chat-input" rows="1" placeholder="Ketik pesan di sini..." onkeydown="handleEnter(event)" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"></textarea>
+      <button id="sendBtn" onclick="kirimPesan()">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
     </div>
   </div>
+</div>
+
+<!-- BOTTOM SHEET -->
+<div class="bottom-sheet-overlay" id="bs-overlay" onclick="closeBottomSheet()">
+    <div class="bottom-sheet" id="bs-menu" onclick="event.stopPropagation()">
+        <div class="bs-handle"></div>
+        <div class="bs-grid">
+            <div class="bs-item" onclick="triggerUpload('camera')">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Kamera
+            </div>
+            <div class="bs-item" onclick="triggerUpload('album')">
+                <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                Album
+            </div>
+            <div class="bs-item" onclick="triggerUpload('dokumen')">
+                <svg viewBox="0 0 24 24"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>
+                Dokumen
+            </div>
+        </div>
+    </div>
 </div>
 
   <script>
@@ -113,6 +166,11 @@
   let isGenerating = false;
   let selectedFiles = [];
 
+  // --- BOTTOM SHEET ---
+  function openBottomSheet() { document.getElementById('bs-overlay').style.display = 'block'; setTimeout(() => document.getElementById('bs-menu').classList.add('show'), 10); }
+  function closeBottomSheet() { document.getElementById('bs-menu').classList.remove('show'); setTimeout(() => document.getElementById('bs-overlay').style.display = 'none', 300); }
+  function triggerUpload(type) { closeBottomSheet(); document.getElementById('file-input').click(); }
+
   // --- SISTEM MODE AI ---
   let currentMode = localStorage.getItem('ai_mode') || 'free';
   document.getElementById('ai-mode-select').value = currentMode;
@@ -120,21 +178,17 @@
   function updateMode() {
       currentMode = document.getElementById('ai-mode-select').value;
       localStorage.setItem('ai_mode', currentMode);
-      
       let statusEl = document.getElementById('status-text');
-      let maxFile = 3; // Default Free
-
-      if(currentMode === 'free') { statusEl.innerText = "Status: Free (Limit)"; maxFile = 3; }
-      else if(currentMode === 'pro') { statusEl.innerText = "Status: PRO (∞)"; maxFile = 3; }
-      else if(currentMode === 'vip') { statusEl.innerText = "Status: VIP (∞)"; maxFile = 5; }
-      else if(currentMode === 'vvip') { statusEl.innerText = "Status: VVIP (∞)"; maxFile = 7; }
-      else if(currentMode === 'king') { statusEl.innerText = "Status: KING (∞)"; maxFile = 10; }
+      if(currentMode === 'free') statusEl.innerText = "Status: Free (Limit)";
+      else if(currentMode === 'pro') statusEl.innerText = "Status: PRO (∞)";
+      else if(currentMode === 'vip') statusEl.innerText = "Status: VIP (∞)";
+      else if(currentMode === 'vvip') statusEl.innerText = "Status: VVIP (∞)";
+      else if(currentMode === 'king') statusEl.innerText = "Status: KING (∞)";
   }
-  
   document.getElementById('ai-mode-select').addEventListener('change', updateMode);
   updateMode();
 
-  // Batas Kuota (Khusus Mode Free)
+  // Batas Kuota
   const limitKey = 'lyz_creator_limit_' + (localStorage.getItem('creator_active_user') || 'guest');
   let limitData = JSON.parse(localStorage.getItem(limitKey)) || { generate: 7, chat: 5 };
   
@@ -142,88 +196,98 @@
   function saveChats() { localStorage.setItem('groq_chats', JSON.stringify(chats)); }
   function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
 
-  function renderHistory() {
-  const list = document.getElementById('history-list');
-  list.innerHTML = '';
-  chats.forEach(c => {
-    const item = document.createElement('div');
-    item.className = 'history-item' + (c.id === currentChatId ? ' active' : '');
-    const title = document.createElement('div');
-    title.className = 'history-title';
-    title.innerText = c.title;
-    title.onclick = () => muatChat(c.id);
-    const delBtn = document.createElement('button');
-    delBtn.className = 'btn-delete';
-    delBtn.innerText = '🗑';
-    delBtn.onclick = (e) => { e.stopPropagation(); hapusChat(c.id); };
-    item.appendChild(title); item.appendChild(delBtn); list.appendChild(item);
-  });
-}
-
-function hapusChat(id) {
-  if (!confirm('Hapus obrolan ini?')) return;
-  chats = chats.filter(c => c.id !== id); saveChats();
-  if (currentChatId === id) { currentChatId = chats.length > 0 ? chats[0].id : null; muatChat(currentChatId); } 
-  else { renderHistory(); }
-}
-
-function newChat() {
-  if (window.innerWidth <= 768) toggleSidebar();
-  const newId = Date.now().toString();
-  chats.unshift({ id: newId, title: 'Obrolan Baru', messages: [], tipeChat: null });
-  saveChats(); muatChat(newId);
-}
-
-function muatChat(id) {
-  if (!id && chats.length > 0) id = chats[0].id;
-  currentChatId = id;
-  if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('show');
-  renderHistory();
-  const box = document.getElementById('chat-box');
-  box.innerHTML = '';
-  const chat = chats.find(c => c.id === id);
-  if (!chat) { box.innerHTML = '<div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan.</div>'; return; }
-  chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial));
-}
-
-function handleFileSelect(event) {
-  const files = event.target.files;
-  let maxFile = currentMode === 'king' ? 10 : (currentMode === 'vvip' ? 7 : (currentMode === 'vip' ? 5 : 3));
-  
-  if (files.length > maxFile) return showAlert("Limit File", `Maksimal ${maxFile} file buat mode ${currentMode.toUpperCase()}!`);
-  
-  selectedFiles = Array.from(files);
-  const preview = document.getElementById('file-preview');
-  preview.innerHTML = selectedFiles.map((f, i) => `<div class="file-badge">${f.name} <span onclick="hapusFile(${i})" style="cursor:pointer; color:red;">✖</span></div>`).join('');
-  preview.style.display = 'flex';
-}
-
-function hapusFile(index) {
-  selectedFiles.splice(index, 1);
-  if(selectedFiles.length === 0) document.getElementById('file-preview').style.display = 'none';
-  else handleFileSelect({ target: { files: selectedFiles } }); 
-}
-
-function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kirimPesan(); } }
-function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
-  const box = document.getElementById('chat-box');
-  const empty = document.getElementById('empty-state'); if(empty) empty.remove();
-  const div = document.createElement('div'); div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
-  if (isUser) { div.innerText = text; } 
-  else {
-    if (codeContent) {
-      div.innerHTML = `<div style="margin-bottom:10px; color:#ccc;">${escapeHtml(tutorialText || '')}</div>
-        <div class="code-wrapper"><div class="code-header"><span>HTML + CSS + JS</span>
-        <button onclick="salinKode(this)" style="background:none;border:none;color:var(--accent);cursor:pointer;">Salin</button></div>
-        <div class="code-box">${escapeHtml(codeContent)}</div></div>`;
-    } else { div.innerHTML = text.replace(/\n/g, '<br>'); }
+      function renderHistory() {
+    const list = document.getElementById('history-list');
+    list.innerHTML = '';
+    chats.forEach(c => {
+      const item = document.createElement('div');
+      item.className = 'history-item' + (c.id === currentChatId ? ' active' : '');
+      const title = document.createElement('div');
+      title.className = 'history-title'; title.innerText = c.title;
+      title.onclick = () => muatChat(c.id);
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-delete'; delBtn.innerText = '🗑';
+      delBtn.onclick = (e) => { e.stopPropagation(); hapusChat(c.id); };
+      item.appendChild(title); item.appendChild(delBtn); list.appendChild(item);
+    });
   }
-  box.appendChild(div); box.scrollTop = box.scrollHeight;
-  }  
 
-      function salinKode(btn) {
+  function hapusChat(id) {
+    if (!confirm('Hapus obrolan ini?')) return;
+    chats = chats.filter(c => c.id !== id); saveChats();
+    if (currentChatId === id) { currentChatId = chats.length > 0 ? chats[0].id : null; muatChat(currentChatId); } 
+    else { renderHistory(); }
+  }
+
+  function newChat() {
+    if (window.innerWidth <= 768) toggleSidebar();
+    const newId = Date.now().toString();
+    chats.unshift({ id: newId, title: 'Obrolan Baru', messages: [], tipeChat: null });
+    saveChats(); muatChat(newId);
+  }
+
+  function muatChat(id) {
+    if (!id && chats.length > 0) id = chats[0].id;
+    currentChatId = id;
+    if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('show');
+    renderHistory();
+    const box = document.getElementById('chat-box');
+    box.innerHTML = '';
+    const chat = chats.find(c => c.id === id);
+    if (!chat || chat.messages.length === 0) { 
+        box.innerHTML = `<div id="empty-state"><img src="https://img.icons8.com/color/96/spiderman.png"><h2>Halo, bagaimana saya bisa membantu?</h2></div>`; 
+        return; 
+    }
+    chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial));
+  }
+
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Maksimal 2 foto buat free, 3 buat vip, dll
+    let maxFoto = currentMode === 'king' ? 8 : (currentMode === 'vvip' ? 7 : (currentMode === 'vip' ? 5 : 2));
+    if (selectedFiles.length >= maxFoto) return showAlert("Limit Foto", `Maksimal ${maxFoto} foto buat mode ${currentMode.toUpperCase()}!`);
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      selectedFiles.push({ name: file.name, base64: e.target.result, type: file.type });
+      const preview = document.getElementById('file-preview');
+      preview.innerHTML = selectedFiles.map((f, i) => `<div class="file-badge">${f.name} <span onclick="hapusFile(${i})" style="cursor:pointer; color:red;">✖</span></div>`).join('');
+      preview.style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function hapusFile(index) {
+    selectedFiles.splice(index, 1);
+    if(selectedFiles.length === 0) document.getElementById('file-preview').style.display = 'none';
+    else {
+        const preview = document.getElementById('file-preview');
+        preview.innerHTML = selectedFiles.map((f, i) => `<div class="file-badge">${f.name} <span onclick="hapusFile(${i})" style="cursor:pointer; color:red;">✖</span></div>`).join('');
+    }
+  }
+
+  function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kirimPesan(); } }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
+    const box = document.getElementById('chat-box');
+    const empty = document.getElementById('empty-state'); if(empty) empty.remove();
+    const div = document.createElement('div'); div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
+    if (isUser) { div.innerText = text; } 
+    else {
+      if (codeContent) {
+        div.innerHTML = `<div style="margin-bottom:10px; color:#ccc;">${escapeHtml(tutorialText || '')}</div>
+          <div class="code-wrapper"><div class="code-header"><span>HTML + CSS + JS</span>
+          <button onclick="salinKode(this)" style="background:none;border:none;color:var(--accent);cursor:pointer;">Salin</button></div>
+          <div class="code-box">${escapeHtml(codeContent)}</div></div>`;
+      } else { div.innerHTML = text.replace(/\n/g, '<br>'); }
+    }
+    box.appendChild(div); box.scrollTop = box.scrollHeight;
+  }
+
+  function salinKode(btn) {
     const codeText = btn.closest('.code-wrapper').querySelector('.code-box').innerText;
     navigator.clipboard.writeText(codeText).then(() => {
       btn.innerText = 'Tersalin!'; setTimeout(() => btn.innerText = 'Salin', 2000);
@@ -241,7 +305,7 @@ function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
     let chat = chats.find(c => c.id === currentChatId);
     if (!chat) { newChat(); chat = chats.find(c => c.id === currentChatId); }
 
-    // --- LOGIKA LIMIT (Hanya buat Mode Free) ---
+    // LOGIKA LIMIT
     const lowerText = text.toLowerCase();
     const isGenerateText = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('tolong') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || selectedFiles.length > 0;
     
@@ -249,11 +313,11 @@ function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
       if (chat.tipeChat === null) {
         if (isGenerateText) {
           chat.tipeChat = 'generate';
-          if (limitData.generate <= 0) return showAlert("Limit Habis", 'Limit generate (7x) habis! Silakan beli Premium.');
+          if (limitData.generate <= 0) return showAlert("Limit Habis", 'Limit generate (7x) habis!');
           limitData.generate--; saveLimit();
         } else {
           chat.tipeChat = 'chat';
-          if (limitData.chat <= 0) return showAlert("Limit Habis", 'Limit ngobrol (5x) habis! Silakan beli Premium.');
+          if (limitData.chat <= 0) return showAlert("Limit Habis", 'Limit ngobrol (5x) habis!');
           limitData.chat--; saveLimit();
         }
       } else {
@@ -264,10 +328,19 @@ function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
 
     if (chat.messages.length === 0) { chat.title = text.substring(0, 25) + '...'; renderHistory(); }
     
-    let fileNames = selectedFiles.map(f => f.name).join(', ');
-    let userContent = text + (selectedFiles.length > 0 ? `\n[File terlampir: ${fileNames}]` : '');
-    tambahPesanUI(userContent, true); chat.messages.push({ role: 'user', text: userContent }); saveChats();
-    input.value = ''; selectedFiles = []; document.getElementById('file-preview').style.display = 'none';
+    // GABUNGIN TEKS & FOTO JADI SATU PESAN
+    let userContent = text;
+    if (selectedFiles.length > 0) {
+        userContent = [{ type: "text", text: text || "Tolong analisis gambar ini." }];
+        selectedFiles.forEach(f => {
+            userContent.push({ type: "image_url", image_url: { url: f.base64 } });
+        });
+    }
+
+    tambahPesanUI(text + (selectedFiles.length > 0 ? " [Foto Terlampir]" : ""), true); 
+    chat.messages.push({ role: 'user', text: text, content: userContent }); 
+    saveChats();
+    input.value = ''; selectedFiles = []; document.getElementById('file-preview').style.display = 'none'; input.style.height = '';
 
     isGenerating = true; document.getElementById('sendBtn').disabled = true;
     const loadingId = 'loading-' + Date.now();
@@ -280,7 +353,7 @@ function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
       const response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'openai/gpt-oss-120b',
+          model: selectedFiles.length > 0 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b', // Ganti model kalau ada gambar
           messages: [
             { role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' },
             ...chat.messages.map(m => ({ role: m.role, content: m.content || m.text }))
