@@ -29,6 +29,7 @@
   #openSidebar { display: none; background: none; border: none; color: var(--accent); font-size: 24px; cursor: pointer; }
   @media (max-width: 768px) { #openSidebar { display: block; } }
   .btn-back { text-decoration: none; color: var(--accent); font-size: 14px; font-weight: bold; padding: 5px 10px; border: 1px solid var(--accent); border-radius: 6px; }
+  .btn-upgrade { background: #2a3163; color: #fff; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: bold; }
 
   #empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #fff; text-align: center; padding: 20px; }
   #empty-state h2 { font-size: 20px; font-weight: 600; }
@@ -37,6 +38,10 @@
   .msg { max-width: 85%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 14px; word-wrap: break-word; }
   .msg-user { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 4px; }
   .msg-ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--border); border-bottom-left-radius: 4px; width: 100%; }
+  
+  /* GAMBAR DI DALAM CHAT */
+  .msg-image { max-width: 200px; border-radius: 8px; margin-top: 10px; display: block; }
+  
   .code-wrapper { background: #000; border: 1px solid #333; border-radius: 8px; margin-top: 10px; overflow: hidden; }
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
@@ -49,7 +54,6 @@
   .mode-selector { display: flex; align-items: center; gap: 5px; cursor: pointer; }
   .mode-selector h3 { font-size: 16px; font-weight: normal; color: #ddd; }
   .mode-selector.active h3 { color: var(--accent); }
-  .btn-upgrade { background: #2a3163; color: #fff; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: bold; }
   
   .dropdown-mode { display: none; position: absolute; top: 50px; left: 15px; background: #1e1e1e; border-radius: 16px; width: 250px; padding: 15px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #333; }
   .dropdown-mode.show { display: block; }
@@ -63,10 +67,10 @@
   .mode-option.selected .mode-check { display: block; }
 
   .input-area { padding: 15px; background: var(--panel); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; width: 100%; }
-  .input-row { display: flex; gap: 10px; width: 100%; align-items: flex-end; background: #1e2430; border-radius: 20px; padding: 5px 10px; border: 1px solid var(--border); }
-  #attach-btn { background: transparent; border: none; color: #aaa; padding: 10px; cursor: pointer; font-size: 20px; }
+  .input-row { display: flex; gap: 10px; width: 100%; align-items: center; background: #1e2430; border-radius: 20px; padding: 5px 10px; border: 1px solid var(--border); }
+  #attach-btn { background: transparent; border: none; color: #aaa; padding: 10px; cursor: pointer; font-size: 24px; line-height: 1; }
   #chat-input { flex: 1; padding: 10px 0; background: transparent; border: none; color: var(--text); outline: none; resize: none; font-size: 14px; max-height: 100px; }
-  #sendBtn { padding: 10px; border: none; border-radius: 50%; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; margin-bottom: 2px; }
+  #sendBtn { padding: 8px; border: none; border-radius: 50%; background: var(--accent); color: var(--bg); font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; flex-shrink: 0; }
 
   .bottom-sheet-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; }
   .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: #12151c; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; transform: translateY(100%); transition: transform 0.3s; }
@@ -108,7 +112,8 @@
       <button id="openSidebar" onclick="toggleSidebar()">☰</button>
       <a href="creator.html" class="btn-back">← Dashboard</a>
     </div>
-    <a href="creator.html#pricing" class="btn-upgrade">Upgrade</a>
+    <!-- TOMBOL UPGRADE UDAH KE PREMIUM.HTML -->
+    <a href="premium.html" class="btn-upgrade">Upgrade</a>
   </div>
 
   <div class="mode-header">
@@ -136,6 +141,8 @@
       </div>
   </div>
 
+  <div id="file-preview" class="file-preview" style="display: none;"></div>
+
   <div id="chat-box">
     <div id="empty-state">
         <h2>Halo, bagaimana saya bisa membantu?</h2>
@@ -143,12 +150,11 @@
   </div>
 
   <div class="input-area">
-    <div id="file-preview" class="file-preview" style="display: none;"></div>
     <div class="input-row">
       <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
       <button id="attach-btn" onclick="openBottomSheet()">+</button>
       <textarea id="chat-input" rows="1" placeholder="Ketik pesan di sini..." onkeydown="handleEnter(event)" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"></textarea>
-      <button id="sendBtn" onclick="kirimPesan()"><svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+      <button id="sendBtn" onclick="kirimPesan()"><svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
   </div>
 </div>
@@ -165,8 +171,8 @@
 </div>
 
   <script>
-  // LOGO SPIDER (PAKE GAMBAR REAL)
-  const spiderLogoHTML = `<img src="https://img.icons8.com/fluency/96/spiderman.png" style="width:80px; height:80px; margin-bottom:15px; filter: drop-shadow(0 0 10px rgba(230,180,80,0.5));">`;
+  // LOGO SPIDER (SVG INLINE) - ANTI BROKEN
+  const spiderLogoHTML = `<svg viewBox="0 0 24 24" fill="#e6b450" style="width:80px; height:80px; margin-bottom:15px; filter: drop-shadow(0 0 10px rgba(230,180,80,0.5));"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm1.5-4c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5z"/></svg>`;
 
   function showAlert(title, message) {
       document.getElementById('alert-title').innerText = title;
@@ -270,7 +276,7 @@
     const box = document.getElementById('chat-box'); box.innerHTML = '';
     const chat = chats.find(c => c.id === id);
     if (!chat || chat.messages.length === 0) { box.innerHTML = `<div id="empty-state">${spiderLogoHTML}<h2>Halo, bagaimana saya bisa membantu?</h2></div>`; return; }
-    chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial));
+    chat.messages.forEach(msg => tambahPesanUI(msg.text, msg.role === 'user', msg.code, msg.tutorial, msg.img));
   }
 
   function handleFileSelect(event) {
@@ -297,11 +303,18 @@
   function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kirimPesan(); } }
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-  function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null) {
+  function tambahPesanUI(text, isUser, codeContent = null, tutorialText = null, imgBase64 = null) {
     const box = document.getElementById('chat-box');
     const empty = document.getElementById('empty-state'); if(empty) empty.remove();
     const div = document.createElement('div'); div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
-    if (isUser) { div.innerText = text; } else {
+    
+    if (isUser) {
+      if(imgBase64) {
+          div.innerHTML = `<img src="${imgBase64}" class="msg-image"><br>${text}`;
+      } else {
+          div.innerText = text;
+      }
+    } else {
       if (codeContent) {
         div.innerHTML = `<div style="margin-bottom:10px; color:#ccc;">${escapeHtml(tutorialText || '')}</div><div class="code-wrapper"><div class="code-header"><span>HTML + CSS + JS</span><button onclick="salinKode(this)" style="background:none;border:none;color:var(--accent);cursor:pointer;">Salin</button></div><div class="code-box">${escapeHtml(codeContent)}</div></div>`;
       } else { div.innerHTML = text.replace(/\n/g, '<br>'); }
@@ -327,17 +340,19 @@
     let chat = chats.find(c => c.id === currentChatId);
     if (!chat) { newChat(); chat = chats.find(c => c.id === currentChatId); }
 
-    // --- FIX: LOGIKA LIMIT ---
-    const isGenText = text.toLowerCase().match(/(buatkan|bikin|tolong|web|skripsi|analisis)/) || selectedFiles.length > 0;
+    // --- LOGIKA LIMIT (Hanya buat Mode Free) ---
+    const lowerText = text.toLowerCase();
+    const isGenerateText = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('tolong') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || selectedFiles.length > 0;
+    
     if (currentMode === 'free') {
       if (chat.tipeChat === null) {
-        if (isGenText) {
+        if (isGenerateText) {
           chat.tipeChat = 'generate';
-          if (limitData.generate <= 0) return showAlert("Limit Habis", 'Limit generate (7x) habis!');
+          if (limitData.generate <= 0) return showAlert("Limit Habis", 'Limit generate (7x) habis! Silakan beli Premium.');
           limitData.generate--; saveLimit();
         } else {
           chat.tipeChat = 'chat';
-          if (limitData.chat <= 0) return showAlert("Limit Habis", 'Limit ngobrol (5x) habis!');
+          if (limitData.chat <= 0) return showAlert("Limit Habis", 'Limit ngobrol (5x) habis! Silakan beli Premium.');
           limitData.chat--; saveLimit();
         }
       } else {
@@ -348,14 +363,15 @@
 
     if (chat.messages.length === 0) { chat.title = text.substring(0, 25) + '...'; renderHistory(); }
     
+    let imgBase64 = selectedFiles.length > 0 ? selectedFiles[0].base64 : null;
     let userContent = text;
     if (selectedFiles.length > 0) {
         userContent = [{ type: "text", text: text || "Tolong analisis gambar ini." }];
         selectedFiles.forEach(f => { userContent.push({ type: "image_url", image_url: { url: f.base64 } }); });
     }
 
-    tambahPesanUI(text + (selectedFiles.length > 0 ? " [Foto Terlampir]" : ""), true); 
-    chat.messages.push({ role: 'user', text: text, content: userContent }); saveChats();
+    tambahPesanUI(text || "[Foto Terlampir]", true, null, null, imgBase64); 
+    chat.messages.push({ role: 'user', text: text || "[Foto Terlampir]", content: userContent, img: imgBase64 }); saveChats();
     input.value = ''; selectedFiles = []; document.getElementById('file-preview').style.display = 'none'; input.style.height = '';
 
     isGenerating = true; document.getElementById('sendBtn').disabled = true;
@@ -366,12 +382,14 @@
     box.appendChild(loadDiv); box.scrollTop = box.scrollHeight;
 
     try {
+      // FORMAT PAYLOAD KE API
       const apiPayloadMessages = chat.messages.map(m => m.content ? { role: m.role, content: m.content } : { role: m.role, content: m.text });
+      
       const response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: selectedFiles.length > 0 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b',
-          messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas.' }, ...apiPayloadMessages]
+          model: imgBase64 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b',
+          messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' }, ...apiPayloadMessages]
         })
       });
 
