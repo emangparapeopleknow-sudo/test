@@ -217,7 +217,7 @@
             <!-- TAMPILAN QRIS -->
             <div class="qris-box" style="background: #fff; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
                 <!-- GANTI URL DI BAWAH INI PAKAI LINK GAMBAR QRIS LU, ATAU BASE64 -->
-                <img src="https://files.catbox.moe/kqm1p4.jpeg" alt="QRIS LYZ MARKET" style="width: 100%; max-width: 300px; border-radius: 8px;">
+                <img src="https://files.catbox.moe/yrryus.jpg" alt="QRIS LYZ MARKET" style="width: 100%; max-width: 300px; border-radius: 8px;">
                 <p style="color: #ed1c24; font-weight: bold; margin-top: 15px; font-size: 16px;">QRIS</p>
             </div>
             
@@ -312,6 +312,11 @@
         let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
         inbox.unshift({ code, namaPaket: currentOrder.nama, dateStr, timeStr, expiry, status: 'unused' });
         localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
+    
+         // Notif kalau kode udah masuk
+         setTimeout(() => {
+    showAlert("Notifikasi", "Kode aktivasi sudah masuk ke Kotak Masuk! Silakan cek dan klik aktivasi.");
+    }, 1000);
     }
 
     function kembaliKeHarga() {
