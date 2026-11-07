@@ -166,7 +166,7 @@
     </div>
 </div>
 
-  <script>
+<script>
   // LOGO BINTANG EMAS (SVG INLINE)
   const spiderLogoHTML = `<svg viewBox="0 0 24 24" fill="url(#starGrad)" style="width:80px; height:80px; margin-bottom:15px; filter: drop-shadow(0px 4px 10px rgba(230,180,80,0.4));"><defs><linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" /><stop offset="100%" style="stop-color:#b8860b;stop-opacity:1" /></linearGradient></defs><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
 
@@ -366,7 +366,7 @@
     tambahPesanUI(text || "[Foto Terlampir]", true, null, null, imgBase64); 
     chat.messages.push({ role: 'user', text: text || "[Foto Terlampir]", content: userContent, img: imgBase64 }); saveChats();
     
-    // FIX BUG: HAPUS INPUT SEBELUM FETCH
+    // FIX: HAPUS INPUT SEBELUM FETCH
     input.value = ''; selectedFiles = []; document.getElementById('file-preview').style.display = 'none'; input.style.height = '';
     isGenerating = true; document.getElementById('sendBtn').disabled = true;
     
@@ -383,30 +383,41 @@
           return { role: m.role, content: String(m.text) };
       });
 
-      // Fallback model logic
       let modelToUse = imgBase64 ? 'qwen/qwen3.8-27b' : 'openai/gpt-oss-120b';
       
+      // Nambahin Timeout 15 Detik biar ga nge-hang
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
       let response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: modelToUse,
           messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas.' }, ...apiPayloadMessages]
-        })
+        }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       let data = await response.json();
 
-      // Kalau over capacity, pake fallback
+      // Fallback model kalau over capacity
       if (data.error && data.error.message.includes('over capacity')) {
           loadDiv.innerHTML = '⚠️ Model utama penuh, mencoba server cadangan...';
           modelToUse = 'llama-3.2-11b-vision-preview';
+          
+          const controller2 = new AbortController();
+          const timeoutId2 = setTimeout(() => controller2.abort(), 15000);
+
           response = await fetch('/api/chat', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               model: modelToUse,
               messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas.' }, ...apiPayloadMessages]
-            })
+            }),
+            signal: controller2.signal
           });
+          clearTimeout(timeoutId2);
           data = await response.json();
       }
 
@@ -426,7 +437,13 @@
     } catch (err) {
       if (currentMode === 'free') { if (chat.tipeChat === 'generate') limitData.generate++; else limitData.chat++; saveLimit(); }
       const errDiv = document.getElementById(loadingId);
-      if(errDiv) errDiv.innerText = '❌ Error: ' + err.message;
+      if(errDiv) {
+          if (err.name === 'AbortError') {
+              errDiv.innerText = '⏱️ Timeout: Server AI terlalu lama merespon. Coba lagi nanti.';
+          } else {
+              errDiv.innerText = '❌ Error: ' + err.message;
+          }
+      }
     } finally {
       isGenerating = false; document.getElementById('sendBtn').disabled = false;
     }
