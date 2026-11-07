@@ -568,12 +568,19 @@
     }
 
     function aktivasiKode(index) {
-        let inbox = JSON.parse(localStorage.getItem('lyz_inbox'));
-        if(inbox[index].status === 'used') return;
-        inbox[index].status = 'used';
-        localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
-        localStorage.setItem('lyz_premium', JSON.stringify({ expiry: inbox[index].expiry }));
-        showAlert("Berhasil", "Premium Berhasil Diaktifkan!"); renderInbox(); updatePremiumStatus();
+    let inbox = JSON.parse(localStorage.getItem('lyz_inbox'));
+    if(inbox[index].status === 'used') return;
+    
+    // Ubah status jadi used
+    inbox[index].status = 'used';
+    localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
+    
+    // BARU SET PREMIUM DI SINI
+    localStorage.setItem('lyz_premium', JSON.stringify({ paket: inbox[index].namaPaket, expiry: inbox[index].expiry }));
+    
+    showAlert("Berhasil", "Premium Berhasil Diaktifkan! Status akun lu udah ke-update.");
+    renderInbox();
+    updatePremiumStatus(); // Update teks status di dashboard
     }
 
     async function cariLagu() {
