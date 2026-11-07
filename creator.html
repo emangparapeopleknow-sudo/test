@@ -197,6 +197,16 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
                 <button class="btn-order" onclick="prosesBayar('VVIP 2 Bulan', 36000, 60)">Order Sekarang</button>
             </div>
 
+           <div class="modal" id="modal-deploy">
+    <div class="deploy-screen">
+        <div class="fs-header">
+            <div class="fs-back" onclick="tutupModal('deploy')">←</div>
+            <h1 data-i18n="deploy_title">Cara Deploy Web</h1>
+        </div>
+        <div class="text-content" id="deploy-text-content"></div>
+    </div>
+           </div>
+            
             <div class="pricing-card">
                 <div class="price-title">Super VIP</div>
                 <div class="price-amount">Rp 57.000 <span>/Bulan</span></div>
@@ -421,26 +431,27 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
         }
     };
 
-    // --- LOGIKA STATUS PREMIUM DI DASHBOARD ---
-function updatePremiumStatus() {
-    let premiumData = JSON.parse(localStorage.getItem('lyz_premium'));
-    let statusText = "Status Anda: Free";
-    let statusColor = "#888";
+    // --- LOGIKA STATUS PREMIUM (TARUH DI DALAM SINI) ---
+    function updatePremiumStatus() {
+        let premiumData = JSON.parse(localStorage.getItem('lyz_premium'));
+        let statusText = "Status Anda: Free";
+        let statusColor = "#888";
 
-    if (premiumData) {
-        let paket = premiumData.paket;
-        statusText = "Status Anda: " + paket;
-        statusColor = "var(--accent)"; // Warna emas
-    }
+        if (premiumData && premiumData.paket) {
+            statusText = "Status Anda: " + premiumData.paket;
+            statusColor = "var(--accent)"; 
+        }
 
-    let statusEl = document.getElementById('status-premium');
-    if(statusEl) {
-        statusEl.innerText = statusText;
-        statusEl.style.color = statusColor;
+        let statusEl = document.getElementById('status-premium');
+        if(statusEl) {
+            statusEl.innerText = statusText;
+            statusEl.style.color = statusColor;
+        }
     }
-}
-// Panggil fungsinya pas web dibuka
-updatePremiumStatus();
+    
+    // Panggil pas web dibuka
+    updatePremiumStatus();
+    // ... sisa kode JS lu di bawahnya
     
     function setLanguage(lang) {
     localStorage.setItem('lyz_lang', lang);
