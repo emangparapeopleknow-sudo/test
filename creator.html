@@ -78,7 +78,7 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
 .settings-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
 .settings-sub { font-size: 12px; color: #888; }
 .settings-arrow { color: #666; font-size: 18px; }
-        .text-content { flex: 1; overflow-y: auto; font-size: 14px; color: var(--text); line-height: 1.8; padding: 20px; }
+    .text-content { flex: 1; overflow-y: auto; font-size: 14px; color: var(--text); line-height: 1.8; padding: 20px; }
     .text-content h2 { font-size: 16px; color: var(--accent); margin-top: 20px; margin-bottom: 10px; }
     .text-content ul { padding-left: 20px; }
     .text-content li { margin-bottom: 10px; }
@@ -118,39 +118,38 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
 
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <audio id="bg-music" loop src=""></audio>
-
     <div class="navbar">
-        <div class="nav-left">
-            <div class="nav-icon" onclick="toggleMenu()">☰</div>
-            <div class="nav-title" data-i18n="app_title">LyzCreator</div>
-        </div>
-        <div class="nav-right">
-            <div class="nav-controls">
-                <div class="btn-control" onclick="toggleMusicGlobal()" id="global-music-btn">▶</div>
-                <div class="btn-control" onclick="logout()">⏻</div>
-            </div>
+    <div class="nav-left">
+        <div class="nav-icon" onclick="toggleMenu()">☰</div>
+        <div class="nav-title" data-i18n="app_title">LyzCreator</div>
+    </div>
+    <div class="nav-right">
+        <div class="nav-controls">
+            <div class="btn-control" onclick="toggleMusicGlobal()" id="global-music-btn">▶</div>
+            <div class="btn-control" onclick="logout()">⏻</div>
         </div>
     </div>
+</div>
 
-    <div class="dashboard">
-        <div class="user-info" style="margin-bottom: 10px; font-size: 14px; color: var(--accent); cursor:pointer;" onclick="openModal('settings')">Halo, <span id="user-display">User</span></div>
-        <a href="chat.html" class="btn-start" onclick="cekLoginDanMasuk()" data-i18n="btn_start">🚀 Mulai Bikin Web?</a>
-        <div class="row-top">
-            <a href="#" class="btn-oval" onclick="openModal('pricing')" data-i18n="btn_pricing">Lihat Harga Premium</a>
-            <a href="#" class="btn-oval" onclick="openModal('deploy')" data-i18n="btn_deploy">Cara Deploy Web</a> 
-        </div>
+<div class="dashboard">
+    <div class="user-info" style="margin-bottom: 10px; font-size: 14px; color: var(--accent); cursor:pointer;" onclick="openModal('settings')">Halo, <span id="user-display">User</span></div>
+    <a href="chat.html" class="btn-start" onclick="cekLoginDanMasuk()" data-i18n="btn_start">🚀 Mulai Bikin Web?</a>
+    <div class="row-top">
+        <a href="#" class="btn-oval" onclick="openModal('pricing')" data-i18n="btn_pricing">Lihat Harga Premium</a>
+        <a href="#" class="btn-oval" onclick="openModal('deploy')" data-i18n="btn_deploy">Cara Deploy Web</a> 
     </div>
+</div>
 
-    <div class="sidebar" id="mySidebar">
-        <div class="close-btn" onclick="toggleMenu()">×</div>
-        <h3 data-i18n="menu_title">Menu Creator</h3>
-        <a onclick="openModal('inbox')" data-i18n="menu_inbox">📬 Kotak Masuk</a>
-        <a onclick="openModal('history')" data-i18n="menu_history">📜 Histori</a>
-        <a onclick="openModal('music')" data-i18n="menu_music">🎵 Cari Lagu</a>
-        <a onclick="openModal('settings')" data-i18n="menu_settings">⚙️ Pengaturan</a>
-        <a onclick="openModal('privacy')" data-i18n="menu_privacy">🔒 Privacy & Policy</a>
-    </div>
-        <div class="modal" id="modal-pricing">
+<div class="sidebar" id="mySidebar">
+    <div class="close-btn" onclick="toggleMenu()">×</div>
+    <h3 data-i18n="menu_title">Menu Creator</h3>
+    <a onclick="openModal('inbox')" data-i18n="menu_inbox">📬 Kotak Masuk</a>
+    <a onclick="openModal('history')" data-i18n="menu_history">📜 Histori</a>
+    <a onclick="openModal('music')" data-i18n="menu_music">🎵 Cari Lagu</a>
+    <a onclick="openModal('settings')" data-i18n="menu_settings">⚙️ Pengaturan</a>
+    <a onclick="openModal('privacy')" data-i18n="menu_privacy">🔒 Privacy & Policy</a>
+</div>
+<div class="modal" id="modal-pricing">
     <div class="pricing-screen">
         <div class="fs-header">
             <div class="fs-back" onclick="tutupModal('pricing')">←</div>
@@ -196,19 +195,8 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal" id="modal-deploy">
-    <div class="deploy-screen">
-        <div class="fs-header">
-            <div class="fs-back" onclick="tutupModal('deploy')">←</div>
-            <h1 data-i18n="deploy_title">Cara Deploy Web</h1>
-        </div>
-        <div class="text-content" id="deploy-text-content"></div>
-    </div>
-</div>
-
-<div class="modal" id="modal-history">
+  </div>
+  <div class="modal" id="modal-history">
     <div class="history-screen">
         <div class="fs-header">
             <div class="fs-back" onclick="tutupModal('history')">←</div>
@@ -260,7 +248,6 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
     </div>
     <button class="music-mini-btn" id="mini-btn-control" onclick="toggleMusicGlobal()">▶</button>
 </div>
-
 <div class="modal" id="modal-settings">
     <div class="settings-screen">
         <div class="fs-header">
@@ -297,7 +284,6 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
     </div>
 </div>
 
-<!-- PROFILE FULL SCREEN -->
 <div class="modal" id="modal-profile">
     <div class="profile-screen">
         <div class="fs-header">
@@ -332,7 +318,6 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
     </div>
 </div>
 
-<!-- LANG SELECT -->
 <div class="modal" id="modal-lang-select">
     <div class="modal-content">
         <h3 data-i18n="settings_lang">Pilih Bahasa</h3>
@@ -341,8 +326,7 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
         <button onclick="tutupModal('lang-select')" style="background: var(--accent); color: black;">Tutup</button>
     </div>
 </div>
-
-        <div class="modal" id="modal-privacy">
+    <div class="modal" id="modal-privacy">
         <div class="privacy-screen">
             <div class="fs-header">
                 <div class="fs-back" onclick="tutupModal('privacy')">←</div>
@@ -379,8 +363,8 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
             privacy_title: "Privacy & Policy", edit_profile_title: "👤 Edit Profil", edit_profile_user: "Username", edit_profile_email: "Email (Tertaut)",
             edit_profile_save: "Simpan", edit_profile_cancel: "Batal", auth_login: "Masuk", auth_pass: "Password (Min. 8 Karakter)", auth_google: "Login pakai Google",
             auth_or: "Atau", auth_switch: "Belum punya akun? Daftar",
-            privacy_text: `<p><b>Terakhir Diperbarui: Hari ini.</b></p><p>LyzCreator ("Kami") sangat menghargai privasi Anda.</p><h2>1. Data Akun</h2><p>LyzCreator tidak akan mengambil password asli akun Google Anda. Hanya email sebagai identitas login.</p><h2>2. Riwayat</h2><p>Semua riwayat disimpan lokal di browser Anda. Jika melebihi 10 data, sistem akan menghapus yang terlama.</p><h2>3. Pembayaran</h2><p>Kami tidak menyimpan data kartu kredit. Transaksi diproses via Payment Gateway aman.</p>`,
-            deploy_text: `<p>Ikuti panduan lengkap ini untuk merilis web buatanmu ke internet secara gratis:</p><h2>Langkah 1: Simpan Kode</h2><ul><li>Minta AI membuatkan web.</li><li>Salin kodenya ke Notepad.</li><li>Simpan sebagai <code>index.html</code>.</li></ul><h2>Langkah 2: Daftar Vercel</h2><ul><li>Buka <b>vercel.com</b>.</li><li>Klik "Sign Up".</li><li>Daftar pakai Email/GitHub (Gratis).</li></ul><h2>Langkah 3: Upload Project</h2><ul><li>Masuk Dashboard Vercel.</li><li>Klik <b>"Add New..."</b> > <b>"Project"</b>.</li><li>Cari opsi <b>"Upload"</b>, lalu masukkan file <code>index.html</code>.</li></ul><h2>Langkah 4: Deploy</h2><ul><li>Klik <b>"Deploy"</b> dan tunggu.</li><li>Web kamu sudah online!</li></ul>`
+            privacy_text: `<p><b>Terakhir Diperbarui: Hari ini.</b></p><p>LyzCreator ("Kami", "Kita") sangat menghargai privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda saat menggunakan layanan kami.</p><h2>1. Data Akun & Autentikasi</h2><p>LyzCreator <b>tidak akan pernah</b> mengambil, menyimpan, atau membaca *password* asli akun Google/Email Anda. Sistem autentikasi kami hanya menggunakan email dan username sebagai identitas login. Kami tidak memiliki akses ke kontak, Google Drive, atau data pribadi lainnya di akun Google Anda.</p><h2>2. Riwayat Permintaan (History)</h2><p>Semua *history prompt* dan kode AI disimpan secara lokal di *browser* perangkat Anda (LocalStorage). Kami tidak menyimpannya di server pusat kami. Untuk menjaga performa perangkat, jika riwayat melebihi 10 data, sistem kami secara otomatis akan menghapus data yang paling lama (Auto-Delete).</p><h2>3. Pembayaran & Transaksi</h2><p>Kami tidak menyimpan data kartu kredit, rekening bank, atau detail pembayaran Anda di server kami. Semua transaksi pembayaran Premium (VIP, VVIP, dll) diproses melalui *Payment Gateway* pihak ketiga yang bersertifikasi dan aman.</p><h2>4. Kode Aktivasi Premium</h2><p>Kode aktivasi (Lyzz-XXXX) bersifat rahasia dan hanya untuk penggunaan pribadi. Jangan pernah membagikan kode Anda kepada siapa pun. Segala bentuk penyalahgunaan kode di luar tanggung jawab kami.</p><h2>5. Perubahan Kebijakan</h2><p>Kami dapat memperbarui kebijakan privasi ini dari waktu ke waktu. Dengan terus menggunakan layanan LyzCreator, Anda dianggap menyetujui pembaruan tersebut.</p>`,
+            deploy_text: `<p>Ikuti panduan lengkap ini untuk merilis web buatanmu ke internet secara gratis:</p><h2>Langkah 1: Simpan Kode</h2><ul><li>Minta AI untuk membuatkan web (HTML/CSS/JS).</li><li>Salin kodenya dan simpan ke text editor (Notepad/VS Code).</li><li>Simpan dengan nama file <code>index.html</code>.</li></ul><h2>Langkah 2: Daftar Akun Vercel</h2><ul><li>Buka situs <b>vercel.com</b>.</li><li>Klik "Sign Up" di pojok kanan atas.</li><li>Daftar menggunakan Email, GitHub, atau Google (Gratis).</li></ul><h2>Langkah 3: Upload Project</h2><ul><li>Setelah login, masuk ke <b>Dashboard Vercel</b>.</li><li>Klik tombol hitam <b>"Add New..."</b> di pojok kanan atas, lalu pilih <b>"Project"</b>.</li><li>Scroll ke bawah, cari tulisan <b>"Deploy from a template"</b> atau <b>"Upload"</b>.</li><li>Drag & Drop file <code>index.html</code> tadi ke area upload Vercel.</li></ul><h2>Langkah 4: Deploy & Selesai</h2><ul><li>Klik tombol <b>"Deploy"</b> dan tunggu beberapa detik.</li><li>Vercel akan memberikan link web kamu (contoh: <code>web-lu.vercel.app</code>).</li><li>Web kamu sudah online dan bisa diakses siapa saja!</li></ul>`
         },
         en: {
             app_title: "LyzCreator", btn_start: "🚀 Start Building Web?", btn_pricing: "View Premium Pricing", btn_deploy: "How to Deploy Web",
@@ -392,250 +376,250 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
             privacy_title: "Privacy & Policy", edit_profile_title: "👤 Edit Profile", edit_profile_user: "Username", edit_profile_email: "Email (Linked)",
             edit_profile_save: "Save", edit_profile_cancel: "Cancel", auth_login: "Login", auth_pass: "Password (Min. 8 Characters)", auth_google: "Login with Google",
             auth_or: "Or", auth_switch: "Don't have an account? Register",
-            privacy_text: `<p><b>Last Updated: Today.</b></p><p>LyzCreator ("We") highly values your privacy.</p><h2>1. Account Data</h2><p>LyzCreator will not take your actual Google password. Only email for login identity.</p><h2>2. History</h2><p>All history is stored locally on your browser. If it exceeds 10 data, system will delete the oldest.</p><h2>3. Payments</h2><p>We do not store credit card data. Transactions are processed via secure Payment Gateways.</p>`,
-            deploy_text: `<p>Follow this complete guide to release your website to the internet for free:</p><h2>Step 1: Save the Code</h2><ul><li>Ask AI to create a website.</li><li>Copy the code to Notepad.</li><li>Save as <code>index.html</code>.</li></ul><h2>Step 2: Register Vercel</h2><ul><li>Go to <b>vercel.com</b>.</li><li>Click "Sign Up".</li><li>Register using Email/GitHub (Free).</li></ul><h2>Step 3: Upload Project</h2><ul><li>Go to Vercel Dashboard.</li><li>Click <b>"Add New..."</b> > <b>"Project"</b>.</li><li>Look for <b>"Upload"</b> option, insert <code>index.html</code>.</li></ul><h2>Step 4: Deploy</h2><ul><li>Click <b>"Deploy"</b> and wait.</li><li>Your website is online!</li></ul>`
+            privacy_text: `<p><b>Last Updated: Today.</b></p><p>LyzCreator ("We", "Us") highly values your privacy. This Privacy Policy explains how we collect, use, and protect your information when using our services.</p><h2>1. Account Data & Authentication</h2><p>LyzCreator <b>will never</b> take, store, or read the actual *password* of your Google/Email account. Our authentication system only uses email and username as login identity. We do not have access to contacts, Google Drive, or other personal data in your Google account.</p><h2>2. Request History</h2><p>All *history prompts* and AI code are stored locally on your device's *browser* (LocalStorage). We do not store them on our central server. To maintain device performance, if history exceeds 10 data, our system will automatically delete the oldest data (Auto-Delete).</p><h2>3. Payments & Transactions</h2><p>We do not store credit card data, bank accounts, or your payment details on our server. All Premium payment transactions (VIP, VVIP, etc.) are processed through certified and secure third-party *Payment Gateways*.</p><h2>4. Premium Activation Code</h2><p>The activation code (Lyzz-XXXX) is confidential and for personal use only. Never share your code with anyone. Any misuse of the code is beyond our responsibility.</p><h2>5. Policy Changes</h2><p>We may update this privacy policy from time to time. By continuing to use the LyzCreator service, you are deemed to agree to these updates.</p>`,
+            deploy_text: `<p>Follow this complete guide to release your website to the internet for free:</p><h2>Step 1: Save the Code</h2><ul><li>Ask AI to create a website (HTML/CSS/JS).</li><li>Copy the code and save it to a text editor (Notepad/VS Code).</li><li>Save it as a file named <code>index.html</code>.</li></ul><h2>Step 2: Register a Vercel Account</h2><ul><li>Go to <b>vercel.com</b>.</li><li>Click "Sign Up" in the top right corner.</li><li>Register using Email, GitHub, or Google (Free).</li></ul><h2>Step 3: Upload Project</h2><ul><li>After logging in, go to the <b>Vercel Dashboard</b>.</li><li>Click the black <b>"Add New..."</b> button in the top right, then select <b>"Project"</b>.</li><li>Scroll down, look for <b>"Deploy from a template"</b> or <b>"Upload"</b>.</li><li>Drag & Drop the <code>index.html</code> file into the Vercel upload area.</li></ul><h2>Step 4: Deploy & Done</h2><ul><li>Click the <b>"Deploy"</b> button and wait a few seconds.</li><li>Vercel will provide your website link (e.g., <code>your-web.vercel.app</code>).</li><li>Your website is now online and accessible to anyone!</li></ul>`
         }
     };
 
     function setLanguage(lang) {
-        localStorage.setItem('lyz_lang', lang);
-        applyLanguage();
-        tutupModal('lang-select');
-        document.getElementById('current-lang-display').innerText = lang === 'id' ? 'Indonesia' : 'English';
-    }
+    localStorage.setItem('lyz_lang', lang);
+    applyLanguage();
+    tutupModal('lang-select');
+    document.getElementById('current-lang-display').innerText = lang === 'id' ? 'Indonesia' : 'English';
+}
 
-    function applyLanguage() {
-        const lang = localStorage.getItem('lyz_lang') || 'id';
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if(translations[lang] && translations[lang][key]) { el.innerText = translations[lang][key]; }
-        });
-        document.getElementById('privacy-text-content').innerHTML = translations[lang]['privacy_text'];
-        document.getElementById('deploy-text-content').innerHTML = translations[lang]['deploy_text'];
-    }
-
-    function showAlert(title, message) {
-        document.getElementById('alert-title').innerText = title;
-        document.getElementById('alert-message').innerText = message;
-        document.getElementById('custom-alert').style.display = 'flex';
-    }
-    function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
-
-    function gantiTema() {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        localStorage.setItem('lyz_theme', isLight ? 'light' : 'dark');
-    }
-    if(localStorage.getItem('lyz_theme') === 'light') document.body.classList.add('light-mode');
-
-    const music = document.getElementById('bg-music');
-    let hasClicked = false;
-    const defaultSongUrl = 'https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3';
-    
-    window.addEventListener('DOMContentLoaded', () => {
-        music.src = defaultSongUrl;
-        music.muted = true;
-        music.play().catch(e => console.log("Autoplay muted blocked"));
+function applyLanguage() {
+    const lang = localStorage.getItem('lyz_lang') || 'id';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if(translations[lang] && translations[lang][key]) { el.innerText = translations[lang][key]; }
     });
+    document.getElementById('privacy-text-content').innerHTML = translations[lang]['privacy_text'];
+    document.getElementById('deploy-text-content').innerHTML = translations[lang]['deploy_text'];
+}
 
-    document.body.addEventListener('click', () => {
-        if (!hasClicked) {
-            hasClicked = true;
-            music.muted = false;
-            music.volume = 0.4;
-            if (music.paused) { music.play(); updatePlayButtons(); }
-        }
-    }, { once: true });
+function showAlert(title, message) {
+    document.getElementById('alert-title').innerText = title;
+    document.getElementById('alert-message').innerText = message;
+    document.getElementById('custom-alert').style.display = 'flex';
+}
+function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+function gantiTema() {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    localStorage.setItem('lyz_theme', isLight ? 'light' : 'dark');
+}
+if(localStorage.getItem('lyz_theme') === 'light') document.body.classList.add('light-mode');
+
+const music = document.getElementById('bg-music');
+let hasClicked = false;
+const defaultSongUrl = 'https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3';
+
+window.addEventListener('DOMContentLoaded', () => {
+    music.src = defaultSongUrl;
+    music.muted = true;
+    music.play().catch(e => console.log("Autoplay muted blocked"));
+});
+
+document.body.addEventListener('click', () => {
+    if (!hasClicked) {
+        hasClicked = true;
+        music.muted = false;
+        music.volume = 0.4;
+        if (music.paused) { music.play(); updatePlayButtons(); }
+    }
+}, { once: true });
 
     function updatePlayButtons() {
-        const icon = music.paused ? "▶" : "⏸";
-        document.getElementById('global-music-btn').innerText = icon;
-        document.getElementById('mini-btn-control').innerText = icon;
-    }
+    const icon = music.paused ? "▶" : "⏸";
+    document.getElementById('global-music-btn').innerText = icon;
+    document.getElementById('mini-btn-control').innerText = icon;
+}
 
-    function toggleMusicGlobal() {
-        if(!music.src || music.src === window.location.href) return showAlert("Oops", "Pilih lagu dulu di menu!");
-        if(music.paused) { music.play(); } else { music.pause(); }
-        updatePlayButtons();
-    }
+function toggleMusicGlobal() {
+    if(!music.src || music.src === window.location.href) return showAlert("Oops", "Pilih lagu dulu di menu!");
+    if(music.paused) { music.play(); } else { music.pause(); }
+    updatePlayButtons();
+}
 
-    let isLoginMode = true;
-    function toggleAuthMode() {
-        isLoginMode = !isLoginMode;
-        const lang = localStorage.getItem('lyz_lang') || 'id';
-        document.getElementById('auth-title').innerText = isLoginMode ? (lang === 'id' ? "Login ke LyzCreator" : "Login to LyzCreator") : (lang === 'id' ? "Daftar Akun Baru" : "Register New Account");
-        document.getElementById('auth-btn').innerText = isLoginMode ? (lang === 'id' ? "Masuk" : "Login") : (lang === 'id' ? "Daftar" : "Register");
-        document.getElementById('auth-switch').innerText = isLoginMode ? (lang === 'id' ? "Belum punya akun? Daftar" : "Don't have an account? Register") : (lang === 'id' ? "Udah punya akun? Login" : "Already have an account? Login");
-        document.getElementById('email-group').style.display = isLoginMode ? 'none' : 'block'; 
-    }
+let isLoginMode = true;
+function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    const lang = localStorage.getItem('lyz_lang') || 'id';
+    document.getElementById('auth-title').innerText = isLoginMode ? (lang === 'id' ? "Login ke LyzCreator" : "Login to LyzCreator") : (lang === 'id' ? "Daftar Akun Baru" : "Register New Account");
+    document.getElementById('auth-btn').innerText = isLoginMode ? (lang === 'id' ? "Masuk" : "Login") : (lang === 'id' ? "Daftar" : "Register");
+    document.getElementById('auth-switch').innerText = isLoginMode ? (lang === 'id' ? "Belum punya akun? Daftar" : "Don't have an account? Register") : (lang === 'id' ? "Udah punya akun? Login" : "Already have an account? Login");
+    document.getElementById('email-group').style.display = isLoginMode ? 'none' : 'block'; 
+}
 
-    function prosesAuth() {
-        const user = document.getElementById('auth-username').value;
-        const pass = document.getElementById('auth-password').value;
-        const email = document.getElementById('auth-email').value;
-        if(!user || !pass) return showAlert("Gagal", "Isi Username & Password dulu, Bily!");
-        if(pass.length < 8) return showAlert("Password Lemah", "Password minimal 8 karakter biar aman!");
-        localStorage.setItem('creator_active_user', user);
-        localStorage.setItem('creator_email', email || 'user@gmail.com');
-        showAlert("Berhasil", "Login Berhasil!");
-        document.getElementById('modal-auth').style.display = 'none';
-        updateUserDisplay();
-    }
+function prosesAuth() {
+    const user = document.getElementById('auth-username').value;
+    const pass = document.getElementById('auth-password').value;
+    const email = document.getElementById('auth-email').value;
+    if(!user || !pass) return showAlert("Gagal", "Isi Username & Password dulu, Bily!");
+    if(pass.length < 8) return showAlert("Password Lemah", "Password minimal 8 karakter biar aman!");
+    localStorage.setItem('creator_active_user', user);
+    localStorage.setItem('creator_email', email || 'user@gmail.com');
+    showAlert("Berhasil", "Login Berhasil!");
+    document.getElementById('modal-auth').style.display = 'none';
+    updateUserDisplay();
+}
 
-    function loginGoogle() {
-        let user = prompt("Simulasi Google Login:\nMasukin Username (Nama) lu:");
-        if(user) {
-            let pass = prompt("Bikin Password (Minimal 8 karakter):");
-            if(pass && pass.length >= 8) {
-                localStorage.setItem('creator_active_user', user);
-                localStorage.setItem('creator_email', 'user@gmail.com');
-                showAlert("Berhasil", "Akun Google Berhasil Tertaut!");
-                document.getElementById('modal-auth').style.display = 'none';
-                updateUserDisplay();
-            } else {
-                showAlert("Gagal", "Password minimal 8 karakter!");
-            }
+function loginGoogle() {
+    let user = prompt("Simulasi Google Login:\nMasukin Username (Nama) lu:");
+    if(user) {
+        let pass = prompt("Bikin Password (Minimal 8 karakter):");
+        if(pass && pass.length >= 8) {
+            localStorage.setItem('creator_active_user', user);
+            localStorage.setItem('creator_email', 'user@gmail.com');
+            showAlert("Berhasil", "Akun Google Berhasil Tertaut!");
+            document.getElementById('modal-auth').style.display = 'none';
+            updateUserDisplay();
+        } else {
+            showAlert("Gagal", "Password minimal 8 karakter!");
         }
     }
+}
 
     function updateUserDisplay() {
-        const activeUser = localStorage.getItem('creator_active_user');
-        if(activeUser) {
-            document.getElementById('user-display').innerText = activeUser;
-            document.getElementById('settings-username').innerText = activeUser;
-        } else {
-            document.getElementById('user-display').innerText = `Login / Daftar`;
-            document.getElementById('modal-auth').style.display = 'block';
-        }
+    const activeUser = localStorage.getItem('creator_active_user');
+    if(activeUser) {
+        document.getElementById('user-display').innerText = activeUser;
+        document.getElementById('settings-username').innerText = activeUser;
+    } else {
+        document.getElementById('user-display').innerText = `Login / Daftar`;
+        document.getElementById('modal-auth').style.display = 'block';
     }
+}
 
-    function logout() {
-        if(confirm("Yakin mau keluar?")) {
-            localStorage.removeItem('creator_active_user');
-            localStorage.removeItem('creator_email');
-            window.location.reload();
-        }
+function logout() {
+    if(confirm("Yakin mau keluar?")) {
+        localStorage.removeItem('creator_active_user');
+        localStorage.removeItem('creator_email');
+        window.location.reload();
     }
+}
 
-    function switchHistoryTab(tab) {
-        document.getElementById('tab-pembelian').classList.remove('active');
-        document.getElementById('tab-permintaan').classList.remove('active');
-        document.getElementById('tab-' + tab).classList.add('active');
-        const wrapper = document.getElementById('history-wrapper');
-        if(tab === 'pembelian') { wrapper.style.transform = 'translateX(0)'; renderHistoryPembelian(); } 
-        else { wrapper.style.transform = 'translateX(-50%)'; renderHistoryPermintaan(); }
-    }
+function switchHistoryTab(tab) {
+    document.getElementById('tab-pembelian').classList.remove('active');
+    document.getElementById('tab-permintaan').classList.remove('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    const wrapper = document.getElementById('history-wrapper');
+    if(tab === 'pembelian') { wrapper.style.transform = 'translateX(0)'; renderHistoryPembelian(); } 
+    else { wrapper.style.transform = 'translateX(-50%)'; renderHistoryPermintaan(); }
+}
 
-    function renderHistoryPembelian() {
-        let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
-        const container = document.getElementById('history-pembelian');
-        if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada pembelian.</p>"; return; }
-        container.innerHTML = inbox.map(msg => `
-            <div class="history-card" style="border-left: 4px solid var(--accent);">
-                <div style="font-weight:bold; margin-bottom:5px;">${msg.namaPaket}</div>
-                <div style="font-size:12px; color:#888;">Dibeli: ${msg.dateStr}</div>
-                <div style="font-size:12px; color:#888;">Status: ${msg.status === 'used' ? 'Aktif' : 'Belum diaktifkan'}</div>
-            </div>
-        `).join('');
-    }
+function renderHistoryPembelian() {
+    let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
+    const container = document.getElementById('history-pembelian');
+    if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada pembelian.</p>"; return; }
+    container.innerHTML = inbox.map(msg => `
+        <div class="history-card" style="border-left: 4px solid var(--accent);">
+            <div style="font-weight:bold; margin-bottom:5px;">${msg.namaPaket}</div>
+            <div style="font-size:12px; color:#888;">Dibeli: ${msg.dateStr}</div>
+            <div style="font-size:12px; color:#888;">Status: ${msg.status === 'used' ? 'Aktif' : 'Belum diaktifkan'}</div>
+        </div>
+    `).join('');
+}
 
-    function renderHistoryPermintaan() {
-        let history = JSON.parse(localStorage.getItem('lyz_history')) || [];
-        if (history.length > 10) { history = history.slice(0, 10); localStorage.setItem('lyz_history', JSON.stringify(history)); }
-        const container = document.getElementById('history-permintaan');
-        if (history.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada permintaan.</p>"; } 
-        else {
-            container.innerHTML = history.map((h, i) => `<div class="history-card"><span style="color: var(--accent); font-weight: bold; margin-right: 10px;">${i+1}.</span> ${h}</div>`).join('');
-        }
+function renderHistoryPermintaan() {
+    let history = JSON.parse(localStorage.getItem('lyz_history')) || [];
+    if (history.length > 10) { history = history.slice(0, 10); localStorage.setItem('lyz_history', JSON.stringify(history)); }
+    const container = document.getElementById('history-permintaan');
+    if (history.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada permintaan.</p>"; } 
+    else {
+        container.innerHTML = history.map((h, i) => `<div class="history-card"><span style="color: var(--accent); font-weight: bold; margin-right: 10px;">${i+1}.</span> ${h}</div>`).join('');
     }
+}
 
-    const sidebar = document.getElementById('mySidebar');
-    const overlay = document.getElementById('overlay');
-    function toggleMenu() { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
-    
-    function openModal(type) {
-        const modal = document.getElementById('modal-' + type);
-        if(modal) {
-            modal.style.display = 'block';
-            if (type === 'history') switchHistoryTab('pembelian');
-            if (type === 'inbox') renderInbox();
-        }
-    }
-    function tutupModal(type) { const modal = document.getElementById('modal-' + type); if(modal) modal.style.display = 'none'; }
+const sidebar = document.getElementById('mySidebar');
+const overlay = document.getElementById('overlay');
+function toggleMenu() { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
 
-    function verifikasiAksi(aksi) {
-        let password = prompt("Verifikasi 2 Langkah Diperlukan.\nMasukin password akun lu buat " + aksi + ":");
-        if(password) {
-            showAlert("Terverifikasi", "Identitas diverifikasi! Lanjut ke menu " + aksi + ".");
-        } else {
-            showAlert("Gagal", "Verifikasi dibatalkan.");
-        }
+function openModal(type) {
+    const modal = document.getElementById('modal-' + type);
+    if(modal) {
+        modal.style.display = 'block';
+        if (type === 'history') switchHistoryTab('pembelian');
+        if (type === 'inbox') renderInbox();
     }
+}
+function tutupModal(type) { const modal = document.getElementById('modal-' + type); if(modal) modal.style.display = 'none'; }
+
+function verifikasiAksi(aksi) {
+    let password = prompt("Verifikasi 2 Langkah Diperlukan.\nMasukin password akun lu buat " + aksi + ":");
+    if(password) {
+        showAlert("Terverifikasi", "Identitas diverifikasi! Lanjut ke menu " + aksi + ".");
+    } else {
+        showAlert("Gagal", "Verifikasi dibatalkan.");
+    }
+}
 
     function prosesBayar(namaPaket, harga, hari) {
-        if(confirm(`Konfirmasi Pembayaran ${namaPaket} sebesar Rp ${harga.toLocaleString()}?`)) {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let code = 'Lyzz-';
-            for (let i = 0; i < 4; i++) { code += chars.charAt(Math.floor(Math.random() * chars.length)); }
-            const today = new Date();
-            const tgl = String(today.getDate()).padStart(2, '0');
-            const bln = String(today.getMonth() + 1).padStart(2, '0');
-            const thn = String(today.getFullYear()).slice(-2);
-            const dateStr = `${tgl}-${bln}-${thn}`;
-            const timeStr = today.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' PM';
-            const expiry = Date.now() + (hari * 24 * 60 * 60 * 1000);
-            let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
-            inbox.unshift({ code, namaPaket, dateStr, timeStr, expiry, status: 'unused' });
-            localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
-            tutupModal('pricing'); openModal('inbox'); showAlert("Pembayaran Sukses", "Pembayaran Berhasil! Cek Kotak Masuk.");
-        }
-    }
-
-    function renderInbox() {
+    if(confirm(`Konfirmasi Pembayaran ${namaPaket} sebesar Rp ${harga.toLocaleString()}?`)) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let code = 'Lyzz-';
+        for (let i = 0; i < 4; i++) { code += chars.charAt(Math.floor(Math.random() * chars.length)); }
+        const today = new Date();
+        const tgl = String(today.getDate()).padStart(2, '0');
+        const bln = String(today.getMonth() + 1).padStart(2, '0');
+        const thn = String(today.getFullYear()).slice(-2);
+        const dateStr = `${tgl}-${bln}-${thn}`;
+        const timeStr = today.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' PM';
+        const expiry = Date.now() + (hari * 24 * 60 * 60 * 1000);
         let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
-        const container = document.getElementById('inbox-content');
-        if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada email masuk.</p>"; return; }
-        container.innerHTML = inbox.map((msg, i) => `
-            <div style="background: var(--card-bg); border-radius:12px; padding:15px; margin-bottom:15px; border-left: 4px solid var(--accent);">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="font-weight:bold; color:var(--text);">LyzCreator</span><span style="font-size:12px; color:#888;">${msg.timeStr}</span></div>
-                <div style="font-weight:bold; margin-bottom:5px; color:var(--text);">Kode Aktivasi ${msg.namaPaket}</div>
-                <div style="font-size:13px; color:#888; margin-bottom:10px;">Dibeli pada ${msg.dateStr}.</div>
-                <div style="display:flex; gap:10px;">
-                    <button onclick="navigator.clipboard.writeText('${msg.code}'); showAlert('Tersalin', 'Kode ${msg.code} berhasil di-copy!')" style="flex:1; padding:10px; border-radius:8px; background:#333; color:#fff; border:none; font-weight:bold;">Copy: ${msg.code}</button>
-                    <button onclick="aktivasiKode(${i})" style="flex:1; padding:10px; border-radius:8px; background:var(--accent); color:#000; border:none; font-weight:bold;" ${msg.status === 'used' ? 'disabled' : ''}>${msg.status === 'used' ? 'Aktif' : 'Aktivasi'}</button>
-                </div>
+        inbox.unshift({ code, namaPaket, dateStr, timeStr, expiry, status: 'unused' });
+        localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
+        tutupModal('pricing'); openModal('inbox'); showAlert("Pembayaran Sukses", "Pembayaran Berhasil! Cek Kotak Masuk.");
+    }
+}
+
+function renderInbox() {
+    let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
+    const container = document.getElementById('inbox-content');
+    if(inbox.length === 0) { container.innerHTML = "<p style='text-align:center; color:#888;'>Belum ada email masuk.</p>"; return; }
+    container.innerHTML = inbox.map((msg, i) => `
+        <div style="background: var(--card-bg); border-radius:12px; padding:15px; margin-bottom:15px; border-left: 4px solid var(--accent);">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="font-weight:bold; color:var(--text);">LyzCreator</span><span style="font-size:12px; color:#888;">${msg.timeStr}</span></div>
+            <div style="font-weight:bold; margin-bottom:5px; color:var(--text);">Kode Aktivasi ${msg.namaPaket}</div>
+            <div style="font-size:13px; color:#888; margin-bottom:10px;">Dibeli pada ${msg.dateStr}.</div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="navigator.clipboard.writeText('${msg.code}'); showAlert('Tersalin', 'Kode ${msg.code} berhasil di-copy!')" style="flex:1; padding:10px; border-radius:8px; background:#333; color:#fff; border:none; font-weight:bold;">Copy: ${msg.code}</button>
+                <button onclick="aktivasiKode(${i})" style="flex:1; padding:10px; border-radius:8px; background:var(--accent); color:#000; border:none; font-weight:bold;" ${msg.status === 'used' ? 'disabled' : ''}>${msg.status === 'used' ? 'Aktif' : 'Aktivasi'}</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function aktivasiKode(index) {
+    let inbox = JSON.parse(localStorage.getItem('lyz_inbox'));
+    if(inbox[index].status === 'used') return;
+    inbox[index].status = 'used';
+    localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
+    localStorage.setItem('lyz_premium', JSON.stringify({ expiry: inbox[index].expiry }));
+    showAlert("Berhasil", "Premium Berhasil Diaktifkan!"); renderInbox();
+}
+
+async function cariLagu() {
+    const query = document.getElementById('search-music').value.trim();
+    if (!query) return;
+    const res = document.getElementById('music-results');
+    res.innerHTML = "<div style='text-align:center; color:#aaa;'>Mencari lagu...</div>";
+    try {
+        const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&limit=10&media=music`);
+        const data = await response.json();
+        if(data.results.length === 0) { res.innerHTML = "<div style='text-align:center; color:#aaa;'>Lagu tidak ditemukan.</div>"; return; }
+        res.innerHTML = data.results.map(track => `
+            <div class="music-track-item" onclick="putarPreview('${track.previewUrl}', '${track.trackName}', '${track.artistName}', '${track.artworkUrl60}')">
+                <img src="${track.artworkUrl60}" class="music-track-cover" alt="cover">
+                <div class="music-track-info"><div class="music-track-title">${track.trackName}</div><div class="music-track-artist">${track.artistName}</div></div>
             </div>
         `).join('');
-    }
+    } catch (err) { res.innerHTML = "<div style='text-align:center; color:#ff3333;'>Gagal mengambil data.</div>"; }
+}
 
-    function aktivasiKode(index) {
-        let inbox = JSON.parse(localStorage.getItem('lyz_inbox'));
-        if(inbox[index].status === 'used') return;
-        inbox[index].status = 'used';
-        localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
-        localStorage.setItem('lyz_premium', JSON.stringify({ expiry: inbox[index].expiry }));
-        showAlert("Berhasil", "Premium Berhasil Diaktifkan!"); renderInbox();
-    }
-
-    async function cariLagu() {
-        const query = document.getElementById('search-music').value.trim();
-        if (!query) return;
-        const res = document.getElementById('music-results');
-        res.innerHTML = "<div style='text-align:center; color:#aaa;'>Mencari lagu...</div>";
-        try {
-            const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&limit=10&media=music`);
-            const data = await response.json();
-            if(data.results.length === 0) { res.innerHTML = "<div style='text-align:center; color:#aaa;'>Lagu tidak ditemukan.</div>"; return; }
-            res.innerHTML = data.results.map(track => `
-                <div class="music-track-item" onclick="putarPreview('${track.previewUrl}', '${track.trackName}', '${track.artistName}', '${track.artworkUrl60}')">
-                    <img src="${track.artworkUrl60}" class="music-track-cover" alt="cover">
-                    <div class="music-track-info"><div class="music-track-title">${track.trackName}</div><div class="music-track-artist">${track.artistName}</div></div>
-                </div>
-            `).join('');
-        } catch (err) { res.innerHTML = "<div style='text-align:center; color:#ff3333;'>Gagal mengambil data.</div>"; }
-    }
-
-    function putarPreview(url, judul, artis, cover) {
+        function putarPreview(url, judul, artis, cover) {
         if (!url) return showAlert("Gagal", "Preview lagu tidak tersedia.");
         music.src = url; music.load(); music.play();
         document.getElementById('mini-player').style.display = 'flex';
