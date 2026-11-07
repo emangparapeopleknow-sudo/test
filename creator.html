@@ -176,6 +176,31 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
                 <div class="price-amount">Rp 21.000 <span>/Bulan</span></div>
                 <ul class="price-features">
                     <li>✅ Dapet Mode VIP yang Lebih Baik</li>
+<!-- MODAL PRICING (HARGA PREMIUM) -->
+<div class="modal" id="modal-pricing">
+    <div class="pricing-screen">
+        <div class="fs-header">
+            <div class="fs-back" onclick="tutupModal('pricing')">←</div>
+            <h1 data-i18n="pricing_title">Pilih Paket Premium</h1>
+        </div>
+        <div style="padding: 20px; overflow-y: auto;">
+            
+            <div class="pricing-card">
+                <div class="price-title">Premium</div>
+                <div class="price-amount">Rp 13.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li>✅ Dapet Mode Pro Ai</li>
+                    <li>✅ Bisa Mode Suara</li>
+                    <li>✅ Cepat, To the point, Limit ∞</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Premium 1 Bulan', 13000, 30)">Order Sekarang</button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="price-title">VIP Bulanan</div>
+                <div class="price-amount">Rp 21.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li>✅ Dapet Mode VIP yang Lebih Baik</li>
                     <li>✅ Bisa Mode suara yang lebih stabil</li>
                     <li>✅ Cepat, bisa buat tabel analisis, Limit ∞, To the point</li>
                 </ul>
@@ -197,16 +222,6 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
                 <button class="btn-order" onclick="prosesBayar('VVIP 2 Bulan', 36000, 60)">Order Sekarang</button>
             </div>
 
-           <div class="modal" id="modal-deploy">
-    <div class="deploy-screen">
-        <div class="fs-header">
-            <div class="fs-back" onclick="tutupModal('deploy')">←</div>
-            <h1 data-i18n="deploy_title">Cara Deploy Web</h1>
-        </div>
-        <div class="text-content" id="deploy-text-content"></div>
-    </div>
-           </div>
-            
             <div class="pricing-card">
                 <div class="price-title">Super VIP</div>
                 <div class="price-amount">Rp 57.000 <span>/Bulan</span></div>
@@ -246,7 +261,19 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
         </div>
     </div>
 </div>
-  <div class="modal" id="modal-history">
+
+<!-- MODAL DEPLOY WEB (TUTORIAL) -->
+<div class="modal" id="modal-deploy">
+    <div class="deploy-screen">
+        <div class="fs-header">
+            <div class="fs-back" onclick="tutupModal('deploy')">←</div>
+            <h1 data-i18n="deploy_title">Cara Deploy Web</h1>
+        </div>
+        <div class="text-content" id="deploy-text-content"></div>
+    </div>
+</div>
+ 
+ <div class="modal" id="modal-history">
     <div class="history-screen">
         <div class="fs-header">
             <div class="fs-back" onclick="tutupModal('history')">←</div>
