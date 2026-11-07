@@ -132,7 +132,10 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
 </div>
 
 <div class="dashboard">
-    <div class="user-info" style="margin-bottom: 10px; font-size: 14px; color: var(--accent); cursor:pointer;" onclick="openModal('settings')">Halo, <span id="user-display">User</span></div>
+    <div class="user-info" style="margin-bottom: 10px; font-size: 14px; color: var(--accent); cursor:pointer; text-align:center;" onclick="openModal('settings')">
+        Halo, <span id="user-display">User</span><br>
+        <span id="status-premium" style="font-size: 12px; color: #888; font-weight: normal;">Status Anda: Free</span>
+    </div>
     <a href="chat.html" class="btn-start" onclick="cekLoginDanMasuk()" data-i18n="btn_start">🚀 Mulai Bikin Web?</a>
     <div class="row-top">
         <a href="#" class="btn-oval" onclick="openModal('pricing')" data-i18n="btn_pricing">Lihat Harga Premium</a>
@@ -156,46 +159,83 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
             <h1 data-i18n="pricing_title">Pilih Paket Premium</h1>
         </div>
         <div style="padding: 20px; overflow-y: auto;">
+            
             <div class="pricing-card">
-                <div class="price-title">Premium Mingguan</div>
-                <div class="price-amount">Rp 12.000 <span>/minggu</span></div>
-                <ul class="price-features"><li>Akses penuh selama 7 hari</li><li>Bebas limit generate web</li></ul>
-                <button class="btn-order" onclick="prosesBayar('Premium 1 Minggu', 12000, 7)">Order Sekarang</button>
+                <div class="price-title">Premium</div>
+                <div class="price-amount">Rp 13.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li>✅ Dapet Mode Pro Ai</li>
+                    <li>✅ Bisa Mode Suara</li>
+                    <li>✅ Cepat, To the point, Limit ∞</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Premium 1 Bulan', 13000, 30)">Order Sekarang</button>
             </div>
+
             <div class="pricing-card">
                 <div class="price-title">VIP Bulanan</div>
-                <div class="price-amount">Rp 15.000 <span>/bulan</span></div>
-                <ul class="price-features"><li>Hemat 30% dari mingguan</li><li>Bebas request web sepuasnya</li></ul>
-                <button class="btn-order" onclick="prosesBayar('VIP 1 Bulan', 15000, 30)">Order Sekarang</button>
+                <div class="price-amount">Rp 21.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li>✅ Dapet Mode VIP yang Lebih Baik</li>
+                    <li>✅ Bisa Mode suara yang lebih stabil</li>
+                    <li>✅ Cepat, bisa buat tabel analisis, Limit ∞, To the point</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('VIP 1 Bulan', 21000, 30)">Order Sekarang</button>
             </div>
+
             <div class="pricing-card popular">
-                <div class="badge-popular">Paling Populer</div>
-                <div class="price-title">VVIP 2 Bulan</div>
-                <div class="price-amount">Rp 25.000 <span>/2 bulan</span></div>
-                <ul class="price-features"><li>Prioritas server (Anti Lag)</li><li>Bebas limit generate web & skripsi</li></ul>
-                <button class="btn-order" onclick="prosesBayar('VVIP 2 Bulan', 25000, 60)">Order Sekarang</button>
+                <div class="badge-popular">BEST SELLER</div>
+                <div class="price-title">VVIP Bulanan</div>
+                <div class="price-amount">Rp 36.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li>✅ Dapet Mode Ai VVIP yang super Stabil dan Lebih baik</li>
+                    <li>✅ Mode Suara lebih banyak, Bisa custom Suara (pakai format .mp3 Nanti Ai nya pakai sampel suara itu untuk ngomong)</li>
+                    <li>✅ Bisa buat belajar ngoding</li>
+                    <li>✅ Buat Skripsi, web, analisis tabel, Atau Untuk Belajar TKA Lebih Baik dan Bagus</li>
+                    <li>✅ Bisa Upload Foto, Video Dan File lebih banyak</li>
+                    <li>✅ Fitur Fitur Lainnya</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('VVIP 2 Bulan', 36000, 60)">Order Sekarang</button>
             </div>
+
             <div class="pricing-card">
-                <div class="price-title">Super VIP 6 Bulan</div>
-                <div class="price-amount">Rp 40.000 <span>/6 bulan</span></div>
-                <ul class="price-features"><li>Investasi jangka panjang</li><li>Akses semua fitur tanpa batas</li></ul>
-                <button class="btn-order" onclick="prosesBayar('Super VIP 6 Bulan', 40000, 180)">Order Sekarang</button>
+                <div class="price-title">Super VIP</div>
+                <div class="price-amount">Rp 57.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li>✅ Fitur Lebih banyak</li>
+                    <li>✅ Upload banyak Foto, video, File (Maks. 7)</li>
+                    <li>✅ Buka Model Ai Vip Pro</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Super VIP 6 Bulan', 57000, 180)">Order Sekarang</button>
             </div>
+
             <div class="pricing-card">
-                <div class="price-title">Super VVIP 8 Bulan</div>
-                <div class="price-amount">Rp 55.000 <span>/8 bulan</span></div>
-                <ul class="price-features"><li>Dapet akses beta fitur rahasia!</li><li>Bebas limit tanpa interupsi</li></ul>
-                <button class="btn-order" onclick="prosesBayar('Super VVIP 8 Bulan', 55000, 240)">Order Sekarang</button>
+                <div class="price-title">Super VVIP</div>
+                <div class="price-amount">Rp 78.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li>✅ Kelebihan banyak</li>
+                    <li>✅ Bisa minta buat Bot telegram</li>
+                    <li>✅ Bisa bikin Web, Skripsi, tabel Analisis, Cepat, Stabil</li>
+                </ul>
+                <button class="btn-order" onclick="prosesBayar('Super VVIP 8 Bulan', 78000, 240)">Order Sekarang</button>
             </div>
-            <div class="pricing-card" style="border-color: #ffd700;">
-                <div class="price-title" style="color: #ffd700;">👑 VVIP KING (1 Tahun)</div>
-                <div class="price-amount">Rp 135.000 <span>/tahun</span></div>
-                <ul class="price-features"><li>Akses eksklusif selama 365 hari</li><li>Jadi Raja di LyzCreator!</li></ul>
+
+            <div class="pricing-card" style="border-color: #ffd700; background: rgba(255, 215, 0, 0.05);">
+                <div class="price-title" style="color: #ffd700;">👑 VVIP KING</div>
+                <div class="price-amount">Rp 135.000 <span>/Bulan</span></div>
+                <ul class="price-features">
+                    <li style="color: #ffd700;">✅ Bisa Buat Apapun (Tidak Untuk Hal Buruk!)</li>
+                    <li style="color: #ffd700;">✅ Buka Fitur Mode Ai Super Vvip</li>
+                    <li style="color: #ffd700;">✅ Super Cepat Dan Stabil</li>
+                    <li style="color: #ffd700;">✅ Bisa Buat bot Telegram</li>
+                    <li style="color: #ffd700;">✅ To The point</li>
+                    <li style="color: #ffd700;">✅ Upload Foto, Video Dan File berapapun</li>
+                </ul>
                 <button class="btn-order" style="background: #ffd700; color: black;" onclick="prosesBayar('VVIP KING 1 Tahun', 135000, 365)">Order Sekarang</button>
             </div>
+
         </div>
     </div>
-  </div>
+</div>
   <div class="modal" id="modal-history">
     <div class="history-screen">
         <div class="fs-header">
@@ -350,7 +390,7 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
             <p style="text-align:center; font-size: 14px; cursor: pointer;" onclick="toggleAuthMode()" id="auth-switch" data-i18n="auth_switch">Belum punya akun? Daftar</p>
         </div>
     </div>
-
+    
 <script>
     const translations = {
         id: {
@@ -381,6 +421,27 @@ body.light-mode .pricing-screen, body.light-mode .history-screen, body.light-mod
         }
     };
 
+    // --- LOGIKA STATUS PREMIUM DI DASHBOARD ---
+function updatePremiumStatus() {
+    let premiumData = JSON.parse(localStorage.getItem('lyz_premium'));
+    let statusText = "Status Anda: Free";
+    let statusColor = "#888";
+
+    if (premiumData) {
+        let paket = premiumData.paket;
+        statusText = "Status Anda: " + paket;
+        statusColor = "var(--accent)"; // Warna emas
+    }
+
+    let statusEl = document.getElementById('status-premium');
+    if(statusEl) {
+        statusEl.innerText = statusText;
+        statusEl.style.color = statusColor;
+    }
+}
+// Panggil fungsinya pas web dibuka
+updatePremiumStatus();
+    
     function setLanguage(lang) {
     localStorage.setItem('lyz_lang', lang);
     applyLanguage();
