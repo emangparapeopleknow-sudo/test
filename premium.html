@@ -282,42 +282,39 @@
     }
 
     function simulasiBerhasil() {
-        document.getElementById('checkout-view-1').style.display = 'none';
-        document.getElementById('checkout-view-2').style.display = 'none';
-        document.getElementById('checkout-view-3').style.display = 'block';
-        
-        document.getElementById('step-2').style.background = '#28a745';
-        document.getElementById('step-3').style.background = 'var(--accent)';
-        document.getElementById('step-3').style.color = '#000';
+    document.getElementById('checkout-view-1').style.display = 'none';
+    document.getElementById('checkout-view-2').style.display = 'none';
+    document.getElementById('checkout-view-3').style.display = 'block';
+    
+    document.getElementById('step-2').style.background = '#28a745';
+    document.getElementById('step-3').style.background = 'var(--accent)';
+    document.getElementById('step-3').style.color = '#000';
 
-        document.getElementById('co-success-paket').innerText = currentOrder.nama;
-        document.getElementById('co-success-harga').innerText = "Rp " + currentOrder.harga.toLocaleString('id-ID');
+    document.getElementById('co-success-paket').innerText = currentOrder.nama;
+    document.getElementById('co-success-harga').innerText = "Rp " + currentOrder.harga.toLocaleString('id-ID');
 
-        // --- SIMPAN DATA PREMIUM (BIAR DASHBOARD & CHAT NGERTI) ---
-        const expiry = Date.now() + (currentOrder.hari * 24 * 60 * 60 * 1000);
-        localStorage.setItem('lyz_premium', JSON.stringify({ paket: currentOrder.nama, expiry: expiry }));
-        
-        // Simpan ke Inbox biar dapet kode
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let code = 'Lyzz-';
-        for (let i = 0; i < 4; i++) { code += chars.charAt(Math.floor(Math.random() * chars.length)); }
-        
-        const today = new Date();
-        const tgl = String(today.getDate()).padStart(2, '0');
-        const bln = String(today.getMonth() + 1).padStart(2, '0');
-        const thn = String(today.getFullYear()).slice(-2);
-        const dateStr = `${tgl}-${bln}-${thn}`;
-        const timeStr = today.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' PM';
+    // --- CUMA SIMPAN KE INBOX (STATUS BELUM AKTIF) ---
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = 'Lyzz-';
+    for (let i = 0; i < 4; i++) { code += chars.charAt(Math.floor(Math.random() * chars.length)); }
+    
+    const today = new Date();
+    const tgl = String(today.getDate()).padStart(2, '0');
+    const bln = String(today.getMonth() + 1).padStart(2, '0');
+    const thn = String(today.getFullYear()).slice(-2);
+    const dateStr = `${tgl}-${bln}-${thn}`;
+    const timeStr = today.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' PM';
 
-        let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
-        inbox.unshift({ code, namaPaket: currentOrder.nama, dateStr, timeStr, expiry: Date.now() + (currentOrder.hari * 24 * 60 * 60 * 1000), status: 'unused' });
-        localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
+    const expiry = Date.now() + (currentOrder.hari * 24 * 60 * 60 * 1000);
+    let inbox = JSON.parse(localStorage.getItem('lyz_inbox')) || [];
+    inbox.unshift({ code, namaPaket: currentOrder.nama, dateStr, timeStr, expiry, status: 'unused' });
+    localStorage.setItem('lyz_inbox', JSON.stringify(inbox));
 
-        // Notif
-        setTimeout(() => {
-            showAlert("Notifikasi", "Kode aktivasi sudah masuk ke Kotak Masuk! Silakan cek dan klik aktivasi.");
-        }, 1000);
-    }
+    // Notif
+    setTimeout(() => {
+        showAlert("Notifikasi", "Kode aktivasi sudah masuk ke Kotak Masuk! Silakan cek dan klik aktivasi.");
+    }, 1000);
+ }
 
     function kembaliKeHarga() {
         document.getElementById('view-pricing').style.display = 'block';
