@@ -3,57 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Creator Web</title>
+<title>Login - LyzCreator</title>
 <style>
-  :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-  body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; }
-  .auth-box { background: var(--panel); padding: 40px 30px; border-radius: 16px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-  .auth-box h2 { color: var(--accent); margin-bottom: 20px; }
-  .input-group { margin-bottom: 15px; text-align: left; }
-  .input-group label { display: block; font-size: 14px; color: #aaa; margin-bottom: 5px; }
-  .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; }
-  .input-group input:focus { border-color: var(--accent); }
-  .btn-submit { width: 100%; padding: 12px; background: var(--accent); color: var(--bg); border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
-  .btn-submit:hover { opacity: 0.9; }
-  .link { margin-top: 20px; font-size: 14px; color: #aaa; display: block; text-decoration: none; }
-  .link:hover { color: var(--accent); }
+    :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .auth-box { background: var(--panel); padding: 40px 30px; border-radius: 16px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .auth-box h2 { color: var(--accent); margin-bottom: 25px; }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; color: #aaa; margin-bottom: 8px; }
+    .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; font-size: 15px; }
+    .form-group input:focus { border-color: var(--accent); }
+    .btn-submit { width: 100%; padding: 14px; background: var(--accent); color: var(--bg); border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
+    .divider { text-align: center; margin: 20px 0; color: #555; font-size: 13px; position: relative; }
+    .divider::before, .divider::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: #333; }
+    .divider::before { left: 0; } .divider::after { right: 0; }
+    .btn-google { background: #fff; color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 15px; }
+    .switch-link { margin-top: 25px; font-size: 14px; color: #aaa; display: block; text-decoration: none; cursor: pointer; }
+    .switch-link:hover { color: var(--accent); }
+    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+    .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
+    .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
+    .alert-message { padding: 0 20px 25px 20px; font-size: 14px; color: #ccc; }
+    .alert-btn { background: transparent; border: none; border-top: 1px solid #444; color: #0a84ff; width: 100%; padding: 16px; font-size: 17px; font-weight: bold; cursor: pointer; }
 </style>
 </head>
 <body>
-
-  <div class="auth-box">
-    <h2>Login Creator</h2>
-    <form onsubmit="prosesLogin(event)">
-      <div class="input-group">
-        <label>Username</label>
-        <input type="text" id="username" required placeholder="Masukin username lu">
-      </div>
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" id="password" required placeholder="Masukin password">
-      </div>
-      <button type="submit" class="btn-submit">Masuk</button>
-    </form>
-    <a href="register.html" class="link">Belum punya akun? Daftar di sini</a>
-  </div>
-
-<script>
-  function prosesLogin(e) {
-    e.preventDefault();
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
-
-    // Simulasi Login (Karena lu belum pakai Backend Firebase/Database)
-    // Di sini lu bisa tambahin validasi API kalau udah ada server
-    if (user && pass) {
-      localStorage.setItem('creator_active_user', user);
-      alert('Login Berhasil!');
-      window.location.href = "creator.html";
-    } else {
-      alert('Isi username dan password dengan benar!');
+    <div id="custom-alert">
+        <div class="alert-box">
+            <div class="alert-title" id="alert-title">Pemberitahuan</div>
+            <div class="alert-message" id="alert-message">Pesan notifikasi akan muncul di sini.</div>
+            <button class="alert-btn" onclick="tutupAlert()">Oke</button>
+        </div>
+    </div>
+    <div class="auth-box">
+        <h2 id="auth-title">Login Creator</h2>
+        <div class="form-group"><label>Username</label><input type="text" id="username" placeholder="Masukin username lu"></div>
+        <div class="form-group" id="email-group" style="display: none;"><label>Email</label><input type="email" id="email" placeholder="Masukin email lu"></div>
+        <div class="form-group"><label>Password (Min. 8 Karakter)</label><input type="password" id="password" placeholder="Masukin password"></div>
+        <button class="btn-submit" onclick="prosesAuth()" id="auth-btn">Masuk</button>
+        <div class="divider">Atau</div>
+        <button class="btn-google" onclick="loginGoogle()"><img src="https://img.icons8.com/color/48/000000/google-logo.png" style="width:20px;"> Login pakai Google</button>
+        <a class="switch-link" onclick="toggleAuthMode()" id="auth-switch">Belum punya akun? Daftar di sini</a>
+    </div>
+    <script>
+    function showAlert(title, message) {
+        document.getElementById('alert-title').innerText = title;
+        document.getElementById('alert-message').innerText = message;
+        document.getElementById('custom-alert').style.display = 'flex';
     }
-  }
+    function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+    let isLoginMode = true;
+    function toggleAuthMode() {
+        isLoginMode = !isLoginMode;
+        document.getElementById('auth-title').innerText = isLoginMode ? "Login Creator" : "Daftar Creator";
+        document.getElementById('auth-btn').innerText = isLoginMode ? "Masuk" : "Daftar Sekarang";
+        document.getElementById('auth-switch').innerText = isLoginMode ? "Belum punya akun? Daftar di sini" : "Udah punya akun? Login";
+        document.getElementById('email-group').style.display = isLoginMode ? 'none' : 'block'; 
+    }
+
+    function prosesAuth() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        const email = document.getElementById('email').value;
+        if(!user || !pass) return showAlert("Gagal", "Isi Username & Password dulu, Bily!");
+        if(pass.length < 8) return showAlert("Password Lemah", "Password minimal 8 karakter (huruf/angka/simbol)!");
+        if(!isLoginMode && !email) return showAlert("Gagal", "Isi Email lu buat daftar!");
+        localStorage.setItem('creator_active_user', user);
+        localStorage.setItem('creator_email', email || 'user@gmail.com');
+        showAlert("Berhasil", `Berhasil ${isLoginMode ? 'Login' : 'Daftar'}!`);
+        setTimeout(() => window.location.href = "creator.html", 1500);
+    }
+
+    function loginGoogle() {
+        let user = prompt("Simulasi Google Login:\nMasukin Username (Nama) lu:");
+        if(user) {
+            let pass = prompt("Bikin Password (Minimal 8 karakter):");
+            if(pass && pass.length >= 8) {
+                localStorage.setItem('creator_active_user', user);
+                localStorage.setItem('creator_email', 'user@gmail.com');
+                showAlert("Berhasil", "Akun Google Berhasil Tertaut!");
+                setTimeout(() => window.location.href = "creator.html", 1500);
+            } else { showAlert("Gagal", "Password minimal 8 karakter!"); }
+        }
+    }
 </script>
 </body>
 </html>
