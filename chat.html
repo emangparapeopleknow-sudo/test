@@ -38,15 +38,12 @@
   .msg { max-width: 85%; padding: 12px 16px; border-radius: 12px; line-height: 1.5; font-size: 14px; word-wrap: break-word; }
   .msg-user { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 4px; }
   .msg-ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--border); border-bottom-left-radius: 4px; width: 100%; }
-  
-  /* GAMBAR DI DALAM CHAT */
-  .msg-image { max-width: 200px; border-radius: 8px; margin-top: 10px; display: block; }
+  .msg img { max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 8px; display: block; }
   
   .code-wrapper { background: #000; border: 1px solid #333; border-radius: 8px; margin-top: 10px; overflow: hidden; }
   .code-header { background: #1a1a1a; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 12px; color: #aaa; border-bottom: 1px solid #333; }
   .code-box { padding: 12px; overflow-x: auto; color: #a9b7c6; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
-</style>
-<style>
+
   .file-preview { display: flex; gap: 10px; padding: 10px; background: #1e2430; border-bottom: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
   .file-badge { background: var(--accent); color: black; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: flex; align-items: center; gap: 5px;}
   
@@ -112,7 +109,6 @@
       <button id="openSidebar" onclick="toggleSidebar()">☰</button>
       <a href="creator.html" class="btn-back">← Dashboard</a>
     </div>
-    <!-- TOMBOL UPGRADE UDAH KE PREMIUM.HTML -->
     <a href="premium.html" class="btn-upgrade">Upgrade</a>
   </div>
 
@@ -170,7 +166,7 @@
     </div>
 </div>
 
-<script>
+  <script>
   // LOGO BINTANG EMAS (SVG INLINE)
   const spiderLogoHTML = `<svg viewBox="0 0 24 24" fill="url(#starGrad)" style="width:80px; height:80px; margin-bottom:15px; filter: drop-shadow(0px 4px 10px rgba(230,180,80,0.4));"><defs><linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" /><stop offset="100%" style="stop-color:#b8860b;stop-opacity:1" /></linearGradient></defs><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
 
@@ -369,9 +365,11 @@
 
     tambahPesanUI(text || "[Foto Terlampir]", true, null, null, imgBase64); 
     chat.messages.push({ role: 'user', text: text || "[Foto Terlampir]", content: userContent, img: imgBase64 }); saveChats();
+    
+    // FIX BUG: HAPUS INPUT SEBELUM FETCH
     input.value = ''; selectedFiles = []; document.getElementById('file-preview').style.display = 'none'; input.style.height = '';
-
     isGenerating = true; document.getElementById('sendBtn').disabled = true;
+    
     const loadingId = 'loading-' + Date.now();
     const box = document.getElementById('chat-box');
     const loadDiv = document.createElement('div'); loadDiv.className = 'msg msg-ai'; loadDiv.id = loadingId;
@@ -379,29 +377,26 @@
     box.appendChild(loadDiv); box.scrollTop = box.scrollHeight;
 
     try {
-      // --- FIX FORMAT PAYLOAD KE GROQ API ---
+      // FORMAT PAYLOAD AMAN
       const apiPayloadMessages = chat.messages.map(m => {
-          // Kalau pesannya punya content array (gambar), pastiin formatnya bener
-          if (m.content && Array.isArray(m.content)) {
-              return { role: m.role, content: m.content };
-          }
-          // Kalau pesan teks biasa, paksa jadi string
+          if (m.content && Array.isArray(m.content)) return { role: m.role, content: m.content };
           return { role: m.role, content: String(m.text) };
       });
 
+      // Fallback model logic
       let modelToUse = imgBase64 ? 'qwen/qwen3.8-27b' : 'openai/gpt-oss-120b';
       
       let response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: modelToUse,
-          messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' }, ...apiPayloadMessages]
+          messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas.' }, ...apiPayloadMessages]
         })
       });
 
       let data = await response.json();
 
-      // AUTO FALLBACK KALAU QWEN ERROR
+      // Kalau over capacity, pake fallback
       if (data.error && data.error.message.includes('over capacity')) {
           loadDiv.innerHTML = '⚠️ Model utama penuh, mencoba server cadangan...';
           modelToUse = 'llama-3.2-11b-vision-preview';
@@ -409,7 +404,7 @@
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               model: modelToUse,
-              messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas, kamu bisa membuat HTML, CSS, JS, dan bisa membuat analisis tabel, Dan Membuat Skripsi, atau Soal latihan TKA(Tes Kemampuan Akademik, Harus Mirip).' }, ...apiPayloadMessages]
+              messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas.' }, ...apiPayloadMessages]
             })
           });
           data = await response.json();
@@ -418,6 +413,9 @@
       if (data.error) throw new Error(data.error.message);
       const aiReply = data.choices[0].message.content;
       
+      const loadDivToRemove = document.getElementById(loadingId);
+      if(loadDivToRemove) loadDivToRemove.remove();
+
       if (aiReply.includes('```html')) {
         const parts = aiReply.split('```html'); const code = parts[1].split('```')[0].trim(); const tutorial = parts[0].trim();
         tambahPesanUI(aiReply, false, code, tutorial); chat.messages.push({ role: 'assistant', text: aiReply, code: code, tutorial: tutorial });
@@ -427,7 +425,8 @@
       saveChats();
     } catch (err) {
       if (currentMode === 'free') { if (chat.tipeChat === 'generate') limitData.generate++; else limitData.chat++; saveLimit(); }
-      document.getElementById(loadingId).innerText = '❌ Error: ' + err.message;
+      const errDiv = document.getElementById(loadingId);
+      if(errDiv) errDiv.innerText = '❌ Error: ' + err.message;
     } finally {
       isGenerating = false; document.getElementById('sendBtn').disabled = false;
     }
@@ -437,4 +436,3 @@
 </script>
 </body>
 </html>
-    
