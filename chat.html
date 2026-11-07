@@ -78,6 +78,28 @@
     <div id="empty-state" style="text-align:center; color:#aaa; margin-top:50px;">Belum ada obrolan. Ketik pesan untuk mulai.</div>
   </div>
   <div class="input-area">
+    
+    <div class="input-area">
+  <!-- Tambahan Dropdown Mode AI -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+      <select id="ai-mode-select" style="background:var(--panel); color:var(--accent); border:1px solid var(--accent); padding:5px 10px; border-radius:6px; font-size:12px; font-weight:bold; outline:none;">
+          <option value="free">Mode: Free (Limit)</option>
+          <option value="pro">Mode: Pro (Cepat, ∞)</option>
+          <option value="vip">Mode: VIP (Analisis, ∞)</option>
+          <option value="king">Mode: KING (Apapun, ∞)</option>
+      </select>
+      <span id="status-text" style="font-size:12px; color:#888;">Status: Free</span>
+  </div>
+
+  <div id="file-preview" class="file-preview" style="display: none;"></div>
+  <div class="input-row">
+    <input type="file" id="file-input" multiple style="display: none;" onchange="handleFileSelect(event)">
+    <button id="attach-btn" onclick="document.getElementById('file-input').click()">📎</button>
+    <textarea id="chat-input" rows="1" placeholder="Ketik pesan di sini..." onkeydown="handleEnter(event)"></textarea>
+    <button id="sendBtn" onclick="kirimPesan()">Kirim</button>
+  </div>
+    </div>
+    
     <div id="file-preview" class="file-preview" style="display: none;"></div>
     <div class="input-row">
       <input type="file" id="file-input" multiple style="display: none;" onchange="handleFileSelect(event)">
@@ -88,8 +110,28 @@
     </div>
   </div>
 </div>
-<script>
-  function showAlert(title, message) {
+
+  <script>
+  
+      // --- SISTEM MODE AI ---
+let currentMode = localStorage.getItem('ai_mode') || 'free';
+document.getElementById('ai-mode-select').value = currentMode;
+
+function updateMode() {
+    currentMode = document.getElementById('ai-mode-select').value;
+    localStorage.setItem('ai_mode', currentMode);
+    
+    let statusEl = document.getElementById('status-text');
+    if(currentMode === 'free') statusEl.innerText = "Status: Free (Limit)";
+    else if(currentMode === 'pro') statusEl.innerText = "Status: PRO (∞)";
+    else if(currentMode === 'vip') statusEl.innerText = "Status: VIP (∞)";
+    else if(currentMode === 'king') statusEl.innerText = "Status: KING (∞)";
+}
+
+document.getElementById('ai-mode-select').addEventListener('change', updateMode);
+updateMode();
+    
+    function showAlert(title, message) {
       document.getElementById('alert-title').innerText = title;
       document.getElementById('alert-message').innerText = message;
       document.getElementById('custom-alert').style.display = 'flex';
