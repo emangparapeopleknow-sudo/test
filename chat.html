@@ -388,7 +388,7 @@
       const response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: imgBase64 ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'openai/gpt-oss-120b',
+          model: imgBase64 ? 'qwen/qwen3.6-27b' : 'openai/gpt-oss-120b',
           messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' }, ...apiPayloadMessages]
         })
       });
