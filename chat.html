@@ -348,6 +348,105 @@
   }
 
   function muatChat(id) {
+<script>
+  // LOGO SPIDER (SVG INLINE)
+  const spiderLogoHTML = `<svg viewBox="0 0 24 24" fill="#e6b450" style="width:80px; height:80px; margin-bottom:15px; filter: drop-shadow(0 0 10px rgba(230,180,80,0.5));"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm1.5-4c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5z"/></svg>`;
+
+  function showAlert(title, message) {
+      document.getElementById('alert-title').innerText = title;
+      document.getElementById('alert-message').innerText = message;
+      document.getElementById('custom-alert').style.display = 'flex';
+  }
+  function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+  let chats = JSON.parse(localStorage.getItem('groq_chats')) || [];
+  let currentChatId = null;
+  let isGenerating = false;
+  let selectedFiles = [];
+
+  function openBottomSheet() { document.getElementById('bs-overlay').style.display = 'block'; setTimeout(() => document.getElementById('bs-menu').classList.add('show'), 10); }
+  function closeBottomSheet() { document.getElementById('bs-menu').classList.remove('show'); setTimeout(() => document.getElementById('bs-overlay').style.display = 'none', 300); }
+  function triggerUpload(type) { closeBottomSheet(); document.getElementById('file-input').click(); }
+
+  // --- KUNCIAN MODE ---
+  let premiumData = JSON.parse(localStorage.getItem('lyz_premium'));
+  let currentPaket = "Free";
+  if (premiumData && premiumData.expiry > Date.now()) { currentPaket = premiumData.paket; } else { localStorage.removeItem('lyz_premium'); }
+
+  let currentMode = "free";
+  if (currentPaket.includes("KING")) currentMode = "king";
+  else if (currentPaket.includes("Super")) currentMode = "vvip";
+  else if (currentPaket.includes("VVIP")) currentMode = "vip";
+  else if (currentPaket.includes("Premium")) currentMode = "pro";
+
+  function updateModeLocks() {
+      let highestUnlocked = 'free';
+      if (currentPaket.includes("KING")) highestUnlocked = 'king';
+      else if (currentPaket.includes("Super")) highestUnlocked = 'vvip';
+      else if (currentPaket.includes("VVIP")) highestUnlocked = 'vip';
+      else if (currentPaket.includes("Premium")) highestUnlocked = 'pro';
+
+      const hierarchy = ['free', 'pro', 'vip', 'vvip', 'king'];
+      const unlockIndex = hierarchy.indexOf(highestUnlocked);
+
+      document.querySelectorAll('.mode-option').forEach(opt => {
+          const mode = opt.getAttribute('data-mode');
+          if (hierarchy.indexOf(mode) > unlockIndex) {
+              opt.classList.add('locked'); opt.querySelector('.mode-icon').innerText = '🔒';
+          } else {
+              opt.classList.remove('locked'); opt.querySelector('.mode-icon').innerText = '✓';
+          }
+      });
+      document.getElementById('current-mode-text').innerText = currentMode.charAt(0).toUpperCase() + currentMode.slice(1);
+  }
+  updateModeLocks();
+
+  function toggleModeDropdown() { document.getElementById('mode-dropdown').classList.toggle('show'); }
+  
+  function pilihMode(mode) {
+      const opt = document.querySelector(`.mode-option[data-mode="${mode}"]`);
+      if (opt.classList.contains('locked')) return showAlert("Mode Terkunci", "Upgrade paket lu di Dashboard buat buka mode ini!");
+      currentMode = mode;
+      document.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      document.getElementById('current-mode-text').innerText = mode.charAt(0).toUpperCase() + mode.slice(1);
+      document.getElementById('mode-dropdown').classList.remove('show');
+  }
+
+  // --- CHAT LOGIC ---
+  const limitKey = 'lyz_creator_limit_' + (localStorage.getItem('creator_active_user') || 'guest');
+  let limitData = JSON.parse(localStorage.getItem(limitKey)) || { generate: 7, chat: 5 };
+  function saveLimit() { localStorage.setItem(limitKey, JSON.stringify(limitData)); }
+  function saveChats() { localStorage.setItem('groq_chats', JSON.stringify(chats)); }
+  function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
+
+  function renderHistory() {
+    const list = document.getElementById('history-list'); list.innerHTML = '';
+    chats.forEach(c => {
+      const item = document.createElement('div');
+      item.className = 'history-item' + (c.id === currentChatId ? ' active' : '');
+      const title = document.createElement('div'); title.className = 'history-title'; title.innerText = c.title;
+      title.onclick = () => muatChat(c.id);
+      const delBtn = document.createElement('button'); delBtn.className = 'btn-delete'; delBtn.innerText = '🗑';
+      delBtn.onclick = (e) => { e.stopPropagation(); hapusChat(c.id); };
+      item.appendChild(title); item.appendChild(delBtn); list.appendChild(item);
+    });
+  }
+
+  function hapusChat(id) {
+    if (!confirm('Hapus obrolan ini?')) return;
+    chats = chats.filter(c => c.id !== id); saveChats();
+    if (currentChatId === id) { currentChatId = chats.length > 0 ? chats[0].id : null; muatChat(currentChatId); } else { renderHistory(); }
+  }
+
+  function newChat() {
+    if (window.innerWidth <= 768) toggleSidebar();
+    const newId = Date.now().toString();
+    chats.unshift({ id: newId, title: 'Obrolan Baru', messages: [], tipeChat: null });
+    saveChats(); muatChat(newId);
+  }
+
+  function muatChat(id) {
     if (!id && chats.length > 0) id = chats[0].id;
     currentChatId = id;
     if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('show');
@@ -419,10 +518,7 @@
     let chat = chats.find(c => c.id === currentChatId);
     if (!chat) { newChat(); chat = chats.find(c => c.id === currentChatId); }
 
-    // --- LOGIKA LIMIT (Hanya buat Mode Free) ---
-    const lowerText = text.toLowerCase();
-    const isGenerateText = lowerText.includes('buatkan') || lowerText.includes('bikin') || lowerText.includes('tolong') || lowerText.includes('web') || lowerText.includes('skripsi') || lowerText.includes('analisis') || selectedFiles.length > 0;
-    
+    const isGenerateText = text.toLowerCase().match(/(buatkan|bikin|tolong|web|skripsi|analisis)/) || selectedFiles.length > 0;
     if (currentMode === 'free') {
       if (chat.tipeChat === null) {
         if (isGenerateText) {
@@ -461,13 +557,10 @@
     box.appendChild(loadDiv); box.scrollTop = box.scrollHeight;
 
     try {
-      // FORMAT PAYLOAD KE API
       const apiPayloadMessages = chat.messages.map(m => m.content ? { role: m.role, content: m.content } : { role: m.role, content: m.text });
-      
       const response = await fetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          // UDAH GUA GANTI JADI qwen3.8-27b
           model: imgBase64 ? 'qwen/qwen3.8-27b' : 'openai/gpt-oss-120b',
           messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' }, ...apiPayloadMessages]
         })
