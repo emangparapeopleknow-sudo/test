@@ -33,8 +33,8 @@ export default async function handler(req, res) {
       }
     });
 
-    // FIX 1: Ganti endpoint ke gemini-flash-latest
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`;
+    // GUNAKAN ENDPOINT STANDAR (pakai ?key=)
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
     let requestBody = { contents: contents };
     if (systemInstruction) {
@@ -43,11 +43,7 @@ export default async function handler(req, res) {
 
     const response = await fetch(apiUrl, {
       method: 'POST',
-      // FIX 2: Ganti header jadi X-goog-api-key
-      headers: { 
-        'Content-Type': 'application/json',
-        'X-goog-api-key': GEMINI_API_KEY
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody)
     });
     
