@@ -3,12 +3,15 @@ export default async function handler(req, res) {
 
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   
+  // 1. Cek API Key
   if (!GEMINI_API_KEY) {
-    return res.status(500).json({ error: 'API Key Gemini belum di-set di Vercel!' });
+    return res.status(500).json({ error: 'API Key Gemini belum di-set di Vercel! Cek Environment Variables.' });
   }
 
   try {
     const { messages } = req.body;
+    
+    // Format pesan ke Gemini
     let contents = [];
     let systemInstruction = "";
     
@@ -33,7 +36,7 @@ export default async function handler(req, res) {
       }
     });
 
-    // GUNAKAN ENDPOINT STANDAR (pakai ?key=)
+    // 2. Nembak ke Gemini API (Pake format ?key=)
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
     let requestBody = { contents: contents };
@@ -49,6 +52,7 @@ export default async function handler(req, res) {
     
     const data = await response.json();
     
+    // 3. Lempar error asli dari Google kalau gagal
     if (data.error) {
         throw new Error(data.error.message || "Google API Error");
     }
@@ -60,6 +64,7 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
+    // 4. Kirim pesan error ke frontend
     res.status(500).json({ error: error.message || "Terjadi kesalahan di server" });
   }
 }
