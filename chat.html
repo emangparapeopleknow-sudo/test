@@ -385,24 +385,32 @@
       });
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000);
+const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-      let response = await fetch('/api/chat', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'gemini',
-          messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas. JIKA user minta dibuatkan website, berikan kode HTML+CSS+JS dan tambahkan cara deploy (Vercel). TAPI JIKA user minta skripsi/analisis, buatkan teks yang rapi.' }, ...apiPayloadMessages]
-        }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
+let response = await fetch('/api/chat', {
+  method: 'POST', headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    model: 'gemini',
+    messages: [{ role: 'system', content: 'Kamu adalah asisten AI cerdas Dan Jenius, Jika Ada Kata Buatkan maka Buatkanlah, jika ada Kata berikan maka berikanlah, Kamu Dapat Membuat HTML, CSS, JS, Skripsi Analisis, Analisis tabel, Skripsi, Latihan Soal Untuk TKA(Tes Kemampuan Akademik, Harus Mirip).' }, ...apiPayloadMessages]
+  }),
+  signal: controller.signal
+});
+clearTimeout(timeoutId);
 
-      let data = await response.json();
-      if (data.error) throw new Error(data.error.message);
-      
-      const aiReply = data.choices[0].message.content;
-      const loadDivToRemove = document.getElementById(loadingId);
-      if(loadDivToRemove) loadDivToRemove.remove();
+// --- FIX: CEK APAKAH RESPONNYA JSON ATAU HTML ---
+const rawText = await response.text();
+let data;
+try {
+    data = JSON.parse(rawText);
+} catch (e) {
+    throw new Error("Server Error: Pastikan API Key Gemini lu udah bener di Vercel dan formatnya (AQ... atau AIzaSy...).");
+}
+
+if (data.error) throw new Error(data.error.message);
+
+const aiReply = data.choices[0].message.content;
+const loadDivToRemove = document.getElementById(loadingId);
+if(loadDivToRemove) loadDivToRemove.remove();
 
       if (aiReply.includes('```html')) {
         const parts = aiReply.split('```html'); const code = parts[1].split('```')[0].trim(); const tutorial = parts[0].trim();
