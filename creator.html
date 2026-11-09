@@ -446,7 +446,7 @@
 </head>
 <body>
 
-    <nav>
+ <nav>
     <div class="nav-left">
         <div class="menu-icon">☰</div>
         <div class="brand">
@@ -462,7 +462,7 @@
     <p>Jasa pembuatan web, analisis data, dan asisten AI untuk mahasiswa dan profesional. Proses otomatis, cepat, dan harga terjangkau.</p>
     
     <div class="hero-buttons">
-        <a href="chat.html" class="btn btn-primary">🛒 Mulai Chat AI</a>
+        <a href="#" onclick="checkAuth('chat.html')" class="btn btn-primary">🛒 Mulai Chat AI</a>
         <a href="#layanan" class="btn btn-outline">Pelajari Selengkapnya</a>
     </div>
 
@@ -486,7 +486,7 @@
             <div class="card-icon" style="color: #ff7b00;">💻</div>
             <h3>Pembuatan Web</h3>
             <p>Landing page, portofolio, sampai sistem informasi. Dibuat rapi, responsif, dan siap pakai.</p>
-            <a href="#" class="card-link orange">Lihat Detail →</a>
+            <a href="#" onclick="checkAuth('#')" class="card-link orange">Lihat Detail →</a>
         </div>
 
         <div class="card">
@@ -500,14 +500,14 @@
             <div class="card-icon" style="color: #00e676;">💳</div>
             <h3>Deposit Saldo</h3>
             <p>Isi saldo dengan mudah melalui QRIS. Proses otomatis, saldo langsung masuk untuk pakai layanan.</p>
-            <a href="deposit.html" class="card-link green">Deposit Sekarang →</a>
+            <a href="#" onclick="checkAuth('deposit.html')" class="card-link green">Deposit Sekarang →</a>
         </div>
 
         <div class="card">
             <div class="card-icon" style="color: #7f5af0;">📝</div>
             <h3>Bantuan Skripsi</h3>
             <p>Bantuan analisis data, cek turnitin, dan penyusunan struktur. Cepat dan rahasia.</p>
-            <a href="#" class="card-link">Lihat Detail →</a>
+            <a href="#" onclick="checkAuth('#')" class="card-link">Lihat Detail →</a>
         </div>
     </div>
 </div>
@@ -593,11 +593,11 @@
     </div>
 </div>
 
-    <div class="section">
+<div class="section">
     <div class="cta-box">
         <h2>Siap Menggunakan<br>Layanan Terbaik?</h2>
         <p>Daftar sekarang gratis dan mulai nikmati semua layanan dari LyzCreator.</p>
-        <a href="login.html" class="btn">Daftar Gratis →</a>
+        <a href="#" onclick="checkAuth('creator.html')" class="btn">Daftar Gratis →</a>
         <a href="#" class="btn btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.3);">💬 Hubungi Admin</a>
     </div>
 </div>
@@ -632,6 +632,16 @@
 </footer>
 
 <script>
+    function checkAuth(url) {
+        const isLoggedIn = localStorage.getItem('lyz_session');
+        if (isLoggedIn === 'true') {
+            window.location.href = url;
+        } else {
+            alert('Kamu harus login dulu untuk mengakses fitur ini!');
+            window.location.href = 'login.html';
+        }
+    }
+
     document.querySelectorAll('.faq-q').forEach(item => {
         item.addEventListener('click', () => {
             const parent = item.parentElement;
