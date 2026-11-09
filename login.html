@@ -3,114 +3,499 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - LyzCreator</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<title>LyzCreator - Auth</title>
 <style>
-    :root { --bg: #0a0c10; --panel: #12151c; --accent: #e6b450; --text: #ffffff; --border: #2a2f3a; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .auth-box { background: var(--panel); padding: 40px 30px; border-radius: 16px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .auth-box h2 { color: var(--accent); margin-bottom: 25px; }
-    .form-group { margin-bottom: 15px; text-align: left; }
-    .form-group label { display: block; font-size: 14px; color: #aaa; margin-bottom: 8px; }
-    .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; font-size: 15px; }
-    .form-group input:focus { border-color: var(--accent); }
-    .btn-submit { width: 100%; padding: 14px; background: var(--accent); color: var(--bg); border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
-    .divider { text-align: center; margin: 20px 0; color: #555; font-size: 13px; position: relative; }
-    .divider::before, .divider::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: #333; }
-    .divider::before { left: 0; } .divider::after { right: 0; }
-    .btn-google { background: #fff; color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 15px; }
-    .switch-link { margin-top: 25px; font-size: 14px; color: #aaa; display: block; text-decoration: none; cursor: pointer; }
-    .switch-link:hover { color: var(--accent); }
-    #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-    .alert-box { background: #2c2c2e; color: #fff; width: 80%; max-width: 320px; border-radius: 16px; overflow: hidden; text-align: center; display: flex; flex-direction: column; }
-    .alert-title { padding: 25px 20px 10px 20px; font-weight: bold; font-size: 17px; }
-    .alert-message { padding: 0 20px 25px 20px; font-size: 14px; color: #ccc; }
-    .alert-btn { background: transparent; border: none; border-top: 1px solid #444; color: #0a84ff; width: 100%; padding: 16px; font-size: 17px; font-weight: bold; cursor: pointer; }
+    :root {
+        --bg-dark: #070b14;
+        --card-bg: #111625;
+        --primary: #7f5af0;
+        --primary-grad: linear-gradient(135deg, #2a1b6b 0%, #4b2c9e 100%);
+        --text-light: #ffffff;
+        --text-muted: #8b94b0;
+        --input-bg: #1a2035;
+        --input-border: #2b3452;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    .mobile-wrapper {
+        width: 100%;
+        max-width: 480px;
+        background-color: var(--bg-dark);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero {
+        background: var(--primary-grad);
+        height: 280px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+    }
+
+    .hero-orbits {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .orbit-center {
+        width: 80px;
+        height: 80px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        z-index: 2;
+    }
+
+    .orbit-center span {
+        font-size: 30px;
+        font-weight: 900;
+        color: #2a1b6b;
+    }
+
+    .orbit-item {
+        position: absolute;
+        width: 45px;
+        height: 45px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        color: #2a1b6b;
+        font-size: 20px;
+    }
+
+    .orbit-1 { top: 10px; right: 20px; }
+    .orbit-2 { bottom: 20px; left: 20px; }
+    .orbit-3 { bottom: 10px; right: 30px; }
+
+    .hero h1 {
+        color: #fff;
+        margin-top: 15px;
+        font-size: 24px;
+        font-weight: 800;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero p {
+        color: rgba(255,255,255,0.8);
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .form-card {
+        background-color: var(--card-bg);
+        flex: 1;
+        margin-top: -30px;
+        border-top-left-radius: 40px;
+        border-top-right-radius: 40px;
+        padding: 30px 25px;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 -10px 20px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+    }
+
+        .form-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .form-header h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-light);
+        margin-bottom: 5px;
+    }
+
+    .form-header p {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text-light);
+    }
+
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        background-color: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 50px;
+        padding: 5px;
+        transition: border-color 0.3s;
+    }
+
+    .input-wrapper:focus-within {
+        border-color: var(--primary);
+    }
+
+    .input-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(127, 90, 240, 0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        margin-right: 10px;
+    }
+
+    .input-wrapper input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-light);
+        font-size: 14px;
+        padding: 10px 0;
+    }
+
+    .input-wrapper input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .toggle-password {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        padding: 0 15px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 13px;
+    }
+
+    .checkbox-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-muted);
+        cursor: pointer;
+    }
+
+    .checkbox-wrap input[type="checkbox"] {
+        accent-color: var(--primary);
+        width: 16px;
+        height: 16px;
+    }
+
+    .forgot-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 15px;
+        background: var(--primary-grad);
+        border: none;
+        border-radius: 50px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(75, 44, 158, 0.4);
+        transition: transform 0.2s;
+    }
+
+    .btn-primary:active {
+        transform: scale(0.98);
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 25px 0;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--input-border);
+    }
+
+    .divider::before { margin-right: 15px; }
+    .divider::after { margin-left: 15px; }
+
+    .btn-google {
+        width: 100%;
+        padding: 14px;
+        background: transparent;
+        border: 1px solid var(--input-border);
+        border-radius: 50px;
+        color: var(--text-light);
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: background 0.3s;
+    }
+
+    .btn-google:hover {
+        background: rgba(255,255,255,0.05);
+    }
+
+    .footer-text {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .footer-text a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .terms {
+        text-align: center;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 20px;
+        line-height: 1.5;
+    }
+
+    .terms a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .copyright {
+        text-align: center;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: auto;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+
+    .hidden {
+        display: none;
+    }
 </style>
 </head>
 <body>
-    <div id="custom-alert">
-        <div class="alert-box">
-            <div class="alert-title" id="alert-title">Pemberitahuan</div>
-            <div class="alert-message" id="alert-message">Pesan notifikasi akan muncul di sini.</div>
-            <button class="alert-btn" onclick="tutupAlert()">Oke</button>
+
+<div class="mobile-wrapper">
+    <div class="hero">
+        <div class="hero-orbits">
+            <div class="orbit-item orbit-1">🔒</div>
+            <div class="orbit-item orbit-2">👤</div>
+            <div class="orbit-item orbit-3">✉️</div>
+            <div class="orbit-center">
+                <span>L</span>
+            </div>
         </div>
+        <h1>LyzCreator</h1>
+        <p id="hero-subtitle">Selamat datang kembali! 👋</p>
     </div>
 
-    <div class="auth-box">
-        <h2 id="auth-title">Login Creator</h2>
-        <div class="form-group"><label>Username</label><input type="text" id="username" placeholder="Masukin username lu"></div>
-        <div class="form-group" id="email-group" style="display: none;"><label>Email</label><input type="email" id="email" placeholder="Masukin email lu"></div>
-        <div class="form-group"><label>Password (Min. 8 Karakter)</label><input type="password" id="password" placeholder="Masukin password"></div>
-        <button class="btn-submit" onclick="prosesAuth()" id="auth-btn">Masuk</button>
-        
-        <div class="divider">Atau</div>
-        
-        <!-- TOMBOL GOOGLE ASLI -->
-        <div id="g_id_onload"
-             data-client_id="CLIENT_ID_GOOGLE_LU"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin"
-             data-type="standard"
-             data-size="large"
-             data-theme="outline"
-             data-text="sign_in_with_google"
-             data-shape="rectangular"
-             data-logo_alignment="left" style="display: flex; justify-content: center;">
+    <div class="form-card">
+        <div class="form-header">
+            <h2 id="form-title">Masuk ke Akun</h2>
+            <p id="form-desc">Akses dashboard LyzCreator kamu</p>
         </div>
 
-        <a class="switch-link" onclick="toggleAuthMode()" id="auth-switch">Belum punya akun? Daftar di sini</a>
+        <form id="auth-form">
+            <div class="form-group" id="group-username" style="display: none;">
+                <label>Username</label>
+                <div class="input-wrapper">
+                    <div class="input-icon">👤</div>
+                    <input type="text" id="reg-username" placeholder="Pilih username kamu">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="label-email">Email</label>
+                <div class="input-wrapper">
+                    <div class="input-icon">✉️</div>
+                    <input type="text" id="input-email" placeholder="Masukkan email kamu" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <div class="input-icon">🔒</div>
+                    <input type="password" id="input-password" placeholder="Min. 8 karakter" required>
+                    <button type="button" class="toggle-password" onclick="togglePass()">👁️</button>
+                </div>
+            </div>
+
+            <div class="form-options" id="options-login">
+                <label class="checkbox-wrap">
+                    <input type="checkbox"> Ingat Saya
+                </label>
+                <a href="#" class="forgot-link">Lupa Password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submit-btn">Masuk</button>
+        </form>
+
+        <div class="divider">ATAU</div>
+
+        <button class="btn-google" onclick="alert('Integrasi Google OAuth menyusul')">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/><path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.764l-4.026 3.115A11.929 11.929 0 0 0 12 24c3.055 0 5.782-1.145 7.91-3L16.04 18.013z"/><path fill="#4A90E2" d="M19.91 21c2.135-1.954 3.09-4.923 3.09-8 0-.614-.056-1.227-.164-1.836H12v3.836h5.836c-.268 1.54-1.164 2.91-2.596 3.813l4.67 4.187z"/><path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.8.136-1.564.368-2.277L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.45 3.736 1.24 5.35l4.037-3.082z"/></svg>
+            <span id="google-text">Masuk dengan Google</span>
+        </button>
+
+        <div class="footer-text">
+            <span id="toggle-text">Belum punya akun?</span> <a onclick="toggleMode()" id="toggle-btn">Daftar sekarang</a>
+        </div>
+
+        <div class="terms" id="terms-text" style="display: none;">
+            Dengan membuat akun, kamu menyetujui <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a> kami.
+        </div>
+
+        <div class="copyright">
+            © 2026 LyzCreator • Developer: Billy
+        </div>
     </div>
+</div>
 
-<script>
-    function showAlert(title, message) {
-        document.getElementById('alert-title').innerText = title;
-        document.getElementById('alert-message').innerText = message;
-        document.getElementById('custom-alert').style.display = 'flex';
-    }
-    function tutupAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+    <script>
+    let isLogin = true;
 
-    let isLoginMode = true;
-    function toggleAuthMode() {
-        isLoginMode = !isLoginMode;
-        document.getElementById('auth-title').innerText = isLoginMode ? "Login Creator" : "Daftar Creator";
-        document.getElementById('auth-btn').innerText = isLoginMode ? "Masuk" : "Daftar Sekarang";
-        document.getElementById('auth-switch').innerText = isLoginMode ? "Belum punya akun? Daftar di sini" : "Udah punya akun? Login";
-        document.getElementById('email-group').style.display = isLoginMode ? 'none' : 'block'; 
+    function togglePass() {
+        const passInput = document.getElementById('input-password');
+        passInput.type = passInput.type === 'password' ? 'text' : 'password';
     }
 
-    function prosesAuth() {
-        const user = document.getElementById('username').value;
-        const pass = document.getElementById('password').value;
-        const email = document.getElementById('email').value;
-        if(!user || !pass) return showAlert("Gagal", "Isi Username & Password dulu, Bily!");
-        if(pass.length < 8) return showAlert("Password Lemah", "Password minimal 8 karakter (huruf/angka/simbol)!");
-        if(!isLoginMode && !email) return showAlert("Gagal", "Isi Email lu buat daftar!");
-        localStorage.setItem('creator_active_user', user);
-        localStorage.setItem('creator_email', email || 'user@gmail.com');
-        showAlert("Berhasil", `Berhasil ${isLoginMode ? 'Login' : 'Daftar'}!`);
-        setTimeout(() => window.location.href = "creator.html", 1500);
+    function toggleMode() {
+        isLogin = !isLogin;
+        
+        const formTitle = document.getElementById('form-title');
+        const formDesc = document.getElementById('form-desc');
+        const labelEmail = document.getElementById('label-email');
+        const inputEmail = document.getElementById('input-email');
+        const optionsLogin = document.getElementById('options-login');
+        const submitBtn = document.getElementById('submit-btn');
+        const toggleText = document.getElementById('toggle-text');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const googleText = document.getElementById('google-text');
+        const termsText = document.getElementById('terms-text');
+        const groupUsername = document.getElementById('group-username');
+        const heroSubtitle = document.getElementById('hero-subtitle');
+        const inputPass = document.getElementById('input-password');
+
+        if (isLogin) {
+            heroSubtitle.innerText = "Selamat datang kembali! 👋";
+            formTitle.innerText = "Masuk ke Akun";
+            formDesc.innerText = "Akses dashboard LyzCreator kamu";
+            labelEmail.innerText = "Email";
+            inputEmail.placeholder = "Masukkan email kamu";
+            optionsLogin.style.display = "flex";
+            submitBtn.innerText = "Masuk";
+            toggleText.innerText = "Belum punya akun?";
+            toggleBtn.innerText = "Daftar sekarang";
+            googleText.innerText = "Masuk dengan Google";
+            termsText.style.display = "none";
+            groupUsername.style.display = "none";
+            inputPass.placeholder = "Masukkan password";
+        } else {
+            heroSubtitle.innerText = "Buat akun baru 🚀";
+            formTitle.innerText = "Buat Akun Baru";
+            formDesc.innerText = "Daftar dan mulai gunakan layanan LyzCreator";
+            labelEmail.innerText = "Alamat Email";
+            inputEmail.placeholder = "Masukkan alamat email kamu";
+            optionsLogin.style.display = "none";
+            submitBtn.innerText = "Daftar";
+            toggleText.innerText = "Sudah punya akun?";
+            toggleBtn.innerText = "Masuk di sini";
+            googleText.innerText = "Daftar dengan Google";
+            termsText.style.display = "block";
+            groupUsername.style.display = "block";
+            inputPass.placeholder = "Min. 8 karakter";
+        }
     }
 
-    function handleCredentialResponse(response) {
-        const responsePayload = parseJwt(response.credential);
-        localStorage.setItem('creator_active_user', responsePayload.name);
-        localStorage.setItem('creator_email', responsePayload.email);
-        showAlert("Berhasil", `Login sebagai ${responsePayload.name}!`);
-        setTimeout(() => window.location.href = "creator.html", 1500);
-    }
+    document.getElementById('auth-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('input-email').value;
+        const pass = document.getElementById('input-password').value;
+        const btn = document.getElementById('submit-btn');
 
-    function parseJwt(token) {
-        var base64Url = token.split('.')[1];
-        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    }
+        if (pass.length < 8) {
+            alert('Password minimal 8 karakter!');
+            return;
+        }
+
+        btn.innerText = "Memproses...";
+        btn.disabled = true;
+
+        setTimeout(() => {
+            if (isLogin) {
+                localStorage.setItem('lyz_session', 'true');
+                alert('Login Berhasil!');
+                window.location.href = "creator.html"; 
+            } else {
+                alert('Daftar Berhasil! Silakan Login.');
+                isLogin = true;
+                toggleMode();
+                btn.innerText = "Masuk";
+                btn.disabled = false;
+            }
+        }, 1500);
+    });
 </script>
+
 </body>
 </html>
