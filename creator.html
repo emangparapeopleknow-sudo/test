@@ -13,459 +13,108 @@
         --card-border: #232c45;
         --primary: #7f5af0;
         --primary-grad: linear-gradient(135deg, #2a1b6b 0%, #4b2c9e 100%);
-        --purple-grad: linear-gradient(135deg, #4b2c9e 0%, #2a1b6b 100%);
         --text-main: #ffffff;
         --text-muted: #8b94b0;
         --accent-orange: #ff7b00;
     }
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Plus Jakarta Sans', sans-serif;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { 
+        background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; 
+        background-image: linear-gradient(var(--bg-grid) 1px, transparent 1px), linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px); 
+        background-size: 40px 40px; background-position: center; padding-bottom: 50px; 
     }
 
-    body {
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        overflow-x: hidden;
-        background-image: 
-            linear-gradient(var(--bg-grid) 1px, transparent 1px),
-            linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
-        background-size: 40px 40px;
-        background-position: center;
-    }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 150; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .overlay.active { opacity: 1; visibility: visible; }
 
-    nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        background: rgba(7, 11, 20, 0.9);
-        backdrop-filter: blur(10px);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        border-bottom: 1px solid var(--card-border);
-    }
+    .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card-bg); border-right: 1px solid var(--card-border); z-index: 200; display: flex; flex-direction: column; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .sidebar.active { left: 0; }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 20px; border-bottom: 1px solid var(--card-border); }
+    .close-btn { background: none; border: none; color: var(--accent-orange); font-size: 20px; font-weight: 700; cursor: pointer; }
+    .sidebar-menu { display: flex; flex-direction: column; padding: 20px 10px; flex: 1; }
+    .sidebar-link { display: flex; align-items: center; gap: 15px; padding: 15px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 600; border-radius: 10px; }
+    .sidebar-footer { padding: 20px; border-top: 1px solid var(--card-border); display: flex; flex-direction: column; gap: 10px; }
+    .btn-side-outline { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--card-border); color: var(--text-main); border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none; text-align: center; }
+    .btn-side-solid { width: 100%; padding: 12px; background: var(--primary-grad); border: none; color: #fff; border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none; text-align: center; }
 
-    .nav-left {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(7, 11, 20, 0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--card-border); }
+    .nav-left { display: flex; align-items: center; gap: 15px; }
+    .menu-icon { font-size: 24px; cursor: pointer; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
+    .brand-logo { width: 32px; height: 32px; background: var(--primary-grad); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; }
 
-    .menu-icon {
-        font-size: 24px;
-        cursor: pointer;
-        color: var(--text-main);
-    }
-
-    .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 800;
-        font-size: 18px;
-        color: var(--text-main);
-    }
-
-    .brand-logo {
-        width: 32px;
-        height: 32px;
-        background: var(--primary-grad);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-weight: 900;
-    }
-
-    .hero {
-        padding: 60px 20px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .reveal-text {
-        filter: blur(10px);
-        opacity: 0.3;
-        transform: scale(1.05);
-        transition: filter 0.8s ease-out, opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-
-    .reveal-text.active {
-        filter: blur(0);
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    .hero h1 {
-        font-size: 32px;
-        font-weight: 800;
-        line-height: 1.2;
-        margin-bottom: 15px;
-        text-shadow: 0 0 20px rgba(127, 90, 240, 0.3);
-    }
-
-    .hero p {
-        font-size: 14px;
-        color: var(--text-muted);
-        margin-bottom: 30px;
-        max-width: 400px;
-        line-height: 1.6;
-    }
-
-    .hero-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .btn {
-        padding: 15px 25px;
-        border-radius: 50px;
-        font-size: 15px;
-        font-weight: 700;
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: transform 0.2s;
-        border: none;
-    }
-
-    .btn:active { transform: scale(0.98); }
-
-    .btn-primary {
-        background: var(--primary-grad);
-        color: #fff;
-        box-shadow: 0 5px 15px rgba(75, 44, 158, 0.4);
-    }
-
-    .btn-outline {
-        background: transparent;
-        color: var(--text-main);
-        border: 1px solid var(--card-border);
-    }
-
-    .badges {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 40px;
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .badge {
-        background: rgba(17, 22, 37, 0.8);
-        border: 1px solid var(--card-border);
-        padding: 12px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text-muted);
-    }
-
-         .section {
-        padding: 50px 20px;
-    }
-
-    .section-title {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    .section-title span {
-        color: var(--primary);
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    .section-title h2 {
-        font-size: 26px;
-        font-weight: 800;
-    }
-
-    .grid-cards {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        max-width: 500px;
-        margin: 0 auto;
-    }
-
-    .card {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 20px;
-        padding: 25px;
-        transition: border-color 0.3s;
-    }
-
-    .card.highlight {
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 15px rgba(255, 123, 0, 0.15);
-    }
-
-    .card-icon {
-        width: 45px;
-        height: 45px;
-        background: rgba(127, 90, 240, 0.1);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        margin-bottom: 15px;
-    }
-
-    .card h3 {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-
-    .card p {
-        font-size: 13px;
-        color: var(--text-muted);
-        line-height: 1.6;
-        margin-bottom: 15px;
-    }
-
-    .card-link {
-        color: var(--primary);
-        font-size: 13px;
-        font-weight: 700;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .card-link.orange { color: var(--accent-orange); }
-    .card-link.green { color: #00e676; }
-
-    .badge-status {
-        display: inline-block;
-        padding: 5px 12px;
-        background: rgba(0, 230, 118, 0.1);
-        color: #00e676;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 700;
-        border: 1px solid rgba(0, 230, 118, 0.3);
-    }
-
-    .timeline {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 30px;
-        max-width: 400px;
-        margin: 0 auto;
-        position: relative;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        top: 20px;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 2px;
-        background: var(--card-border);
-        z-index: 1;
-    }
-
-    .step {
-        text-align: center;
-        position: relative;
-        z-index: 2;
-    }
-
-    .step-num {
-        width: 50px;
-        height: 50px;
-        background: var(--purple-grad);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        font-weight: 800;
-        margin: 0 auto 15px;
-        border: 4px solid var(--bg-color);
-        color: #fff;
-    }
-
-    .step h4 {
-        font-size: 16px;
-        margin-bottom: 5px;
-    }
-
-    .step p {
-        font-size: 12px;
-        color: var(--text-muted);
-    }
-
-    .faq-list {
-        max-width: 500px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .faq-item {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    .faq-q {
-        padding: 18px;
-        font-size: 14px;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .faq-a {
-        padding: 0 18px;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
-        font-size: 13px;
-        color: var(--text-muted);
-        line-height: 1.6;
-    }
-
-    .faq-item.active .faq-a {
-        padding: 0 18px 18px 18px;
-        max-height: 200px;
-    }
-
-    .faq-icon {
-        color: var(--primary);
-        font-weight: 800;
-        font-size: 20px;
-        transition: transform 0.3s;
-    }
-
-    .faq-item.active .faq-icon {
-        transform: rotate(45deg);
-    }
-
-    .cta-box {
-        background: var(--primary-grad);
-        border-radius: 24px;
-        padding: 40px 20px;
-        text-align: center;
-        max-width: 500px;
-        margin: 0 auto 40px;
-        box-shadow: 0 10px 30px rgba(42, 27, 107, 0.4);
-    }
-
-    .cta-box h2 {
-        font-size: 24px;
-        font-weight: 800;
-        margin-bottom: 15px;
-    }
-
-    .cta-box p {
-        font-size: 14px;
-        margin-bottom: 25px;
-        line-height: 1.6;
-        color: rgba(255,255,255,0.8);
-    }
-
-    .cta-box .btn {
-        width: 100%;
-        margin-bottom: 15px;
-        background: #fff;
-        color: var(--bg-color);
-    }
-
-    footer {
-        background: var(--card-bg);
-        border-top: 1px solid var(--card-border);
-        padding: 40px 20px 20px;
-        text-align: center;
-    }
-
-    .footer-links {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        text-align: left;
-        margin-bottom: 30px;
-        max-width: 400px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .footer-links h4 {
-        font-size: 14px;
-        margin-bottom: 12px;
-    }
-
-    .footer-links a {
-        display: block;
-        color: var(--text-muted);
-        text-decoration: none;
-        font-size: 13px;
-        margin-bottom: 8px;
-    }
-
-    .footer-bottom {
-        font-size: 12px;
-        color: var(--text-muted);
-        border-top: 1px solid var(--card-border);
-        padding-top: 20px;
-    }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 22, 37, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 10px 0 15px 0; z-index: 100; transition: transform 0.3s ease-in-out; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #8b94b0; text-decoration: none; font-size: 11px; font-weight: 600; transition: all 0.2s; }
+    .nav-item svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .nav-item.active { color: #7f5af0; }
+</style>
+<style>
+    .hero { padding: 60px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .reveal-text { filter: blur(10px); opacity: 0.3; transform: scale(1.05); transition: filter 0.8s ease-out, opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal-text.active { filter: blur(0); opacity: 1; transform: scale(1); }
+    .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 15px; text-shadow: 0 0 20px rgba(127, 90, 240, 0.3); }
+    .hero p { font-size: 14px; color: var(--text-muted); margin-bottom: 30px; max-width: 400px; line-height: 1.6; }
+    .hero-buttons { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; }
+    .btn { padding: 15px 25px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s; border: none; }
+    .btn-primary { background: var(--primary-grad); color: #fff; box-shadow: 0 5px 15px rgba(75, 44, 158, 0.4); }
+    .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--card-border); }
+    .badges { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 40px; width: 100%; max-width: 400px; }
+    .badge { background: rgba(17, 22, 37, 0.8); border: 1px solid var(--card-border); padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    .section { padding: 50px 20px; }
+    .section-title { text-align: center; margin-bottom: 30px; }
+    .section-title span { color: var(--primary); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 10px; }
+    .section-title h2 { font-size: 26px; font-weight: 800; }
+    .grid-cards { display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; }
+    .card-icon { width: 45px; height: 45px; background: rgba(127, 90, 240, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 15px; }
+    .card h3 { font-size: 18px; margin-bottom: 10px; }
+    .card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; }
+    .card-link { color: var(--primary); font-size: 13px; font-weight: 700; text-decoration: none; display: inline-block; }
+    .badge-status { display: inline-block; padding: 5px 12px; background: rgba(0, 230, 118, 0.1); color: #00e676; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid rgba(0, 230, 118, 0.3); }
+    .timeline { display: flex; flex-direction: column; align-items: center; gap: 30px; max-width: 400px; margin: 0 auto; position: relative; }
+    .timeline::before { content: ''; position: absolute; top: 20px; bottom: 20px; left: 50%; transform: translateX(-50%); width: 2px; background: var(--card-border); z-index: 1; }
+    .step { text-align: center; position: relative; z-index: 2; }
+    .step-num { width: 50px; height: 50px; background: var(--primary-grad); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; margin: 0 auto 15px; border: 4px solid var(--bg-color); }
+    .faq-list { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+    .faq-item { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; overflow: hidden; }
+    .faq-q { padding: 18px; font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; cursor: pointer; }
+    .faq-a { padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; font-size: 13px; color: var(--text-muted); }
+    .faq-item.active .faq-a { padding: 0 18px 18px 18px; max-height: 200px; }
+    .cta-box { background: var(--primary-grad); border-radius: 24px; padding: 40px 20px; text-align: center; max-width: 500px; margin: 0 auto 40px; }
+    footer { background: var(--card-bg); border-top: 1px solid var(--card-border); padding: 40px 20px 20px; text-align: center; }
+    .footer-links { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin-bottom: 30px; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .footer-links h4 { font-size: 14px; margin-bottom: 12px; }
+    .footer-links a { display: block; color: var(--text-muted); text-decoration: none; font-size: 13px; margin-bottom: 8px; }
+    .footer-bottom { font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--card-border); padding-top: 20px; }
 </style>
 </head>
 <body>
 
- <nav>
-    <div class="nav-left">
-        <div class="menu-icon">☰</div>
-        <div class="brand">
-            <div class="brand-logo">L</div>
-            LyzCreator
-        </div>
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h3>Menu</h3><button class="close-btn" onclick="toggleSidebar()">✕</button></div>
+    <div class="sidebar-menu">
+        <a href="#" class="sidebar-link" onclick="toggleSidebar()"><span>🏠</span> Beranda</a>
+        <a href="#layanan" class="sidebar-link" onclick="toggleSidebar()"><span>🗂️</span> Semua Layanan</a>
+        <a href="#" class="sidebar-link" onclick="toggleSidebar()"><span>🎧</span> Support</a>
     </div>
+    <div class="sidebar-footer">
+        <a href="login.html" class="btn-side-outline">Masuk</a>
+        <a href="login.html" class="btn-side-solid">Daftar Gratis</a>
+    </div>
+</div>
+<nav>
+    <div class="nav-left"><div class="menu-icon" onclick="toggleSidebar()">☰</div><div class="brand"><div class="brand-logo">L</div>LyzCreator</div></div>
     <div style="font-size: 12px; color: var(--primary); font-weight: 700;">FREE TIER</div>
 </nav>
-
 <div class="hero">
     <h1 class="reveal-text">Asisten Pintar<br>Untuk Tugasmu</h1>
-    <p>Jasa pembuatan web, analisis data, dan asisten AI untuk mahasiswa dan profesional. Proses otomatis, cepat, dan harga terjangkau.</p>
-    
+    <p>Jasa pembuatan web, analisis data, dan asisten AI. Proses otomatis, cepat, dan harga terjangkau.</p>
     <div class="hero-buttons">
         <a href="#" onclick="checkAuth('chat.html')" class="btn btn-primary">🛒 Mulai Chat AI</a>
         <a href="#layanan" class="btn btn-outline">Pelajari Selengkapnya</a>
     </div>
-
     <div class="badges">
         <div class="badge"><span style="color:#00e676;">🛡️</span> Transaksi Aman</div>
         <div class="badge"><span style="color:#ff7b00;">⚡</span> Proses Instan</div>
@@ -473,182 +122,55 @@
         <div class="badge"><span style="color:#7f5af0;">👥</span> Ratusan Pengguna</div>
     </div>
 </div>
-
 <div class="section" id="layanan">
-    <div class="section-title">
-        <span>Layanan Kami</span>
-        <h2>Semua yang Kamu<br>Butuhkan Ada di Sini</h2>
-        <p style="color: var(--text-muted); font-size: 13px; margin-top: 10px;">Pilih layanan sesuai kebutuhanmu.</p>
-    </div>
-
+    <div class="section-title"><span>Layanan Kami</span><h2>Semua yang Kamu<br>Butuhkan</h2></div>
     <div class="grid-cards">
-        <div class="card">
-            <div class="card-icon" style="color: #ff7b00;">💻</div>
-            <h3>Pembuatan Web</h3>
-            <p>Landing page, portofolio, sampai sistem informasi. Dibuat rapi, responsif, dan siap pakai.</p>
-            <a href="#" onclick="checkAuth('#')" class="card-link orange">Lihat Detail →</a>
-        </div>
-
-        <div class="card">
-            <div class="card-icon" style="color: var(--primary);">🤖</div>
-            <h3>Asisten AI Chat</h3>
-            <p>Tanya apa saja, minta bantuan ngetik, analisis, atau coding. AI kami siap 24 jam.</p>
-            <span class="badge-status">● Tersedia Sekarang</span>
-        </div>
-
-        <div class="card highlight">
-            <div class="card-icon" style="color: #00e676;">💳</div>
-            <h3>Deposit Saldo</h3>
-            <p>Isi saldo dengan mudah melalui QRIS. Proses otomatis, saldo langsung masuk untuk pakai layanan.</p>
-            <a href="#" onclick="checkAuth('deposit.html')" class="card-link green">Deposit Sekarang →</a>
-        </div>
-
-        <div class="card">
-            <div class="card-icon" style="color: #7f5af0;">📝</div>
-            <h3>Bantuan Skripsi</h3>
-            <p>Bantuan analisis data, cek turnitin, dan penyusunan struktur. Cepat dan rahasia.</p>
-            <a href="#" onclick="checkAuth('#')" class="card-link">Lihat Detail →</a>
-        </div>
+        <div class="card"><div class="card-icon" style="color: #ff7b00;">💻</div><h3>Pembuatan Web</h3><p>Landing page, portofolio, sistem informasi.</p><a href="#" onclick="checkAuth('chat.html')" class="card-link">Lihat Detail →</a></div>
+        <div class="card"><div class="card-icon" style="color: var(--primary);">🤖</div><h3>Asisten AI Chat</h3><p>Tanya apa saja, bantuan ngetik, analisis, coding.</p><span class="badge-status">● Tersedia Sekarang</span></div>
+        <div class="card"><div class="card-icon" style="color: #00e676;">💳</div><h3>Deposit Saldo</h3><p>Isi saldo mudah via QRIS. Saldo langsung masuk.</p><a href="#" onclick="checkAuth('deposit.html')" class="card-link" style="color: #00e676;">Deposit Sekarang →</a></div>
+        <div class="card"><div class="card-icon" style="color: #7f5af0;">📝</div><h3>Bantuan Skripsi</h3><p>Bantuan analisis data, cek turnitin.</p><a href="#" onclick="checkAuth('chat.html')" class="card-link">Lihat Detail →</a></div>
     </div>
 </div>
-
-<div class="section" style="background: rgba(17, 22, 37, 0.3);">
-    <div class="section-title">
-        <span>Kenapa Kami?</span>
-        <h2>Keunggulan yang<br>Membedakan</h2>
-    </div>
-
-    <div class="grid-cards">
-        <div class="card" style="border-color: transparent;">
-            <div class="card-icon" style="color: var(--primary);">⚡</div>
-            <h3>Proses Super Cepat</h3>
-            <p>Sistem otomatis 24/7. Pesanan dan request diproses instan tanpa perlu menunggu admin.</p>
-        </div>
-        <div class="card" style="border-color: transparent;">
-            <div class="card-icon" style="color: #00e676;">🛡️</div>
-            <h3>Aman & Terpercaya</h3>
-            <p>Privasi pengguna selalu diutamakan. Data dan saldo kamu dilindungi sepenuhnya.</p>
-        </div>
-        <div class="card" style="border-color: transparent;">
-            <div class="card-icon" style="color: #ff7b00;">🎧</div>
-            <h3>Support Siap Bantu</h3>
-            <p>Tim support responsif siap membantu setiap kendala yang kamu hadapi via chat.</p>
-        </div>
-    </div>
-</div>
-
-<div class="section">
-    <div class="section-title">
-        <span>Cara Kerja</span>
-        <h2>4 Langkah Mudah</h2>
-    </div>
-
-    <div class="timeline">
-        <div class="step">
-            <div class="step-num">1</div>
-            <h4>Buat Akun</h4>
-            <p>Daftar gratis dan verifikasi akun.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">2</div>
-            <h4>Isi Saldo</h4>
-            <p>Top up saldo via QRIS.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">3</div>
-            <h4>Pilih Layanan</h4>
-            <p>Pilih layanan dari daftar yang tersedia.</p>
-        </div>
-        <div class="step">
-            <div class="step-num">4</div>
-            <h4>Selesai!</h4>
-            <p>Pesanan diproses otomatis dan langsung diterima.</p>
-        </div>
-    </div>
-</div>
-
-<div class="section" style="background: rgba(17, 22, 37, 0.3);">
-    <div class="section-title">
-        <span>FAQ</span>
-        <h2>Pertanyaan yang Sering<br>Ditanyakan</h2>
-    </div>
-
-    <div class="faq-list">
-        <div class="faq-item">
-            <div class="faq-q">Apa itu LyzCreator? <span class="faq-icon">+</span></div>
-            <div class="faq-a">LyzCreator adalah platform asisten AI dan jasa digital yang membantu kamu mengerjakan tugas, membuat web, dan analisis data dengan cepat.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-q">Bagaimana cara deposit saldo? <span class="faq-icon">+</span></div>
-            <div class="faq-a">Buka menu Deposit Saldo di dashboard, pilih nominal, lalu scan QRIS yang muncul. Saldo otomatis masuk setelah pembayaran berhasil.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-q">Saldo sudah bayar tapi belum masuk? <span class="faq-icon">+</span></div>
-            <div class="faq-a">Tunggu maksimal 5 menit. Jika belum masuk, hubungi admin dengan melampirkan bukti transfer.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-q">Apakah layanan ini aman? <span class="faq-icon">+</span></div>
-            <div class="faq-a">Ya. Data kamu dienkripsi dan tidak dibagikan ke pihak ketiga.</div>
-        </div>
-    </div>
-</div>
-
-<div class="section">
-    <div class="cta-box">
-        <h2>Siap Menggunakan<br>Layanan Terbaik?</h2>
-        <p>Daftar sekarang gratis dan mulai nikmati semua layanan dari LyzCreator.</p>
-        <a href="#" onclick="checkAuth('creator.html')" class="btn">Daftar Gratis →</a>
-        <a href="#" class="btn btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.3);">💬 Hubungi Admin</a>
-    </div>
-</div>
-
 <footer>
-    <div class="brand" style="justify-content: center; margin-bottom: 20px;">
-        <div class="brand-logo">L</div>
-        LyzCreator
-    </div>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6;">
-        Jasa pembuatan web, asisten AI, dan layanan digital. Proses otomatis, harga terjangkau, dan dukungan cepat.
-    </p>
-
+    <div class="brand" style="justify-content: center; margin-bottom: 20px;"><div class="brand-logo">L</div>LyzCreator</div>
     <div class="footer-links">
-        <div>
-            <h4>Produk</h4>
-            <a href="#">Pembuatan Web</a>
-            <a href="#">Asisten AI</a>
-            <a href="#">Bantuan Skripsi</a>
-        </div>
-        <div>
-            <h4>Bantuan</h4>
-            <a href="#">Hubungi Kami</a>
-            <a href="#">FAQ</a>
-            <a href="#">Cek Transaksi</a>
-        </div>
+        <div><h4>Produk</h4><a href="#">Pembuatan Web</a><a href="#">Asisten AI</a><a href="#">Bantuan Skripsi</a></div>
+        <div><h4>Bantuan</h4><a href="#">Hubungi Kami</a><a href="#">FAQ</a><a href="#">Cek Transaksi</a></div>
     </div>
-
-    <div class="footer-bottom">
-        © 2026 LyzCreator. All rights reserved.
-    </div>
+    <div class="footer-bottom">© 2026 LyzCreator. All rights reserved.</div>
 </footer>
 
+<div class="bottom-nav">
+    <a href="creator.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Home</span>
+    </a>
+    <a href="history.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg><span>Riwayat</span>
+    </a>
+    <a href="deposit.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg><span>Deposit</span>
+    </a>
+    <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg><span>CS</span>
+    </a>
+    <a href="profil.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Profil</span>
+    </a>
+</div>
+
 <script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
     function checkAuth(url) {
-        const isLoggedIn = localStorage.getItem('lyz_session');
-        if (isLoggedIn === 'true') {
+        if (localStorage.getItem('lyz_session') === 'true') {
             window.location.href = url;
         } else {
-            alert('Kamu harus login dulu untuk mengakses fitur ini!');
+            alert('Kamu harus login dulu!');
             window.location.href = 'login.html';
         }
     }
-
-    document.querySelectorAll('.faq-q').forEach(item => {
-        item.addEventListener('click', () => {
-            const parent = item.parentElement;
-            parent.classList.toggle('active');
-        });
-    });
-
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -657,11 +179,19 @@
             }
         });
     }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-text').forEach(el => { observer.observe(el); });
 
-    document.querySelectorAll('.reveal-text').forEach(el => {
-        observer.observe(el);
+    let lastScrollTop = 0;
+    const bottomNav = document.querySelector('.bottom-nav');
+    window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollTop > lastScrollTop && scrollTop > 50) {
+            bottomNav.style.transform = 'translateY(100%)';
+        } else {
+            bottomNav.style.transform = 'translateY(0)';
+        }
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
     });
 </script>
-
 </body>
 </html>
