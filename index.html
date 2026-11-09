@@ -27,61 +27,68 @@
         overflow: hidden;
     }
 
-    .loader-container {
+    .loader-box {
         position: relative;
+        padding: 15px 30px;
         display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
-        width: 220px;
-        height: 50px;
+        align-items: center;
     }
 
     .brand-text {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 800;
-        letter-spacing: 3px;
+        letter-spacing: 4px;
         color: #ffffff;
         z-index: 2;
         opacity: 0;
         animation: fadeIn 0.5s ease forwards;
         animation-delay: 0.2s;
+        text-shadow: 0 0 10px rgba(255, 123, 0, 0.5);
     }
 
-    .line-wrapper {
+    .line-top, .line-bottom {
         position: absolute;
-        width: 100%;
         height: 2px;
-        left: 0;
-    }
-
-    .line-top { top: 0; }
-    .line-bottom { bottom: 0; }
-
-    .line {
-        position: absolute;
-        height: 100%;
         width: 0;
         left: 50%;
         transform: translateX(-50%);
         background: var(--gradient-color);
         box-shadow: 0 0 8px #ff7b00;
+        transition: width 0.4s ease-in-out;
     }
 
-    .line-top .line {
-        border-radius: 0 0 2px 2px;
-        animation: animLine 1.6s infinite ease-in-out;
+    .line-top { top: 0; }
+    .line-bottom { bottom: 0; }
+
+    .side-left, .side-right {
+        position: absolute;
+        width: 2px;
+        height: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--gradient-color);
+        box-shadow: 0 0 8px #ff7b00;
+        transition: height 0.4s ease-in-out;
+        transition-delay: 0.4s;
     }
 
-    .line-bottom .line {
-        border-radius: 2px 2px 0 0;
-        animation: animLine 1.6s infinite ease-in-out;
+    .side-left { left: 0; }
+    .side-right { right: 0; }
+
+    .loader-box.expand .line-top,
+    .loader-box.expand .line-bottom {
+        width: 100%;
     }
 
-    @keyframes animLine {
-        0% { width: 0; }
-        40% { width: 100%; }
-        100% { width: 100%; }
+    .loader-box.expand .side-left,
+    .loader-box.expand .side-right {
+        height: 100%;
+    }
+
+    .loader-box.expand .brand-text {
+        color: #ffffff;
+        text-shadow: 0 0 15px #ff7b00, 0 0 30px #ff0000;
     }
 
     @keyframes fadeIn {
@@ -91,19 +98,30 @@
 </head>
 <body>
 
-    <div class="loader-container">
-    <div class="line-wrapper line-top">
-        <div class="line"></div>
-    </div>
-    
+    <div class="loader-box" id="loaderBox">
+    <div class="line-top"></div>
+    <div class="line-bottom"></div>
+    <div class="side-left"></div>
+    <div class="side-right"></div>
     <div class="brand-text">LYZ CREATOR</div>
-    
-    <div class="line-wrapper line-bottom">
-        <div class="line"></div>
-    </div>
 </div>
 
 <script>
+    const box = document.getElementById('loaderBox');
+    let isExpanded = false;
+
+    function animateLoader() {
+        if (!isExpanded) {
+            box.classList.add('expand');
+            isExpanded = true;
+        } else {
+            box.classList.remove('expand');
+            isExpanded = false;
+        }
+    }
+
+    setInterval(animateLoader, 1600);
+
     setTimeout(() => {
         window.location.href = "login.html"; 
     }, 4000);
