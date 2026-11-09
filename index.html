@@ -3,30 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loading...</title>
+<title>LyzCreator - Loading</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
 <style>
-  body { background-color: #0a0c10; color: #e6b450; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; margin: 0; }
-  .loader { font-size: 20px; font-weight: bold; animation: blink 1s infinite; }
-  @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+    :root {
+        --bg-dark: #070b14;
+        --primary: #7f5af0;
+        --text-main: #ffffff;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    .loader-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 40px;
+    }
+
+    .brand-text {
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 4px;
+        z-index: 2;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    .line {
+        position: absolute;
+        height: 4px;
+        background-color: var(--primary);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        transition: width 0.4s ease;
+        box-shadow: 0 0 10px var(--primary);
+    }
+
+    .line-top {
+        top: 0;
+        border-radius: 0 0 4px 4px;
+    }
+
+    .line-bottom {
+        bottom: 0;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .line.expand {
+        width: calc(100% + 20px);
+    }
+
+    @keyframes fadeIn {
+        to { opacity: 1; }
+    }
 </style>
 </head>
 <body>
-  <div class="loader">Membuka Creator Web...</div>
 
-  <script>
-    // Cek apakah user udah login atau belum
-    const activeUser = localStorage.getItem('creator_active_user');
-    
-    // Kasih delay dikit biar ga kaget (opsional)
+  <div class="loader-container">
+    <div class="line line-top" id="lineTop"></div>
+    <div class="brand-text" id="brandText">LYZ CREATOR</div>
+    <div class="line line-bottom" id="lineBottom"></div>
+</div>
+
+<script>
+    const lineTop = document.getElementById('lineTop');
+    const lineBottom = document.getElementById('lineBottom');
+    const brandText = document.getElementById('brandText');
+    let isExpanded = false;
+
+    function animateLoader() {
+        if (!isExpanded) {
+            lineTop.classList.add('expand');
+            lineBottom.classList.add('expand');
+            isExpanded = true;
+        } else {
+            lineTop.classList.remove('expand');
+            lineBottom.classList.remove('expand');
+            isExpanded = false;
+        }
+    }
+
+    setInterval(animateLoader, 1200);
+
     setTimeout(() => {
-      if (activeUser) {
-        // Kalau udah login, masuk ke dashboard
-        window.location.replace("creator.html");
-      } else {
-        // Kalau belum login, lempar ke halaman login
-        window.location.replace("login.html");
-      }
-    }, 500); // 500ms = setengah detik
-  </script>
+        window.location.href = "login.html"; 
+    }, 4000);
+</script>
+
 </body>
 </html>
