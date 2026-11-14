@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LyzCreator - Auth</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
     :root { --bg-dark: #070b14; --card-bg: #111625; --primary: #7f5af0; --primary-grad: linear-gradient(135deg, #2a1b6b 0%, #4b2c9e 100%); --text-light: #ffffff; --text-muted: #8b94b0; --input-bg: #1a2035; --input-border: #2b3452; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -31,15 +32,16 @@
     .divider { display: flex; align-items: center; text-align: center; margin: 25px 0; color: var(--text-muted); font-size: 12px; font-weight: 600; }
     .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--input-border); }
     .divider::before { margin-right: 15px; } .divider::after { margin-left: 15px; }
-    .btn-google { width: 100%; padding: 14px; background: transparent; border: 1px solid var(--input-border); border-radius: 50px; color: var(--text-light); font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    
+    .google-btn-container { display: flex; justify-content: center; }
+    
     .footer-text { text-align: center; margin-top: 25px; font-size: 13px; color: var(--text-muted); } .footer-text a { color: var(--primary); text-decoration: none; font-weight: 700; cursor: pointer; }
     .terms { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 20px; } .terms a { color: var(--primary); text-decoration: none; }
     .copyright { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: auto; padding-top: 20px; padding-bottom: 10px; }
 </style>
 </head>
 <body>
-
-    <div class="mobile-wrapper">
+<div class="mobile-wrapper">
     <div class="hero">
         <div class="hero-orbits">
             <div class="orbit-item orbit-1">🔒</div><div class="orbit-item orbit-2">👤</div><div class="orbit-item orbit-3">✉️</div>
@@ -57,16 +59,33 @@
             <button type="submit" class="btn-primary" id="submit-btn">Masuk</button>
         </form>
         <div class="divider">ATAU</div>
-        <button class="btn-google"><span id="google-text">Masuk dengan Google</span></button>
+        
+        <!-- GOOGLE LOGIN BUTTON -->
+        <div class="google-btn-container">
+            <div id="g_id_onload"
+                 data-client_id="81989745926-a9ulu337intog9gjacu3jnd3gjdnlk1k.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" 
+                 data-type="standard" 
+                 data-size="large" 
+                 data-theme="filled_black" 
+                 data-text="signin_with" 
+                 data-shape="pill" 
+                 data-logo_alignment="left">
+            </div>
+        </div>
+
         <div class="footer-text"><span id="toggle-text">Belum punya akun?</span> <a onclick="toggleMode()" id="toggle-btn">Daftar sekarang</a></div>
         <div class="terms" id="terms-text" style="display: none;">Dengan membuat akun, kamu menyetujui <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a> kami.</div>
-        <div class="copyright">© 2026 LyzCreator • Developer: Billy</div>
+        <div class="copyright">© 2026 LyzCreator • Developer: Lyz</div>
     </div>
- </div>
-
-    <script src="alert.js"></script>
+</div>
+<script src="alert.js"></script>
 <script>
     let isLogin = true;
+
     function toggleMode() {
         isLogin = !isLogin;
         document.getElementById('form-title').innerText = isLogin ? "Masuk ke Akun" : "Buat Akun Baru";
@@ -76,34 +95,67 @@
         document.getElementById('submit-btn').innerText = isLogin ? "Masuk" : "Daftar";
         document.getElementById('toggle-text').innerText = isLogin ? "Belum punya akun?" : "Sudah punya akun?";
         document.getElementById('toggle-btn').innerText = isLogin ? "Daftar sekarang" : "Masuk di sini";
-        document.getElementById('google-text').innerText = isLogin ? "Masuk dengan Google" : "Daftar dengan Google";
         document.getElementById('terms-text').style.display = isLogin ? "none" : "block";
         document.getElementById('group-username').style.display = isLogin ? "none" : "block";
         document.getElementById('hero-subtitle').innerText = isLogin ? "Selamat datang kembali! 👋" : "Buat akun baru 🚀";
         document.getElementById('input-password').placeholder = isLogin ? "Masukkan password" : "Min. 8 karakter";
     }
-</script>
 
-    <script>
-    document.getElementById('auth-form').addEventListener('submit', function(e) {
+    document.getElementById('auth-form').addEventListener('submit', async function(e) {
         e.preventDefault();
+        const email = document.getElementById('input-email').value;
         const pass = document.getElementById('input-password').value;
         const btn = document.getElementById('submit-btn');
-        if (pass.length < 8) { 
-            showAlert('Password Salah', 'Password minimal 8 karakter!'); 
-            return; 
-        }
+
+        if (pass.length < 8) { showAlert('Password Salah', 'Password minimal 8 karakter!'); return; }
+
         btn.innerText = "Memproses..."; btn.disabled = true;
-        setTimeout(() => {
-            if (isLogin) {
+
+        const endpoint = isLogin ? 'http://localhost:3000/api/login' : 'http://localhost:3000/api/register';
+        
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nama: email.split('@')[0], email: email, password: pass })
+            });
+            const data = await response.json();
+
+            if (data.success) {
                 localStorage.setItem('lyz_session', 'true');
-                showAlert('Login Berhasil', 'Selamat datang kembali!', 'creator.html');
+                localStorage.setItem('lyz_user', JSON.stringify(data.user));
+                showAlert('Berhasil', data.message, 'creator.html');
             } else {
-                showAlert('Daftar Berhasil', 'Silakan login menggunakan akun baru kamu.'); 
-                isLogin = true; toggleMode(); btn.innerText = "Masuk"; btn.disabled = false;
+                showAlert('Gagal', data.message);
+                btn.innerText = isLogin ? "Masuk" : "Daftar"; 
+                btn.disabled = false;
             }
-        }, 1500);
+        } catch (error) {
+            showAlert('Error', 'Gagal terhubung ke server.');
+            btn.innerText = isLogin ? "Masuk" : "Daftar"; 
+            btn.disabled = false;
+        }
     });
+    // Fungsi Callback yang dipanggil Google setelah user milih akun
+    function handleCredentialResponse(response) {
+        // response.credential isinya JWT Token dari Google
+        fetch('http://localhost:3000/api/auth/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                localStorage.setItem('lyz_session', 'true');
+                localStorage.setItem('lyz_user', JSON.stringify(data.user));
+                showAlert('Berhasil', 'Login dengan Google Berhasil!', 'creator.html');
+            } else {
+                showAlert('Gagal', data.message);
+            }
+        })
+        .catch(err => showAlert('Error', 'Gagal terhubung ke server.'));
+    }
 </script>
 </body>
 </html>

@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int    @id @default(autoincrement())
+  nama      String
+  email     String @unique
+  password  String
+  saldo     Int    @default(0)
+  tier      String @default("free") // Free, Pro, VIP, dll
+  chatCount Int    @default(0)      // Hitungan chat yang udah dipakai
+  uploadCount Int  @default(0)
+  transactions Transaction[]
+  chats ChatHistory[]
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  type String // "deposit" atau "purchase"
+  status String @default("success") // success, pending, failed
+  method String // QRIS, Saldo, dll
+  createAt DateTime @default(now())
+}
+
+model ChatHistory {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  sender    String
+  message   String
+  createdAt DateTime @default(now())
+}

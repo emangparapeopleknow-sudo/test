@@ -144,14 +144,25 @@
 
 <script src="alert.js"></script>
 <script>
-    function checkout(paket, harga) {
-        if (localStorage.getItem('lyz_session') !== 'true') {
-            showAlert('Akses Ditolak', 'Kamu harus login dulu untuk membeli paket ini!', 'login.html');
-            return;
-        }
-        localStorage.setItem('lyz_checkout_paket', paket);
-        localStorage.setItem('lyz_checkout_harga', harga);
-        window.location.href = 'checkout.html';
+    async function checkout(paket, harga, tier) {
+        const user = JSON.parse(localStorage.getItem('lyz_user'));
+        if (!user) { showAlert('Gagal', 'Login dulu!', 'login.html'); return; }
+        if (!confirm(`Beli ${paket} seharga Rp ${harga.toLocaleString('id-ID')}?`)) return;
+
+        // GANTI URL INI PAS UDAH DEPLOY VERCEL
+        try {
+            const res = await fetch('http://localhost:3000/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: user.email, paket: paket, harga: harga, tier: tier })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showAlert('Berhasil', data.message + '\nKode: ' + data.code, 'history.html');
+            } else {
+                showAlert('Gagal', data.message, data.message.includes('Saldo') ? 'deposit.html' : null);
+            }
+        } catch (e) { showAlert('Error', 'Gagal terhubung.'); }
     }
 </script>
 </body>

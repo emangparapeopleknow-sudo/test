@@ -167,17 +167,18 @@
     function handleManualInput(input) {
         document.querySelectorAll('.nominal-item').forEach(el => el.classList.remove('active'));
     }
+
     function lanjutkan() {
         const nominal = document.getElementById('input-nominal').value;
-        if (!nominal || nominal < 5000) { 
-            showAlert('Gagal', 'Minimal deposit adalah Rp 5.000'); 
-            return; 
-        }
-        if (nominal > 1000000) { 
-            showAlert('Gagal', 'Maksimal deposit adalah Rp 1.000.000'); 
-            return; 
-        }
-        showAlert('Lanjut Pembayaran', 'Total deposit: Rp ' + parseInt(nominal).toLocaleString('id-ID') + '. Metode QRIS akan muncul (simulasi).');
+        if (!nominal || nominal < 5000) { showAlert('Gagal', 'Minimal deposit Rp 5.000'); return; }
+        
+        const user = JSON.parse(localStorage.getItem('lyz_user'));
+        if (!user) { showAlert('Gagal', 'Login dulu!', 'login.html'); return; }
+
+        // GANTI 'username-lu' PAKAI USERNAME TRAKTEER LU
+       const linkTrakteer = `https://trakteer.id/rtx1ylgpaxmw2m32vpql/tip?quantity=${nominal}&message=${user.email}`;
+        window.open(linkTrakteer, '_blank');
+        showAlert('Instruksi', '1. Selesaikan pembayaran di Trakteer.\n2. Saldo masuk otomatis 1-5 menit.\n3. Cek berkala.', null);
     }
 </script>
 </body>

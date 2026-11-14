@@ -103,20 +103,43 @@
 
 </div>
 
+<script src="alert.js"></script>
 <script>
-    document.querySelectorAll('.filter-chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
+    async function aktivasiKode() {
+        const code = document.getElementById('inputKode').value;
+        const user = JSON.parse(localStorage.getItem('lyz_user'));
+        if (!code) { showAlert('Gagal', 'Masukkan kode!'); return; }
+        if (!user) { showAlert('Gagal', 'Login dulu!', 'login.html'); return; }
 
-    document.querySelectorAll('.category-chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
-</script>
+        // GANTI URL INI PAS UDAH DEPLOY VERCEL
+        try {
+            const res = await fetch('http://localhost:3000/api/activate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: user.email, code: code })
+            });
+            const data = await res.json();
+            if (data.success) {
+                localStorage.setItem('lyz_user', JSON.stringify(data.user));
+                showAlert('Berhasil', data.message, 'creator.html');
+            } else {
+                showAlert('Gagal', data.message);
+            }
+        } catch (e) { showAlert('Error', 'Gagal terhubung.'); }
+    }
+
+    async function loadTransactions() {
+        const user = JSON.parse(localStorage.getItem('lyz_user'));
+        if (!user) return;
+        // GANTI URL INI PAS UDAH DEPLOY VERCEL
+        try {
+            const res = await fetch(`http://localhost:3000/api/transactions/${user.email}`);
+            const data = await res.json();
+            console.log(data.transactions); 
+            // Di sini lu bisa loop data.transactions dan tampilin ke HTML lu
+        } catch (e) {}
+    }
+    window.onload = loadTransactions;
+</script>const linkTrakteer = `https://trakteer.id/rtx1ylgpaxmw2m32vpql/tip?quantity=${nominal}&message=${user.email}`;
 </body>
 </html>
