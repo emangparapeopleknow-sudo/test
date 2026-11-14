@@ -7,7 +7,6 @@ const cloudinary = require('cloudinary').v2;
 const prisma = new PrismaClient();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Konfigurasi Cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -67,7 +66,7 @@ module.exports = async (req, res) => {
 
         // UPLOAD FILE KE CLOUDINARY
         if (path === '/api/upload' && method === 'POST') {
-            const { fileBase64, resourceType, email } = body;
+            const { fileBase64, resourceType } = body;
             if (!fileBase64) return res.status(400).json({ success: false, message: 'File kosong!' });
 
             try {
@@ -75,7 +74,6 @@ module.exports = async (req, res) => {
                     resource_type: resourceType || 'auto',
                     folder: 'lyzcreator_uploads'
                 });
-
                 return res.json({ success: true, url: result.secure_url });
             } catch (error) {
                 return res.status(500).json({ success: false, message: error.message });
@@ -144,26 +142,58 @@ module.exports = async (req, res) => {
         if (path === '/api/checkout' && method === 'POST') {
             const { email, paket, harga, tier } = body;
             const user = await prisma.user.findUnique({ where: { email } });
+            
             if (user.tier !== 'free' && user.expiredAt && new Date(user.expiredAt) > new Date()) {
                 return res.status(400).json({ success: false, message: `STATUS: ${user.tier.toUpperCase()}\nBELUM EXPIRED!\nTIDAK BISA MEMBELI.` });
             }
             if (user.saldo < parseInt(harga)) return res.status(400).json({ success: false, message: 'Saldo kurang!' });
             
             await prisma.user.update({ where: { email }, data: { saldo: user.saldo - parseInt(harga) } });
-            const kode = `LYZ-${tier.toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-            await prisma.transaction.create({ data: { userId: user.id, type: 'purchase', amount: parseInt(harga), status: 'success', method: 'Saldo', activationCode: kode } });
+            
+            const paketTier = tier ? tier.toUpperCase() : 'PRO';
+            const kode = `LYZ-${paketTier}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+            
+            await prisma.transaction.create({ 
+                data: { 
+                    userId: user.id, 
+                    type: 'purchase', 
+                    amount: parseInt(harga), 
+                    status: 'success', 
+                    method: 'Saldo', 
+                    activationCode: kode,
+                    isUsed: false
+                } 
+            });
             return res.json({ success: true, message: 'Berhasil! Cek Kode di Riwayat.', code: kode });
         }
 
         if (path === '/api/activate' && method === 'POST') {
             const { email, code } = body;
             const user = await prisma.user.findUnique({ where: { email } });
-            const trx = await prisma.transaction.findFirst({ where: { activationCode: code, userId: user.id, isUsed: false } });
+            
+            const trx = await prisma.transaction.findFirst({ 
+                where: { 
+                    activationCode: code, 
+                    userId: user.id, 
+                    isUsed: false 
+                } 
+            });
+            
             if (!trx) return res.status(404).json({ success: false, message: 'Kode tidak valid/sudah dipakai!' });
+            
             const expiredDate = new Date(); expiredDate.setDate(expiredDate.getDate() + 30);
-            let newTier = code.includes('VIP') ? 'vip' : (code.includes('VVIP') ? 'vvip' : 'pro');
-            const updatedUser = await prisma.user.update({ where: { email }, data: { tier: newTier, expiredAt: expiredDate } });
-            await prisma.transaction.update({ where: { id: trx.id }, data: { isUsed: true } });
+            let newTier = code.includes('KING') ? 'king' : (code.includes('VVIP') ? 'vvip' : (code.includes('VIP') ? 'vip' : 'pro'));
+            
+            const updatedUser = await prisma.user.update({ 
+                where: { email }, 
+                data: { tier: newTier, expiredAt: expiredDate } 
+            });
+            
+            await prisma.transaction.update({ 
+                where: { id: trx.id }, 
+                data: { isUsed: true } 
+            });
+            
             return res.json({ success: true, message: 'Aktivasi Berhasil!', user: updatedUser });
         }
 
