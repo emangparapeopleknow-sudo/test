@@ -113,7 +113,7 @@
 
         // GANTI URL INI PAS UDAH DEPLOY VERCEL
         try {
-            const res = await fetch('https://test-dhrs.vercel.app:3000/api/activate', {
+            const res = await fetch('https://test-dhrs.vercel.app/api/activate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: user.email, code: code })
@@ -133,7 +133,7 @@
         if (!user) return;
         // GANTI URL INI PAS UDAH DEPLOY VERCEL
         try {
-            const res = await fetch(`https://test-dhrs.vercel.app:3000/api/transactions/${user.email}`);
+            const res = await fetch(`https://test-dhrs.vercel.app/api/transactions/${user.email}`);
             const data = await res.json();
             console.log(data.transactions); 
             // Di sini lu bisa loop data.transactions dan tampilin ke HTML lu
