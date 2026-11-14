@@ -2,15 +2,16 @@ require('dotenv').config();
 const { GoogleGenAI } = require('@google/genai');
 const { PrismaClient } = require('@prisma/client');
 const { OAuth2Client } = require('google-auth-library');
-const cloudinary = require('cloudinary').v2
+const cloudinary = require('cloudinary').v2;
 
 const prisma = new PrismaClient();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// Konfigurasi Cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 module.exports = async (req, res) => {
@@ -64,6 +65,23 @@ module.exports = async (req, res) => {
             return res.json({ success: true, message: 'Login Berhasil!', user });
         }
 
+        // UPLOAD FILE KE CLOUDINARY
+        if (path === '/api/upload' && method === 'POST') {
+            const { fileBase64, resourceType, email } = body;
+            if (!fileBase64) return res.status(400).json({ success: false, message: 'File kosong!' });
+
+            try {
+                const result = await cloudinary.uploader.upload(fileBase64, {
+                    resource_type: resourceType || 'auto',
+                    folder: 'lyzcreator_uploads'
+                });
+
+                return res.json({ success: true, url: result.secure_url });
+            } catch (error) {
+                return res.status(500).json({ success: false, message: error.message });
+            }
+        }
+
         // GEMINI AI
         if (path === '/api/gemini' && method === 'POST') {
             const { prompt, email } = body;
@@ -107,20 +125,18 @@ module.exports = async (req, res) => {
             return res.json({ success: true });
         }
 
-        // WEBHOOK TRAKTEER (TAMBAH SALDO OTOMATIS)
+        // WEBHOOK TRAKTEER
         if (path === '/api/trakteer-webhook' && method === 'POST') {
-            const { quantity, message } = body; // Trakteer ngirim data ini
+            const { quantity, message } = body;
             const emailUser = message; 
-            const nominalMasuk = parseInt(quantity) * 1000; // 1 unit = Rp 1.000
+            const nominalMasuk = parseInt(quantity) * 1000;
 
             if (!emailUser) return res.status(400).send('Email tidak ditemukan.');
-            
             const user = await prisma.user.findUnique({ where: { email: emailUser } });
             if (!user) return res.status(404).send('User tidak terdaftar.');
 
             await prisma.user.update({ where: { email: emailUser }, data: { saldo: user.saldo + nominalMasuk } });
             await prisma.transaction.create({ data: { userId: user.id, type: 'deposit', amount: nominalMasuk, status: 'success', method: 'Trakteer' } });
-            
             return res.status(200).send('OK');
         }
 
