@@ -139,7 +139,7 @@
     // Fungsi Callback yang dipanggil Google setelah user milih akun
     function handleCredentialResponse(response) {
         // response.credential isinya JWT Token dari Google
-        fetch('https://test-dhrs.vercel.app:3000/api/auth/google', {
+        fetch('https://test-dhrs.vercel.app/api/auth/google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: response.credential })
