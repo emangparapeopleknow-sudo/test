@@ -9,15 +9,8 @@
     :root { --bg-dark: #070b14; --card-bg: #111625; --card-border: #232c45; --primary: #7f5af0; --primary-grad: linear-gradient(135deg, #2a1b6b 0%, #4b2c9e 100%); --text-main: #ffffff; --text-muted: #8b94b0; --success: #00e676; --danger: #ff3b30; --warning: #ffcc00; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 80px; }
-    
     .topbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg-dark); border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100; }
     .brand { font-weight: 800; font-size: 20px; color: #fff; }
-    .topbar-right { display: flex; align-items: center; gap: 10px; }
-    .saldo-box { background: var(--card-bg); border: 1px solid var(--card-border); padding: 6px 12px; border-radius: 10px; display: flex; align-items: center; gap: 10px; }
-    .saldo-text h4 { font-size: 14px; font-weight: 800; }
-    .saldo-text p { font-size: 10px; color: var(--primary); }
-    .btn-wallet { background: var(--primary-grad); border: none; width: 30px; height: 30px; border-radius: 8px; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    
     .container { padding: 20px; max-width: 600px; margin: 0 auto; }
     .header-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .title-left { display: flex; align-items: center; gap: 15px; }
@@ -27,50 +20,32 @@
     .title-text p { font-size: 12px; color: var(--text-muted); }
     .btn-home { width: 40px; height: 40px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--text-main); text-decoration: none; font-size: 18px; }
     
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 22, 37, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 10px 0 15px 0; z-index: 100; transition: transform 0.3s ease-in-out; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #8b94b0; text-decoration: none; font-size: 11px; font-weight: 600; transition: all 0.2s; }
-    .nav-item svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; }
-    .nav-item.active { color: #7f5af0; }
-</style>
-<style>
     .filter-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
     .filter-row::-webkit-scrollbar { display: none; }
     .filter-label { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; white-space: nowrap; }
     .filter-chip { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
     .filter-chip.active { background: rgba(127, 90, 240, 0.1); border-color: var(--primary); color: var(--primary); }
     
-    .category-row { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-    .category-row::-webkit-scrollbar { display: none; }
-    .category-chip { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-    .category-chip.active { background: rgba(127, 90, 240, 0.1); border-color: var(--primary); color: var(--primary); }
-    .category-chip .count { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 10px; font-size: 10px; }
-    .category-chip.active .count { background: var(--primary); color: #fff; }
-
     .empty-state { text-align: center; padding: 40px 20px; background: var(--card-bg); border: 1px dashed var(--card-border); border-radius: 16px; margin-top: 10px; }
     .empty-state .icon { font-size: 40px; color: var(--text-muted); margin-bottom: 15px; opacity: 0.5; }
     .empty-state h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
     .empty-state p { font-size: 13px; color: var(--text-muted); }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 22, 37, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 10px 0 15px 0; z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #8b94b0; text-decoration: none; font-size: 11px; font-weight: 600; }
+    .nav-item svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .nav-item.active { color: #7f5af0; }
 </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="brand">LyzCreator</div>
-    <div class="topbar-right">
-        <div class="saldo-box">
-            <div class="saldo-text"><h4>Rp 0</h4><p>Saldo Utama</p></div>
-            <button class="btn-wallet">💼</button>
-        </div>
-    </div>
-</div>
+<div class="topbar"><div class="brand">LyzCreator</div></div>
 
 <div class="container">
     <div class="header-title">
         <div class="title-left">
             <a href="creator.html" class="btn-back">←</a>
             <div class="title-icon">🧾</div>
-            <div class="title-text">
-                <h2>Riwayat<br>Transaksi</h2>
-            </div>
+            <div class="title-text"><h2>Riwayat<br>Transaksi</h2></div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
             <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">0 transaksi</div>
@@ -86,60 +61,38 @@
         <button class="filter-chip active">Semua Waktu</button>
     </div>
 
-    <div class="category-row">
-        <button class="category-chip active">⊞ Semua <span class="count">0</span></button>
-        <button class="category-chip">🏦 Deposit <span class="count">0</span></button>
-        <button class="category-chip">🎟️ Langganan <span class="count">0</span></button>
-        <button class="category-chip">✅ Berhasil <span class="count">0</span></button>
-        <button class="category-chip">❌ Gagal <span class="count">0</span></button>
-        <button class="category-chip">⏰ Pending <span class="count">0</span></button>
-    </div>
-
-      <div class="empty-state">
+    <div class="empty-state">
         <div class="icon">📭</div>
         <h3>Belum ada transaksi</h3>
         <p>Riwayat pembelian dan deposit kamu akan muncul di sini.</p>
     </div>
-
 </div>
 
-<script src="alert.js"></script>
+<div class="bottom-nav">
+    <a href="creator.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Home</span>
+    </a>
+    <a href="history.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg><span>Riwayat</span>
+    </a>
+    <a href="deposit.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg><span>Deposit</span>
+    </a>
+    <a href="javascript:void(0)" class="nav-item" onclick="openCS()">
+        <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg><span>CS</span>
+    </a>
+    <a href="profil.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Profil</span>
+    </a>
+</div>
+
 <script>
-    async function aktivasiKode() {
-        const code = document.getElementById('inputKode').value;
-        const user = JSON.parse(localStorage.getItem('lyz_user'));
-        if (!code) { showAlert('Gagal', 'Masukkan kode!'); return; }
-        if (!user) { showAlert('Gagal', 'Login dulu!', 'login.html'); return; }
-
-        // GANTI URL INI PAS UDAH DEPLOY VERCEL
-        try {
-            const res = await fetch('https://test-dhrs.vercel.app/api/activate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: user.email, code: code })
-            });
-            const data = await res.json();
-            if (data.success) {
-                localStorage.setItem('lyz_user', JSON.stringify(data.user));
-                showAlert('Berhasil', data.message, 'creator.html');
-            } else {
-                showAlert('Gagal', data.message);
-            }
-        } catch (e) { showAlert('Error', 'Gagal terhubung.'); }
-    }
-
-    async function loadTransactions() {
-        const user = JSON.parse(localStorage.getItem('lyz_user'));
-        if (!user) return;
-        // GANTI URL INI PAS UDAH DEPLOY VERCEL
-        try {
-            const res = await fetch(`https://test-dhrs.vercel.app/api/transactions/${user.email}`);
-            const data = await res.json();
-            console.log(data.transactions); 
-            // Di sini lu bisa loop data.transactions dan tampilin ke HTML lu
-        } catch (e) {}
-    }
-    window.onload = loadTransactions;
-</script>const linkTrakteer = `https://trakteer.id/rtx1ylgpaxmw2m32vpql/tip?quantity=${nominal}&message=${user.email}`;
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+</script>
 </body>
 </html>

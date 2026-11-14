@@ -6,67 +6,75 @@
 <title>LyzCreator - Profil Saya</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-    :root { --bg-dark: #070b14; --card-bg: #111625; --card-border: #232c45; --primary: #7f5af0; --primary-grad: linear-gradient(135deg, #2a1b6b 0%, #4b2c9e 100%); --text-main: #ffffff; --text-muted: #8b94b0; --danger: #ff3b30; --bronze: #cd7f32; --success: #00e676; }
+    :root { --bg-dark: #070b14; --card-bg: #111625; --card-border: #232c45; --primary: #7f5af0; --primary-grad: linear-gradient(135deg, #2a1b6b 0%, #4b2c9e 100%); --text-main: #ffffff; --text-muted: #8b94b0; --danger: #ff3b30; --bronze: #cd7f32; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg-dark); color: var(--text-main); padding-bottom: 80px; }
-    
     .topbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg-dark); border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100; }
     .brand { font-weight: 800; font-size: 20px; color: #fff; }
-    
     .container { padding: 20px; max-width: 600px; margin: 0 auto; display: none; }
     .container.active { display: block; }
-    
     .btn-back { display: inline-flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; margin-bottom: 20px; }
     .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
     .card-header { padding: 15px 20px; border-bottom: 1px solid var(--card-border); display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; }
     .card-header span.icon { color: var(--primary); font-size: 18px; }
 
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 22, 37, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 10px 0 15px 0; z-index: 100; transition: transform 0.3s ease-in-out; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #8b94b0; text-decoration: none; font-size: 11px; font-weight: 600; transition: all 0.2s; }
-    .nav-item svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; }
-    .nav-item.active { color: #7f5af0; }
-    
-    .loading-state { display: flex; justify-content: center; align-items: center; height: 60vh; color: var(--text-muted); font-size: 14px; font-weight: 600; }
-</style>
-<style>
     .profile-info { padding: 30px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .avatar-wrapper { position: relative; margin-bottom: 15px; }
     .avatar-img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; padding: 3px; background: #232c45; }
+    .btn-cam { position: absolute; bottom: 0; right: 0; background: var(--primary-grad); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; border: 2px solid var(--card-bg); cursor: pointer; font-size: 12px; }
     .profile-info h2 { font-size: 18px; font-weight: 800; margin-bottom: 5px; }
     .profile-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; }
     .badge-role { background: rgba(127, 90, 240, 0.1); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; color: var(--primary); }
-    
     .tier-box { padding: 30px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .tier-icon { width: 70px; height: 70px; background: rgba(205, 127, 50, 0.15); color: var(--bronze); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 15px; border: 2px solid rgba(205, 127, 50, 0.3); }
     .tier-box h2 { font-size: 20px; font-weight: 800; color: var(--bronze); margin-bottom: 8px; }
     .tier-box p { font-size: 12px; color: var(--text-muted); }
-    
     .list-menu { display: flex; flex-direction: column; }
     .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--card-border); text-decoration: none; color: var(--text-main); cursor: pointer; transition: background 0.2s; }
     .menu-item:last-child { border-bottom: none; }
+    .menu-item:hover { background: rgba(255,255,255,0.02); }
     .menu-item-left { display: flex; align-items: center; gap: 15px; }
     .menu-icon { width: 40px; height: 40px; background: rgba(127, 90, 240, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--primary); }
     .menu-text h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
     .menu-text p { font-size: 12px; color: var(--text-muted); }
     .menu-arrow { color: var(--text-muted); font-size: 18px; }
-    
     .btn-logout { width: 100%; display: flex; align-items: center; justify-content: flex-start; gap: 15px; background: rgba(255, 59, 48, 0.05); border: 1px solid rgba(255, 59, 48, 0.2); padding: 16px 20px; border-radius: 16px; color: var(--danger); font-size: 14px; font-weight: 700; cursor: pointer; }
     .logout-icon { width: 40px; height: 40px; background: rgba(255, 59, 48, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
     
-    /* Empty State (Belum Login) */
     .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; text-align: center; padding: 20px; }
     .empty-state svg { width: 80px; height: 80px; stroke: var(--text-muted); margin-bottom: 20px; opacity: 0.5; }
     .empty-state h2 { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
     .empty-state p { font-size: 14px; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; max-width: 300px; }
     .btn-login-big { background: var(--primary-grad); color: #fff; text-decoration: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; font-size: 16px; box-shadow: 0 5px 20px rgba(127, 90, 240, 0.4); display: flex; align-items: center; gap: 10px; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(17, 22, 37, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 10px 0 15px 0; z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #8b94b0; text-decoration: none; font-size: 11px; font-weight: 600; }
+    .nav-item svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .nav-item.active { color: #7f5af0; }
+
+    /* CS Sheet */
+    .cs-sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 998; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .cs-sheet-overlay.active { opacity: 1; visibility: visible; }
+    .cs-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: #1a2035; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 20px; z-index: 999; transition: bottom 0.3s ease; }
+    .cs-sheet.active { bottom: 0; }
+    .cs-handle { width: 40px; height: 4px; background: #4a5568; border-radius: 2px; margin: 0 auto 20px; }
+    .cs-sheet h3 { color: #fff; font-size: 18px; margin-bottom: 20px; }
+    .cs-item { display: flex; align-items: center; gap: 15px; background: #232c45; padding: 15px; border-radius: 15px; margin-bottom: 10px; text-decoration: none; cursor: pointer; }
+    .cs-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .cs-icon.blue { background: #3b82f6; }
+    .cs-icon.green { background: #10b981; }
+    .cs-text h4 { color: #fff; font-size: 15px; margin-bottom: 4px; }
+    .cs-text p { color: #8b94b0; font-size: 12px; line-height: 1.4; }
+    .cs-arrow { margin-left: auto; color: #8b94b0; }
+    .cs-admin-menu { display: none; flex-direction: column; gap: 10px; margin-top: 10px; padding-left: 60px; }
+    .cs-admin-menu.active { display: flex; }
+    .cs-admin-link { background: #232c45; padding: 12px; border-radius: 10px; color: #fff; text-decoration: none; font-size: 14px; }
+    .cs-cancel { width: 100%; padding: 15px; background: transparent; border: none; color: #8b94b0; font-size: 15px; font-weight: 600; margin-top: 10px; cursor: pointer; }
 </style>
 </head>
 <body>
-<div class="topbar">
-    <div class="brand">LyzCreator</div>
-</div>
+<div class="topbar"><div class="brand">LyzCreator</div></div>
 
-<!-- STATE BELUM LOGIN -->
 <div id="emptyState" class="empty-state" style="display: none;">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     <h2>Kamu Belum Login</h2>
@@ -77,23 +85,17 @@
     </a>
 </div>
 
-<!-- STATE SUDAH LOGIN -->
 <div class="container" id="profileContainer">
     <a href="creator.html" class="btn-back">← Kembali</a>
-
     <div class="card">
         <div class="card-header"><span class="icon">👤</span> Profil Saya</div>
         <div class="profile-info">
-            <div class="avatar-wrapper">
-                <img src="" alt="Avatar" class="avatar-img" id="userAvatar">
-                <div class="btn-cam">📷</div>
-            </div>
+            <div class="avatar-wrapper"><img src="" alt="Avatar" class="avatar-img" id="userAvatar"><div class="btn-cam">📷</div></div>
             <h2 id="userName">-</h2>
             <p id="userEmail">-</p>
             <div class="badge-role"><span>📱</span> <span id="userRole">User</span></div>
         </div>
     </div>
-
     <div class="card">
         <div class="card-header"><span class="icon">🎖️</span> Tier Member</div>
         <div class="tier-box">
@@ -104,25 +106,13 @@
     </div>
     <div class="card">
         <div class="list-menu">
-            <div class="menu-item" onclick="alert('Fitur upload foto')">
-                <div class="menu-item-left"><div class="menu-icon">📸</div><div class="menu-text"><h4>Ubah Foto Profil</h4><p>Unggah foto baru</p></div></div><span class="menu-arrow">⌄</span>
-            </div>
-            <div class="menu-item" onclick="alert('Form ubah nama')">
-                <div class="menu-item-left"><div class="menu-icon">👤</div><div class="menu-text"><h4>Ubah Nama</h4><p>Ganti nama tampilan</p></div></div><span class="menu-arrow">⌄</span>
-            </div>
-            <div class="menu-item" onclick="alert('Form ubah email')">
-                <div class="menu-item-left"><div class="menu-icon">✉️</div><div class="menu-text"><h4>Ubah Email</h4><p>Ganti alamat email</p></div></div><span class="menu-arrow">⌄</span>
-            </div>
-            <div class="menu-item" onclick="alert('Form ubah password')">
-                <div class="menu-item-left"><div class="menu-icon">🔒</div><div class="menu-text"><h4>Ubah Password</h4><p>Ganti kata sandi akun</p></div></div><span class="menu-arrow">⌄</span>
-            </div>
+            <div class="menu-item" onclick="alert('Fitur upload foto')"><div class="menu-item-left"><div class="menu-icon">📸</div><div class="menu-text"><h4>Ubah Foto Profil</h4><p>Unggah foto baru</p></div></div><span class="menu-arrow">⌄</span></div>
+            <div class="menu-item" onclick="alert('Form ubah nama')"><div class="menu-item-left"><div class="menu-icon">👤</div><div class="menu-text"><h4>Ubah Nama</h4><p>Ganti nama tampilan</p></div></div><span class="menu-arrow">⌄</span></div>
+            <div class="menu-item" onclick="alert('Form ubah email')"><div class="menu-item-left"><div class="menu-icon">✉️</div><div class="menu-text"><h4>Ubah Email</h4><p>Ganti alamat email</p></div></div><span class="menu-arrow">⌄</span></div>
+            <div class="menu-item" onclick="alert('Form ubah password')"><div class="menu-item-left"><div class="menu-icon">🔒</div><div class="menu-text"><h4>Ubah Password</h4><p>Ganti kata sandi akun</p></div></div><span class="menu-arrow">⌄</span></div>
         </div>
     </div>
-
-    <button class="btn-logout" onclick="logout()">
-        <div class="logout-icon">🚪</div>
-        Keluar dari Akun
-    </button>
+    <button class="btn-logout" onclick="logout()"><div class="logout-icon">🚪</div> Keluar dari Akun</button>
 </div>
 
 <div class="bottom-nav">
@@ -132,10 +122,10 @@
     <a href="history.html" class="nav-item">
         <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg><span>Riwayat</span>
     </a>
-    <a href="saldo.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg><span>Saldo</span>
+    <a href="deposit.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg><span>Deposit</span>
     </a>
-    <a href="#" class="nav-item">
+    <a href="javascript:void(0)" class="nav-item" onclick="openCS()">
         <svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg><span>CS</span>
     </a>
     <a href="profil.html" class="nav-item active">
@@ -143,45 +133,40 @@
     </a>
 </div>
 
+<div class="cs-sheet-overlay" id="csOverlay" onclick="closeCS()"></div>
+<div class="cs-sheet" id="csSheet">
+    <div class="cs-handle"></div>
+    <h3>Customer Service</h3>
+    <a href="livechat.html" class="cs-item"><div class="cs-icon blue">💬</div><div class="cs-text"><h4>Live Chat</h4><p>Tanya kendala, dibalas otomatis</p></div></a>
+    <div class="cs-item" onclick="toggleAdminMenu()"><div class="cs-icon green">👤</div><div class="cs-text"><h4>Hubungi Admin</h4><p>Instagram, Telegram, TikTok</p></div><span class="cs-arrow">⌄</span></div>
+    <div class="cs-admin-menu" id="adminMenu">
+        <a href="https://instagram.com/usernamekamu" target="_blank" class="cs-admin-link">Instagram</a>
+        <a href="https://t.me/usernamekamu" target="_blank" class="cs-admin-link">Telegram</a>
+        <a href="https://tiktok.com/@usernamekamu" target="_blank" class="cs-admin-link">TikTok</a>
+    </div>
+    <button class="cs-cancel" onclick="closeCS()">Batal</button>
+</div>
+
 <script src="alert.js"></script>
 <script>
     const userSession = localStorage.getItem('lyz_user');
-    
     if (!userSession) {
-        // Belum Login: Tampilkan Empty State
         document.getElementById('emptyState').style.display = 'flex';
         document.getElementById('profileContainer').classList.remove('active');
     } else {
-        // Udah Login: Tampilkan Profil
         const user = JSON.parse(userSession);
         document.getElementById('emptyState').style.display = 'none';
         document.getElementById('profileContainer').classList.add('active');
-
-        // Set Foto (Kalau ada dari Google, pakai. Kalau gak ada, pakai inisial)
-        const avatarUrl = user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nama)}&background=7f5af0&color=fff&size=128`;
-        document.getElementById('userAvatar').src = avatarUrl;
-        
+        document.getElementById('userAvatar').src = user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nama)}&background=7f5af0&color=fff&size=128`;
         document.getElementById('userName').innerText = user.nama;
         document.getElementById('userEmail').innerText = user.email;
-        
-        // Set Tier
         const tier = user.tier ? user.tier.toUpperCase() : 'FREE';
         document.getElementById('userTier').innerText = tier;
-        
-        // Warna Tier (Opsional)
-        const tierElement = document.getElementById('userTier');
-        if (tier === 'PRO') tierElement.style.color = '#00d2ff';
-        if (tier === 'VIP') tierElement.style.color = '#ffcc00';
-        if (tier === 'VVIP' || tier === 'VVIP KING') tierElement.style.color = '#ff3b30';
     }
-
-    function logout() {
-        if (confirm("Yakin mau keluar dari akun?")) {
-            localStorage.removeItem('lyz_session');
-            localStorage.removeItem('lyz_user');
-            window.location.href = "login.html";
-        }
-    }
+    function logout() { if (confirm("Yakin mau keluar dari akun?")) { localStorage.removeItem('lyz_session'); localStorage.removeItem('lyz_user'); window.location.href = "login.html"; } }
+    function openCS() { document.getElementById('csSheet').classList.add('active'); document.getElementById('csOverlay').classList.add('active'); }
+    function closeCS() { document.getElementById('csSheet').classList.remove('active'); document.getElementById('csOverlay').classList.remove('active'); }
+    function toggleAdminMenu() { document.getElementById('adminMenu').classList.toggle('active'); }
 </script>
 </body>
 </html>
