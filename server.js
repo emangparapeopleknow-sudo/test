@@ -17,9 +17,7 @@ module.exports = async (req, res) => {
     const path = url.split('?')[0];
 
     try {
-        // ==========================================
         // AUTH GOOGLE
-        // ==========================================
         if (path === '/api/auth/google' && method === 'POST') {
             const { token } = body;
             try {
@@ -33,22 +31,18 @@ module.exports = async (req, res) => {
                 const picture = payload.picture;
 
                 let user = await prisma.user.findUnique({ where: { email } });
-                
                 if (!user) {
                     user = await prisma.user.create({ 
                         data: { nama: name, email: email, password: 'GOOGLE_OAUTH_' + Math.random().toString(36) } 
                     });
                 }
-                
                 return res.json({ success: true, user: { ...user, avatar: picture } });
             } catch (error) {
                 return res.status(401).json({ success: false, message: 'Token Google tidak valid!' });
             }
         }
 
-        // ==========================================
         // AUTH MANUAL
-        // ==========================================
         if (path === '/api/register' && method === 'POST') {
             const { nama, email, password } = body;
             if (await prisma.user.findUnique({ where: { email } })) return res.status(400).json({ success: false, message: 'Email dipakai!' });
@@ -63,9 +57,7 @@ module.exports = async (req, res) => {
             return res.json({ success: true, message: 'Login Berhasil!', user });
         }
 
-        // ==========================================
         // GEMINI AI
-        // ==========================================
         if (path === '/api/gemini' && method === 'POST') {
             const { prompt, email } = body;
             const user = await prisma.user.findUnique({ where: { email } });
@@ -82,9 +74,7 @@ module.exports = async (req, res) => {
             return res.json({ success: true, text: response.text });
         }
 
-        // ==========================================
         // CHAT HISTORY
-        // ==========================================
         if (path === '/api/chat/save' && method === 'POST') {
             const { email, sender, message } = body;
             const user = await prisma.user.findUnique({ where: { email }, include: { chats: { orderBy: { createdAt: 'asc' } } } });
@@ -110,9 +100,24 @@ module.exports = async (req, res) => {
             return res.json({ success: true });
         }
 
-        // ==========================================
+        // WEBHOOK TRAKTEER (TAMBAH SALDO OTOMATIS)
+        if (path === '/api/trakteer-webhook' && method === 'POST') {
+            const { quantity, message } = body; // Trakteer ngirim data ini
+            const emailUser = message; 
+            const nominalMasuk = parseInt(quantity) * 1000; // 1 unit = Rp 1.000
+
+            if (!emailUser) return res.status(400).send('Email tidak ditemukan.');
+            
+            const user = await prisma.user.findUnique({ where: { email: emailUser } });
+            if (!user) return res.status(404).send('User tidak terdaftar.');
+
+            await prisma.user.update({ where: { email: emailUser }, data: { saldo: user.saldo + nominalMasuk } });
+            await prisma.transaction.create({ data: { userId: user.id, type: 'deposit', amount: nominalMasuk, status: 'success', method: 'Trakteer' } });
+            
+            return res.status(200).send('OK');
+        }
+
         // CHECKOUT & AKTIVASI
-        // ==========================================
         if (path === '/api/checkout' && method === 'POST') {
             const { email, paket, harga, tier } = body;
             const user = await prisma.user.findUnique({ where: { email } });
