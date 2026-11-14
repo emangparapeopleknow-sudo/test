@@ -111,7 +111,7 @@
 
         btn.innerText = "Memproses..."; btn.disabled = true;
 
-        const endpoint = isLogin ? 'http://localhost:3000/api/login' : 'http://localhost:3000/api/register';
+        const endpoint = isLogin ? 'https://test-dhrs.vercel.app:3000/api/login' : 'https://test-dhrs.vercel.app:3000/api/register';
         
         try {
             const response = await fetch(endpoint, {
@@ -139,7 +139,7 @@
     // Fungsi Callback yang dipanggil Google setelah user milih akun
     function handleCredentialResponse(response) {
         // response.credential isinya JWT Token dari Google
-        fetch('http://localhost:3000/api/auth/google', {
+        fetch('https://test-dhrs.vercel.app:3000/api/auth/google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: response.credential })
