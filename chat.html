@@ -96,11 +96,11 @@
                 <div style="font-size: 10px; color: var(--text-muted); padding: 5px 10px;">FREE TIER (Limit 20x)</div>
                 <div class="model-item" onclick="selectModel('Lyz AI - Free')">Free Mode <span>✓</span></div>
                 <div style="font-size: 10px; color: var(--text-muted); padding: 5px 10px; border-top: 1px solid var(--card-border);">PREMIUM</div>
-                <div class="model-item locked" onclick="showAlert('Akses Ditolak', 'Beli Premium dulu!')">Pro Mode 🔒</div>
+                <div class="model-item locked" id="modePro" onclick="showAlert('Akses Ditolak', 'Beli Premium dulu!')">Pro Mode 🔒</div>
                 <div style="font-size: 10px; color: var(--text-muted); padding: 5px 10px; border-top: 1px solid var(--card-border);">VIP & UP</div>
-                <div class="model-item locked" onclick="showAlert('Akses Ditolak', 'Beli VIP dulu!')">VIP Mode 🔒</div>
-                <div class="model-item locked" onclick="showAlert('Akses Ditolak', 'Beli VVIP dulu!')">VVIP Mode 🔒</div>
-                <div class="model-item locked" onclick="showAlert('Akses Ditolak', 'Beli VVIP KING dulu!')">VVIP King 👑🔒</div>
+                <div class="model-item locked" id="modeVip" onclick="showAlert('Akses Ditolak', 'Beli VIP dulu!')">VIP Mode 🔒</div>
+                <div class="model-item locked" id="modeVvip" onclick="showAlert('Akses Ditolak', 'Beli VVIP dulu!')">VVIP Mode 🔒</div>
+                <div class="model-item locked" id="modeKing" onclick="showAlert('Akses Ditolak', 'Beli VVIP KING dulu!')">VVIP King 👑🔒</div>
             </div>
         </div>
         <button class="btn-info" onclick="toggleInfo()">!</button>
@@ -187,6 +187,30 @@
     function selectModel(name) { document.getElementById('currentModel').innerText = name; document.getElementById('modelDropdown').classList.remove('active'); }
     window.onclick = function(event) { if (!event.target.closest('.model-selector')) document.getElementById('modelDropdown').classList.remove('active'); }
     
+    // BUKA GEMBOK MODE
+    function unlockModes() {
+        const user = JSON.parse(localStorage.getItem('lyz_user'));
+        if (!user) return;
+        const tier = user.tier ? user.tier.toLowerCase() : 'free';
+        
+        if (tier !== 'free') {
+            const pro = document.getElementById('modePro');
+            if(pro) { pro.classList.remove('locked'); pro.innerHTML = 'Pro Mode <span>✓</span>'; pro.setAttribute('onclick', "selectModel('Lyz AI - Pro')"); }
+        }
+        if (tier === 'vip' || tier === 'vvip' || tier === 'king') {
+            const vip = document.getElementById('modeVip');
+            if(vip) { vip.classList.remove('locked'); vip.innerHTML = 'VIP Mode <span>✓</span>'; vip.setAttribute('onclick', "selectModel('Lyz AI - VIP')"); }
+        }
+        if (tier === 'vvip' || tier === 'king') {
+            const vvip = document.getElementById('modeVvip');
+            if(vvip) { vvip.classList.remove('locked'); vvip.innerHTML = 'VVIP Mode <span>✓</span>'; vvip.setAttribute('onclick', "selectModel('Lyz AI - VVIP')"); }
+        }
+        if (tier === 'king') {
+            const king = document.getElementById('modeKing');
+            if(king) { king.classList.remove('locked'); king.innerHTML = 'VVIP King 👑 <span>✓</span>'; king.setAttribute('onclick', "selectModel('Lyz AI - KING')"); }
+        }
+    }
+
     async function saveChatToDB(sender, message) {
         const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) return;
         try { await fetch('https://test-dhrs.vercel.app/api/chat/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email, sender, message }) }); } catch (e) {}
@@ -282,7 +306,11 @@
         container.scrollTop = container.scrollHeight;
     }
     document.getElementById('chatInput').addEventListener('keypress', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
-    window.onload = loadMainChat;
+    
+    window.onload = () => {
+        unlockModes();
+        loadMainChat();
+    };
 </script>
 </body>
 </html>
