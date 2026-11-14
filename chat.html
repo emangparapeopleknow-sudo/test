@@ -189,14 +189,14 @@
     
     async function saveChatToDB(sender, message) {
         const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) return;
-        try { await fetch('http://localhost:3000/api/chat/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email, sender, message }) }); } catch (e) {}
+        try { await fetch('https://test-dhrs.vercel.app/api/chat/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email, sender, message }) }); } catch (e) {}
     }
     
     async function loadSidebarHistory() {
         const user = JSON.parse(localStorage.getItem('lyz_user')); const container = document.getElementById('sidebarHistory');
         if (!user) { container.innerHTML = '<p style="padding:10px;text-align:center;color:var(--text-muted);">Login dulu.</p>'; return; }
         try {
-            const res = await fetch(`http://localhost:3000/api/chat/history/${user.email}`); const data = await res.json();
+            const res = await fetch(`https://test-dhrs.vercel.app/api/chat/history/${user.email}`); const data = await res.json();
             container.innerHTML = '';
             if (data.success && data.history.length > 0) {
                 const reversed = [...data.history].reverse();
@@ -208,7 +208,7 @@
     async function loadMainChat() {
         const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) return;
         try {
-            const res = await fetch(`http://localhost:3000/api/chat/history/${user.email}`); const data = await res.json();
+            const res = await fetch(`https://test-dhrs.vercel.app/api/chat/history/${user.email}`); const data = await res.json();
             if (data.success && data.history.length > 0) {
                 const container = document.getElementById('chatContainer'); container.innerHTML = ''; container.classList.remove('center');
                 data.history.forEach(chat => { const bubble = document.createElement('div'); bubble.className = `message-bubble ${chat.sender}`; if (chat.sender === 'ai') { bubble.innerHTML = marked.parse(chat.message); bubble.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block)); } else { bubble.innerText = chat.message; } container.appendChild(bubble); });
@@ -218,7 +218,7 @@
     }
 
     async function newChat() {
-        const user = JSON.parse(localStorage.getItem('lyz_user')); if (user) { try { await fetch(`http://localhost:3000/api/chat/clear/${user.email}`, { method: 'DELETE' }); } catch (e) {} }
+        const user = JSON.parse(localStorage.getItem('lyz_user')); if (user) { try { await fetch(`https://test-dhrs.vercel.app/api/chat/clear/${user.email}`, { method: 'DELETE' }); } catch (e) {} }
         document.getElementById('chatContainer').innerHTML = `<div class="logo-center">L</div><h2 class="greeting" id="greetingText">Ada yang bisa saya bantu?</h2>`;
         document.getElementById('chatContainer').classList.add('center'); document.getElementById('chatInput').value = ''; window.speechSynthesis.cancel();
     }
@@ -241,7 +241,7 @@
             showAlert('Mengunggah...', 'Sedang mengirim file ke Cloudinary.');
 
             try {
-                const res = await fetch('http://localhost:3000/api/upload', {
+                const res = await fetch('https://test-dhrs.vercel.app/api/upload', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fileBase64: base64File, resourceType: resourceType, email: user.email })
@@ -270,7 +270,7 @@
         const loadingBubble = document.createElement('div'); loadingBubble.id = "loadingBubble"; loadingBubble.className = 'message-bubble ai'; loadingBubble.innerText = "Sedang berpikir..."; container.appendChild(loadingBubble); container.scrollTop = container.scrollHeight;
         let promptToSend = text; if (isThinking) promptToSend = "Berpikirlah mendalam: " + promptToSend; if (isSearching) promptToSend = "Cari referensi: " + promptToSend;
         try {
-            const res = await fetch('http://localhost:3000/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: promptToSend, email: user.email }) });
+            const res = await fetch('https://test-dhrs.vercel.app/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: promptToSend, email: user.email }) });
             const data = await res.json(); document.getElementById('loadingBubble').remove();
             if (data.success) {
                 const aiBubble = document.createElement('div'); aiBubble.className = 'message-bubble ai'; aiBubble.innerHTML = marked.parse(data.text);
