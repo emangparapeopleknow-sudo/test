@@ -2,9 +2,16 @@ require('dotenv').config();
 const { GoogleGenAI } = require('@google/genai');
 const { PrismaClient } = require('@prisma/client');
 const { OAuth2Client } = require('google-auth-library');
+const cloudinary = require('cloudinary').v2
 
 const prisma = new PrismaClient();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true);

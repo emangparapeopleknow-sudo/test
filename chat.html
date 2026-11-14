@@ -86,11 +86,9 @@
 
 <div class="header">
     <div class="header-left">
-        <!-- TOMBOL BACK KE DASHBOARD -->
         <a href="creator.html" class="header-icon">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         </a>
-        
         <div class="model-selector" onclick="toggleDropdown()">
             <span id="currentModel">Lyz AI Mode</span>
             <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -188,7 +186,12 @@
     function toggleDropdown() { document.getElementById('modelDropdown').classList.toggle('active'); }
     function selectModel(name) { document.getElementById('currentModel').innerText = name; document.getElementById('modelDropdown').classList.remove('active'); }
     window.onclick = function(event) { if (!event.target.closest('.model-selector')) document.getElementById('modelDropdown').classList.remove('active'); }
-    async function saveChatToDB(sender, message) { const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) return; try { await fetch('http://localhost:3000/api/chat/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email, sender, message }) }); } catch (e) {} }
+    
+    async function saveChatToDB(sender, message) {
+        const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) return;
+        try { await fetch('http://localhost:3000/api/chat/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email, sender, message }) }); } catch (e) {}
+    }
+    
     async function loadSidebarHistory() {
         const user = JSON.parse(localStorage.getItem('lyz_user')); const container = document.getElementById('sidebarHistory');
         if (!user) { container.innerHTML = '<p style="padding:10px;text-align:center;color:var(--text-muted);">Login dulu.</p>'; return; }
@@ -201,6 +204,7 @@
             } else { container.innerHTML = '<p style="padding:10px;text-align:center;color:var(--text-muted);font-size:13px;">Belum ada riwayat.</p>'; }
         } catch (e) { container.innerHTML = '<p style="padding:10px;text-align:center;color:var(--text-muted);font-size:13px;">Gagal memuat.</p>'; }
     }
+
     async function loadMainChat() {
         const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) return;
         try {
@@ -212,16 +216,49 @@
             }
         } catch (e) {}
     }
+
     async function newChat() {
         const user = JSON.parse(localStorage.getItem('lyz_user')); if (user) { try { await fetch(`http://localhost:3000/api/chat/clear/${user.email}`, { method: 'DELETE' }); } catch (e) {} }
         document.getElementById('chatContainer').innerHTML = `<div class="logo-center">L</div><h2 class="greeting" id="greetingText">Ada yang bisa saya bantu?</h2>`;
         document.getElementById('chatContainer').classList.add('center'); document.getElementById('chatInput').value = ''; window.speechSynthesis.cancel();
     }
+
     async function handleFileUpload(input) {
-        const file = input.files[0]; if (!file) return;
-        const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) { showAlert('Akses Ditolak', 'Login dulu!', 'login.html'); return; }
-        showAlert('Upload', 'Fitur upload akan segera hadir di versi online!');
+        const file = input.files[0];
+        if (!file) return;
+        const user = JSON.parse(localStorage.getItem('lyz_user'));
+        if (!user) { showAlert('Akses Ditolak', 'Login dulu!', 'login.html'); return; }
+
+        if (file.size > 5 * 1024 * 1024) { showAlert('Gagal', 'File terlalu besar! Maksimal 5MB.'); return; }
+
+        let resourceType = 'auto';
+        if (file.type.startsWith('image/')) resourceType = 'image';
+        if (file.type.startsWith('video/')) resourceType = 'video';
+
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            const base64File = e.target.result;
+            showAlert('Mengunggah...', 'Sedang mengirim file ke Cloudinary.');
+
+            try {
+                const res = await fetch('http://localhost:3000/api/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileBase64: base64File, resourceType: resourceType, email: user.email })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showAlert('Berhasil', 'File berhasil di-upload!');
+                } else {
+                    showAlert('Gagal', data.message);
+                }
+            } catch (error) {
+                showAlert('Error', 'Gagal terhubung ke server.');
+            }
+        };
+        reader.readAsDataURL(file);
     }
+
     async function sendMessage() {
         const input = document.getElementById('chatInput'); const text = input.value.trim(); if (!text) return;
         const user = JSON.parse(localStorage.getItem('lyz_user')); if (!user) { showAlert('Akses Ditolak', 'Login dulu!', 'login.html'); return; }
