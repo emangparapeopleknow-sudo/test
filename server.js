@@ -1,210 +1,94 @@
-require('dotenv').config();
-const { GoogleGenAI } = require('@google/genai');
+const express = require('express');
+const path = require('path');
 const { PrismaClient } = require('@prisma/client');
-const { OAuth2Client } = require('google-auth-library');
-const cloudinary = require('cloudinary').v2;
-
+const app = express();
 const prisma = new PrismaClient();
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ==========================================
+// 1. ENDPOINT WEBHOOK TRAKTEER
+// ==========================================
+app.post('/api/webhook', async (req, res) => {
+    try {
+        const body = req.body;
+        console.log("Data dari Trakteer:", JSON.stringify(body));
+
+        const data = body.data || body; 
+        const supporter_email = data.supporter_email || data.email;
+        const amount = data.amount || data.quantity || data.total || 0; 
+        const supporter_name = data.supporter_name || 'Donatur';
+
+        if (!supporter_email) {
+            return res.status(400).json({ success: false, message: 'Email tidak ditemukan dalam request' });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { email: supporter_email }
+        });
+
+        if (user) {
+            await prisma.user.update({
+                where: { email: supporter_email },
+                data: {
+                    saldo: {
+                        increment: parseInt(amount)
+                    }
+                }
+            });
+            console.log(`✅ Saldo ${supporter_email} bertambah Rp${amount} dari ${supporter_name}`);
+            return res.status(200).json({ success: true, message: 'Saldo berhasil ditambahkan' });
+        } else {
+            console.log(`❌ Email ${supporter_email} tidak terdaftar di database.`);
+            return res.status(404).json({ success: false, message: 'User tidak ditemukan' });
+        }
+
+    } catch (error) {
+        console.error("Error Webhook:", error);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
 });
 
-module.exports = async (req, res) => {
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') return res.status(200).end();
-
-    const { url, method, body } = req;
-    const path = url.split('?')[0];
-
+// ==========================================
+// 2. ENDPOINT API LAINNYA (Chat, Transactions, Dll)
+// ==========================================
+// Contoh endpoint Chat AI (Sesuaikan dengan kode lu sebelumnya)
+app.post('/api/chat', async (req, res) => {
     try {
-        // AUTH GOOGLE
-        if (path === '/api/auth/google' && method === 'POST') {
-            const { token } = body;
-            try {
-                const ticket = await googleClient.verifyIdToken({
-                    idToken: token,
-                    audience: process.env.GOOGLE_CLIENT_ID,
-                });
-                const payload = ticket.getPayload();
-                const email = payload.email;
-                const name = payload.name;
-                const picture = payload.picture;
-
-                let user = await prisma.user.findUnique({ where: { email } });
-                if (!user) {
-                    user = await prisma.user.create({ 
-                        data: { nama: name, email: email, password: 'GOOGLE_OAUTH_' + Math.random().toString(36) } 
-                    });
-                }
-                return res.json({ success: true, user: { ...user, avatar: picture } });
-            } catch (error) {
-                return res.status(401).json({ success: false, message: 'Token Google tidak valid!' });
-            }
-        }
-
-        // AUTH MANUAL
-        if (path === '/api/register' && method === 'POST') {
-            const { nama, email, password } = body;
-            if (await prisma.user.findUnique({ where: { email } })) return res.status(400).json({ success: false, message: 'Email dipakai!' });
-            const newUser = await prisma.user.create({ data: { nama, email, password } });
-            return res.json({ success: true, message: 'Registrasi Berhasil!', user: newUser });
-        }
-
-        if (path === '/api/login' && method === 'POST') {
-            const { email, password } = body;
-            const user = await prisma.user.findFirst({ where: { email, password } });
-            if (!user) return res.status(401).json({ success: false, message: 'Email/Password salah!' });
-            return res.json({ success: true, message: 'Login Berhasil!', user });
-        }
-
-        // UPLOAD FILE KE CLOUDINARY
-        if (path === '/api/upload' && method === 'POST') {
-            const { fileBase64, resourceType } = body;
-            if (!fileBase64) return res.status(400).json({ success: false, message: 'File kosong!' });
-
-            try {
-                const result = await cloudinary.uploader.upload(fileBase64, {
-                    resource_type: resourceType || 'auto',
-                    folder: 'lyzcreator_uploads'
-                });
-                return res.json({ success: true, url: result.secure_url });
-            } catch (error) {
-                return res.status(500).json({ success: false, message: error.message });
-            }
-        }
-
-        // GEMINI AI
-        if (path === '/api/gemini' && method === 'POST') {
-            const { prompt, email } = body;
-            const user = await prisma.user.findUnique({ where: { email } });
-            if (user.tier !== 'free' && user.expiredAt && new Date(user.expiredAt) < new Date()) {
-                await prisma.user.update({ where: { email }, data: { tier: 'free', expiredAt: null } });
-                return res.status(403).json({ success: false, message: 'Paket expired, silakan beli lagi.' });
-            }
-            const isBasaBasi = ['halo', 'hai', 'pagi', 'tes'].some(k => prompt.toLowerCase().includes(k)) && !['buatkan', 'bikin', 'kode'].some(k => prompt.toLowerCase().includes(k));
-            if (user.tier === 'free' && isBasaBasi && user.chatCount >= 20) return res.status(403).json({ success: false, message: 'Limit basa-basi habis!', limitReached: true });
-            
-            const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-            const response = await ai.models.generateContent({ model: 'gemini-4-hydrogen', contents: prompt });
-            if (user.tier === 'free' && isBasaBasi) await prisma.user.update({ where: { email }, data: { chatCount: user.chatCount + 1 } });
-            return res.json({ success: true, text: response.text });
-        }
-
-        // CHAT HISTORY
-        if (path === '/api/chat/save' && method === 'POST') {
-            const { email, sender, message } = body;
-            const user = await prisma.user.findUnique({ where: { email }, include: { chats: { orderBy: { createdAt: 'asc' } } } });
-            let msg = message.length > 500 ? message.substring(0, 500) + '...' : message;
-            await prisma.chatHistory.create({ data: { userId: user.id, sender, message: msg } });
-            if (user.chats.length >= 10) await prisma.chatHistory.delete({ where: { id: user.chats[0].id } });
-            return res.json({ success: true });
-        }
-
-        if (path.startsWith('/api/chat/history/') && method === 'GET') {
-            const email = path.split('/').pop();
-            const user = await prisma.user.findUnique({ where: { email } });
-            const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            await prisma.chatHistory.deleteMany({ where: { userId: user.id, createdAt: { lt: sevenDaysAgo } } });
-            const fresh = await prisma.user.findUnique({ where: { email }, include: { chats: { orderBy: { createdAt: 'asc' } } } });
-            return res.json({ success: true, history: fresh.chats });
-        }
-
-        if (path.startsWith('/api/chat/clear/') && method === 'DELETE') {
-            const email = path.split('/').pop();
-            const user = await prisma.user.findUnique({ where: { email } });
-            await prisma.chatHistory.deleteMany({ where: { userId: user.id } });
-            return res.json({ success: true });
-        }
-
-        // WEBHOOK TRAKTEER
-        if (path === '/api/trakteer-webhook' && method === 'POST') {
-            const { quantity, message } = body;
-            const emailUser = message; 
-            const nominalMasuk = parseInt(quantity) * 1000;
-
-            if (!emailUser) return res.status(400).send('Email tidak ditemukan.');
-            const user = await prisma.user.findUnique({ where: { email: emailUser } });
-            if (!user) return res.status(404).send('User tidak terdaftar.');
-
-            await prisma.user.update({ where: { email: emailUser }, data: { saldo: user.saldo + nominalMasuk } });
-            await prisma.transaction.create({ data: { userId: user.id, type: 'deposit', amount: nominalMasuk, status: 'success', method: 'Trakteer' } });
-            return res.status(200).send('OK');
-        }
-
-        // CHECKOUT & AKTIVASI
-        if (path === '/api/checkout' && method === 'POST') {
-            const { email, paket, harga, tier } = body;
-            const user = await prisma.user.findUnique({ where: { email } });
-            
-            if (user.tier !== 'free' && user.expiredAt && new Date(user.expiredAt) > new Date()) {
-                return res.status(400).json({ success: false, message: `STATUS: ${user.tier.toUpperCase()}\nBELUM EXPIRED!\nTIDAK BISA MEMBELI.` });
-            }
-            if (user.saldo < parseInt(harga)) return res.status(400).json({ success: false, message: 'Saldo kurang!' });
-            
-            await prisma.user.update({ where: { email }, data: { saldo: user.saldo - parseInt(harga) } });
-            
-            const paketTier = tier ? tier.toUpperCase() : 'PRO';
-            const kode = `LYZ-${paketTier}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-            
-            await prisma.transaction.create({ 
-                data: { 
-                    userId: user.id, 
-                    type: 'purchase', 
-                    amount: parseInt(harga), 
-                    status: 'success', 
-                    method: 'Saldo', 
-                    activationCode: kode,
-                    isUsed: false
-                } 
-            });
-            return res.json({ success: true, message: 'Berhasil! Cek Kode di Riwayat.', code: kode });
-        }
-
-        if (path === '/api/activate' && method === 'POST') {
-            const { email, code } = body;
-            const user = await prisma.user.findUnique({ where: { email } });
-            
-            const trx = await prisma.transaction.findFirst({ 
-                where: { 
-                    activationCode: code, 
-                    userId: user.id, 
-                    isUsed: false 
-                } 
-            });
-            
-            if (!trx) return res.status(404).json({ success: false, message: 'Kode tidak valid/sudah dipakai!' });
-            
-            const expiredDate = new Date(); expiredDate.setDate(expiredDate.getDate() + 30);
-            let newTier = code.includes('KING') ? 'king' : (code.includes('VVIP') ? 'vvip' : (code.includes('VIP') ? 'vip' : 'pro'));
-            
-            const updatedUser = await prisma.user.update({ 
-                where: { email }, 
-                data: { tier: newTier, expiredAt: expiredDate } 
-            });
-            
-            await prisma.transaction.update({ 
-                where: { id: trx.id }, 
-                data: { isUsed: true } 
-            });
-            
-            return res.json({ success: true, message: 'Aktivasi Berhasil!', user: updatedUser });
-        }
-
-        if (path.startsWith('/api/transactions/') && method === 'GET') {
-            const email = path.split('/').pop();
-            const user = await prisma.user.findUnique({ where: { email }, include: { transactions: { orderBy: { createdAt: 'desc' } } } });
-            return res.json({ success: true, transactions: user.transactions });
-        }
-
-        return res.status(404).json({ success: false, message: 'Endpoint tidak ditemukan!' });
+        // Logika AI Chat lu di sini (Gemini/DeepSeek)
+        return res.status(200).json({ success: true, message: 'Chat endpoint ready' });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
-};
+});
+
+// Contoh endpoint Riwayat Transaksi
+app.get('/api/transactions/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+        const transactions = await prisma.transaction.findMany({
+            where: { user: { email: email } }
+        });
+        return res.status(200).json({ success: true, data: transactions });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// ==========================================
+// 3. ROUTING UNTUK FILE STATIS (HTML, CSS, JS)
+// ==========================================
+// Biar web lu bisa diakses (index.html, chat.html, dll)
+app.use(express.static(path.join(__dirname)));
+
+// Fallback: Kalau route nggak ketemu, arahkan ke index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ==========================================
+// 4. EXPORT UNTUK VERCEL
+// ==========================================
+// PENTING: Jangan pake app.listen() karena Vercel Serverless
+module.exports = app;
