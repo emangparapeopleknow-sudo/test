@@ -8,7 +8,6 @@ export default async function handler(req, res) {
         const data = req.body; 
         const amountPaid = Number(data.price || data.net_amount || data.amount);
 
-        // Kita cari transaksi yang PENDING
         const transaction = await prisma.transaction.findFirst({
             where: { totalAmount: amountPaid, status: 'PENDING' }
         });
