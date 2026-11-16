@@ -6,8 +6,7 @@ export default async function handler(req, res) {
 
     try {
         const data = req.body; 
-        const amountPaid = Number(data.amount || data.quantity);
-
+        const amountPaid = Number(data.price || data.net_amount || data.amount);
         console.log(`Dana masuk: Rp ${amountPaid}`);
 
         // Cari transaksi PENDING yang nominalnya cocok
