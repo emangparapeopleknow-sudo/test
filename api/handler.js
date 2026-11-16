@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     try {
         const data = req.body; 
         const amountPaid = Number(data.price || data.net_amount || data.amount);
-        
-        // Cek transaksi
+
+        // Kita cari transaksi yang PENDING
         const transaction = await prisma.transaction.findFirst({
             where: { totalAmount: amountPaid, status: 'PENDING' }
         });
@@ -22,9 +22,9 @@ export default async function handler(req, res) {
                 where: { id: transaction.userId },
                 data: { saldo: { increment: transaction.amount } }
             });
-            return res.status(200).json({ success: true, message: 'Saldo ditambah!' });
+            return res.status(200).json({ success: true, message: 'Sukses nambah saldo!' });
         } else {
-            return res.status(200).json({ success: true, message: 'Webhook masuk, tapi tidak ada transaksi PENDING dengan nominal ini.' });
+            return res.status(200).json({ success: true, message: 'Webhook masuk, nominal tidak cocok.' });
         }
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });

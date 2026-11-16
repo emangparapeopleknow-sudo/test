@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 // ==========================================
 // 1. ENDPOINT WEBHOOK TRAKTEER
 // ==========================================
-app.post('/api/webhook', async (req, res) => {
+app.post('/api/handler', async (req, res) => {
     try {
         const body = req.body;
         console.log("Data dari Trakteer:", JSON.stringify(body));
