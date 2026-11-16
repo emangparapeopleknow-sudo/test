@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
         
         // 2. Verifikasi Token (Ambil token dari dashboard Trakteer lu)
         // Ganti "TOKEN_RAHASIA_LU" pake token yang ada di gambar lu tadi (yang di-hidden)
-        const expectedToken = "trhook-WUO9rhZLVaKHxbFlx1H7Ln7d"; 
+        const expectedToken = "trhook-gvvcJBEmPKFx3SKWGMRf3a2o"; 
         
         // Trakteer biasanya ngirim token di header 'x-trakteer-token' atau di body.token
         // Cek dokumentasi Trakteer, kalau dari body:
