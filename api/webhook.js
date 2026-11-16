@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     try {
         const data = req.body; 
         const amountPaid = Number(data.price || data.net_amount || data.amount);
-        console.log(`Dana masuk: Rp ${amountPaid}`);
-
+        
+        // Cek transaksi
         const transaction = await prisma.transaction.findFirst({
             where: { totalAmount: amountPaid, status: 'PENDING' }
         });
@@ -22,14 +22,11 @@ export default async function handler(req, res) {
                 where: { id: transaction.userId },
                 data: { saldo: { increment: transaction.amount } }
             });
-            console.log(`✅ Saldo ditambah untuk transaksi ${transaction.id}`);
+            return res.status(200).json({ success: true, message: 'Saldo ditambah!' });
         } else {
-            console.log(`❌ Tidak ada transaksi PENDING dengan nominal Rp ${amountPaid}`);
+            return res.status(200).json({ success: true, message: 'Webhook masuk, tapi tidak ada transaksi PENDING dengan nominal ini.' });
         }
-
-        return res.status(200).json({ success: true, message: 'Webhook received' });
     } catch (error) {
-        console.error("Error:", error);
-        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+        return res.status(500).json({ success: false, message: error.message });
     }
 }
