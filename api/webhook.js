@@ -9,25 +9,34 @@ module.exports = async (req, res) => {
 
     try {
         const body = req.body;
-        
-        // 2. Verifikasi Token (Ambil token dari dashboard Trakteer lu)
-        // Ganti "TOKEN_RAHASIA_LU" pake token yang ada di gambar lu tadi (yang di-hidden)
-        const expectedToken = "trhook-gvvcJBEmPKFx3SKWGMRf3a2o"; 
-        
-        // Trakteer biasanya ngirim token di header 'x-trakteer-token' atau di body.token
-        // Cek dokumentasi Trakteer, kalau dari body:
-        // if (body.token !== expectedToken) return res.status(401).json({ message: 'Unauthorized' });
 
-        // 3. Ambil Data Donasi (Sesuaikan dengan format JSON dari Trakteer)
-        // Trakteer ngirim data dalam bentuk object
-        const { supporter_name, supporter_email, quantity, message } = body;
+        // 2. Verifikasi Token (Ambil dari Environment Variable Vercel)
+        const expectedToken = process.env.TRAKTEER_TOKEN;
+        
+        // Trakteer ngirim token di header 'x-trakteer-token' atau di body (cek dokumentasi)
+        // Sementara kita bypass dulu verifikasi tokennya biar lu bisa tes masukin saldo
+        /*
+        if (body.token !== expectedToken) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+        */
+
+        // 3. Ambil Data Donasi (Trakteer membungkus data di dalam 'body.data')
+        const data = body.data; 
+        
+        if (!data) {
+            return res.status(400).json({ success: false, message: 'Data tidak ditemukan' });
+        }
+
+        const supporter_email = data.supporter_email;
+        const amount = data.amount || data.quantity; // Sesuaikan field nominal dari Trakteer
+        const supporter_name = data.supporter_name;
 
         if (!supporter_email) {
-            return res.status(400).json({ message: 'Email tidak ditemukan' });
+            return res.status(400).json({ success: false, message: 'Email tidak ditemukan' });
         }
 
         // 4. Logika Update Saldo di Database Prisma
-        // Cari user berdasarkan email, terus tambahin saldo mereka
         const user = await prisma.user.findUnique({
             where: { email: supporter_email }
         });
@@ -37,20 +46,20 @@ module.exports = async (req, res) => {
                 where: { email: supporter_email },
                 data: {
                     saldo: {
-                        increment: quantity // Nambah saldo sesuai nominal donasi
+                        increment: amount // Nambah saldo
                     }
                 }
             });
-            console.log(`Saldo ${supporter_email} bertambah Rp${quantity}`);
+            console.log(`Saldo ${supporter_email} bertambah Rp${amount}`);
         } else {
             console.log(`Email ${supporter_email} tidak terdaftar di web.`);
         }
 
-        // 5. Kasih respon 200 OK ke Trakteer biar mereka tau webhook sukses
+        // 5. Kasih respon 200 OK ke Trakteer
         return res.status(200).json({ success: true, message: 'Webhook received' });
 
     } catch (error) {
         console.error("Error Webhook:", error);
         return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-}
+};
