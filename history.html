@@ -113,7 +113,7 @@
         if (!user) { showAlert('Gagal', 'Login dulu!', 'login.html'); return; }
 
         try {
-            const res = await fetch('https://test-dhrs.vercel.app/api/activate', {
+            const res = await fetch('https://test-9ub.vercel.app/api/activate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: user.email, code: code })
@@ -139,7 +139,7 @@
         const countBadge = document.getElementById('trxCount');
         
         try {
-            const res = await fetch(`https://test-dhrs.vercel.app/api/transactions/${user.email}`);
+            const res = await fetch(`https://test-9ub.vercel.app/api/transactions/${user.email}`);
             const data = await res.json();
             
             if (data.success && data.transactions.length > 0) {
