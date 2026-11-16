@@ -8,37 +8,39 @@ datasource db {
 }
 
 model User {
-  id            Int           @id @default(autoincrement())
-  nama          String
-  email         String        @unique
-  password      String
-  saldo         Int           @default(0)
-  tier          String        @default("free")
-  expiredAt     DateTime?
-  chatCount     Int           @default(0)
-  uploadCount   Int           @default(0)
-  transactions  Transaction[]
-  chats         ChatHistory[]
+  id        String   @id @default(cuid())
+  nama      String?
+  email     String   @unique
+  password  String
+  saldo     Int      @default(0)
+  tier      String   @default("free")
+  expiredAt DateTime?
+  chatCount Int      @default(0)
+  
+  // Relasi ke tabel lain
+  transactions Transaction[]
+  chatHistories ChatHistory[]
 }
 
 model Transaction {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id])
-  type           String   // "deposit" atau "purchase"
-  amount         Int
-  status         String   @default("success")
-  method         String   // QRIS, Saldo, Trakteer
-  activationCode String?  // Kode unik kalau beli paket
-  isUsed         Boolean  @default(false) // Status kodenya udah dipake atau belum
-  createdAt      DateTime @default(now())
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // "deposit" atau "purchase"
+  amount      Int
+  uniqueCode  Int
+  totalAmount Int
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model ChatHistory {
   id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  userId    String
   sender    String
   message   String
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
