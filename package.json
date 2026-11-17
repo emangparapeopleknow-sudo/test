@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "prisma generate"
+    "build": "prisma generate"
   },
   "dependencies": {
     "@google/genai": "^1.0.0",
