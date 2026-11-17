@@ -82,7 +82,7 @@
         <div class="copyright">© 2026 LyzCreator • Developer: Lyz</div>
     </div>
 </div>
-<script src="alert.js"></script>
+<script src="alert/alert.js"></script>
 <script>
     let isLogin = true;
 
@@ -111,7 +111,7 @@
 
         btn.innerText = "Memproses..."; btn.disabled = true;
 
-        const endpoint = isLogin ? 'https://test-9ub.vercel.app/api/login' : 'https://test-dhrs.vercel.app:/api/register';
+        const endpoint = isLogin ? 'https://test-9ub.vercel.app/api/login' : 'https://test-9ub.vercel.app:/api/register';
         
         try {
             const response = await fetch(endpoint, {
